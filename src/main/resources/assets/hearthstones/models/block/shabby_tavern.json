@@ -1,0 +1,10 @@
+{
+	"parent": "hearthstones:block/tavern",
+	"textures": {
+		"0": "hearthstones:block/tavernface_shabby",
+		"1": "hearthstones:block/tavernside_shabby",
+		"2": "hearthstones:block/tavernbottom_shabby",
+		"3": "hearthstones:block/taverntop_shabby",
+		"particle": "hearthstones:block/taverntop_shabby"
+	}
+}

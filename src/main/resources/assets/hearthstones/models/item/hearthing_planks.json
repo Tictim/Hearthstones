@@ -1,0 +1,12 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "hearthstones:item/hearthing_planks.on"
+	},
+	"overrides": [
+		{
+			"predicate": {"has_cooldown": 1},
+			"model": "hearthstones:item/hearthing_planks.off"
+		}
+	]
+}

@@ -1,0 +1,12 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "hearthstones:item/companion_hearthstone.on"
+	},
+	"overrides": [
+		{
+			"predicate": {"has_cooldown": 1},
+			"model": "hearthstones:item/companion_hearthstone.off"
+		}
+	]
+}

@@ -1,0 +1,10 @@
+{
+	"parent": "hearthstones:block/tavern",
+	"textures": {
+		"0": "hearthstones:block/tavernface_global",
+		"1": "hearthstones:block/tavernside_global",
+		"2": "hearthstones:block/tavernbottom_global",
+		"3": "hearthstones:block/taverntop_global",
+		"particle": "hearthstones:block/taverntop_global"
+	}
+}

@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"facing=north": { "model": "hearthstones:block/shabby_tavern" },
+		"facing=south": { "model": "hearthstones:block/shabby_tavern", "y": 180 },
+		"facing=east": { "model": "hearthstones:block/shabby_tavern", "y": 90 },
+		"facing=west": { "model": "hearthstones:block/shabby_tavern", "y": 270 }
+	}
+}
