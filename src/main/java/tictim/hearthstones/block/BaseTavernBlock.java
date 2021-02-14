@@ -189,17 +189,18 @@ public abstract class BaseTavernBlock extends Block{
 		addTipInformation(stack, worldIn, tooltip, flagIn);
 		tooltip.add(new TranslationTextComponent("info.hearthstones.tavern.help"));
 
-		if(stack.hasTag()&&stack.getTag().contains("BlockEntityTag", NBT.TAG_COMPOUND)){
-			CompoundNBT nbt = stack.getTag().getCompound("BlockEntityTag");
+		CompoundNBT tag = stack.getTag();
+		if(tag!=null&&tag.contains("BlockEntityTag", NBT.TAG_COMPOUND)){
+			CompoundNBT nbt = tag.getCompound("BlockEntityTag");
 			if(nbt.contains("name", NBT.TAG_STRING)){
-				tooltip.add(new StringTextComponent(" ").appendSibling(new TranslationTextComponent("info.hearthstones.tavern.name", ITextComponent.Serializer.fromJson(nbt.getString("name")))));
+				tooltip.add(new StringTextComponent(" ").append(new TranslationTextComponent("info.hearthstones.tavern.name", ITextComponent.Serializer.getComponentFromJson(nbt.getString("name")))));
 			}
 			if(nbt.contains("owner", NBT.TAG_COMPOUND)){
 				CompoundNBT nbtOwner = nbt.getCompound("owner");
 				UUID uid = nbtOwner.hasUniqueId("owner") ? nbtOwner.getUniqueId("owner") : null;
 				String ownerName = nbtOwner.getString("ownerName");
 
-				tooltip.add(new StringTextComponent(" ").appendSibling(uid!=null ?
+				tooltip.add(new StringTextComponent(" ").append(uid!=null ?
 						new TranslationTextComponent("info.hearthstones.tavern.owner", ownerName, uid) :
 						new TranslationTextComponent("info.hearthstones.tavern.owner.no_id", ownerName)));
 			}
@@ -210,16 +211,7 @@ public abstract class BaseTavernBlock extends Block{
 	protected void addTipInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("info.hearthstones.tavern.tooltip"));
 	}
-	/*
-	@Override public BlockRenderType getRenderType(BlockState state){
-		return super.getRenderType(state);
-	}
-	@Override
-	@SuppressWarnings("deprecation")
-	public boolean hasCustomBreakingProgress(BlockState state){
-		return true;
-	}
-	*/
+
 	@Override @SuppressWarnings("deprecation") public BlockState rotate(BlockState state, Rotation rot){
 		return state.with(BlockStateProperties.HORIZONTAL_FACING, rot.rotate(state.get(BlockStateProperties.HORIZONTAL_FACING)));
 	}

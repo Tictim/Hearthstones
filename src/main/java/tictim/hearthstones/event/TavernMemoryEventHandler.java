@@ -4,7 +4,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -26,7 +25,7 @@ public final class TavernMemoryEventHandler{
 	@SubscribeEvent
 	public static void attachWorldCapabilities(AttachCapabilitiesEvent<World> event){
 		World w = event.getObject();
-		if(w.isRemote||event.getObject().getDimension().getType()==DimensionType.OVERWORLD) event.addCapability(KEY_GLOBAL, new GlobalTavernMemory());
+		if(w.isRemote||w.getDimensionKey().equals(World.OVERWORLD)) event.addCapability(KEY_GLOBAL, new GlobalTavernMemory());
 	}
 
 	@SubscribeEvent

@@ -4,75 +4,67 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Dimension;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 public final class TavernPos{
-	public static final TavernPos OVERWORLD_ORIGIN = new TavernPos(DimensionType.OVERWORLD, 0, 0, 0);
+	public static final TavernPos OVERWORLD_ORIGIN = new TavernPos(Dimension.OVERWORLD.getLocation(), 0, 0, 0);
 
-	@Nullable
-	public static TavernPos tryParse(CompoundNBT nbt){
-		DimensionType type = DimensionType.byName(new ResourceLocation(nbt.getString("dim")));
-		return type==null ? null : new TavernPos(type, NBTUtil.readBlockPos(nbt.getCompound("pos")));
-	}
-	@Nullable
-	public static TavernPos tryRead(PacketBuffer buffer){
-		DimensionType type = DimensionType.getById(buffer.readInt());
-		return type==null ? null : new TavernPos(type, buffer.readBlockPos());
-	}
-
-	public final DimensionType dim;
+	public final ResourceLocation dim;
 	public final BlockPos pos;
 
 	public TavernPos(World world, int x, int y, int z){
-		this(world.getDimension().getType(), x, y, z);
+		this(world.getDimensionKey().getLocation(), x, y, z);
 	}
-	public TavernPos(Dimension dim, int x, int y, int z){
-		this(dim.getType(), x, y, z);
-	}
-	public TavernPos(DimensionType dimensionType, int x, int y, int z){
-		this(dimensionType, new BlockPos(x, y, z));
+	public TavernPos(ResourceLocation dim, int x, int y, int z){
+		this(dim, new BlockPos(x, y, z));
 	}
 	public TavernPos(World world, BlockPos pos){
-		this(world.getDimension().getType(), pos);
-	}
-	public TavernPos(Dimension dim, BlockPos pos){
-		this(dim.getType(), pos);
+		this(world.getDimensionKey().getLocation(), pos);
 	}
 	public TavernPos(TileEntity tileEntity){
-		this(tileEntity.getWorld(), tileEntity.getPos());
+		this(Objects.requireNonNull(tileEntity.getWorld()), tileEntity.getPos());
 	}
 	public TavernPos(CompoundNBT nbt){
-		this(DimensionType.byName(new ResourceLocation(nbt.getString("dim"))), NBTUtil.readBlockPos(nbt));
+		this(new ResourceLocation(nbt.getString("dim")), NBTUtil.readBlockPos(nbt.getCompound("pos")));
 	}
 	public TavernPos(PacketBuffer buffer){
-		this(DimensionType.getById(buffer.readInt()), buffer.readBlockPos());
+		this(buffer.readResourceLocation(), buffer.readBlockPos());
 	}
 
-	public TavernPos(DimensionType dimensionType, BlockPos pos){
-		this.dim = Objects.requireNonNull(dimensionType);
+	public TavernPos(ResourceLocation dim, BlockPos pos){
+		this.dim = Objects.requireNonNull(dim);
 		this.pos = pos.toImmutable();
 	}
 
 	public boolean isSameTile(TileEntity te){
-		return te.getWorld().getDimension().getType()==dim&&pos.equals(te.getPos());
+		return Objects.requireNonNull(te.getWorld()).getDimensionKey().getLocation()==dim&&pos.equals(te.getPos());
+	}
+
+	public boolean isSameDimension(World world){
+		return isSameDimension(world.getDimensionKey());
+	}
+	public boolean isSameDimension(RegistryKey<World> registryKey){
+		return isSameDimension(registryKey.getLocation());
+	}
+	public boolean isSameDimension(ResourceLocation dim){
+		return this.dim.equals(dim);
 	}
 
 	public CompoundNBT serialize(){
 		CompoundNBT nbt = new CompoundNBT();
-		nbt.putString("dim", DimensionType.getKey(dim).toString());
+		nbt.putString("dim", dim.toString());
 		nbt.put("pos", NBTUtil.writeBlockPos(pos));
 		return nbt;
 	}
 
 	public void write(PacketBuffer buffer){
-		buffer.writeInt(dim.getId());
+		buffer.writeResourceLocation(dim);
 		buffer.writeBlockPos(pos);
 	}
 
@@ -89,6 +81,6 @@ public final class TavernPos{
 	}
 	@Override
 	public String toString(){
-		return String.format("[%s (%d), %d %d %d]", DimensionType.getKey(dim), dim.getId(), pos.getX(), pos.getY(), pos.getZ());
+		return String.format("[%s, %d %d %d]", dim, pos.getX(), pos.getY(), pos.getZ());
 	}
 }

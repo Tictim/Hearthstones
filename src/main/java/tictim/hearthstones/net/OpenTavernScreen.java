@@ -9,14 +9,14 @@ import tictim.hearthstones.utils.TavernType;
 import javax.annotation.Nullable;
 
 public class OpenTavernScreen{
-	@Nullable public TavernPos pos;
+	public TavernPos pos;
 	public TavernType type;
 	@Nullable public ITextComponent name;
 	public Accessibility access;
 	public Owner owner;
 	public boolean isHome;
 
-	public OpenTavernScreen(@Nullable TavernPos pos, TavernType type, @Nullable ITextComponent name, Accessibility access, Owner owner, boolean isHome){
+	public OpenTavernScreen(TavernPos pos, TavernType type, @Nullable ITextComponent name, Accessibility access, Owner owner, boolean isHome){
 		this.pos = pos;
 		this.type = type;
 		this.name = name;

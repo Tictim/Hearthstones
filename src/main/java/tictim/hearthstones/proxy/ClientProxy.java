@@ -10,6 +10,8 @@ import tictim.hearthstones.data.GlobalTavernMemory;
 import tictim.hearthstones.data.PlayerTavernMemory;
 import tictim.hearthstones.data.TavernMemory;
 
+import java.util.Objects;
+
 public class ClientProxy extends ServerProxy{
 	@Override
 	public boolean isOp(PlayerEntity player){
@@ -26,6 +28,6 @@ public class ClientProxy extends ServerProxy{
 	@Override
 	public GlobalTavernMemory getGlobalTavernMemory(){
 		if(ServerLifecycleHooks.getCurrentServer()!=null) return super.getGlobalTavernMemory();
-		return Minecraft.getInstance().world.getCapability(TavernMemory.GLOBAL).orElseThrow(() -> new RuntimeException("Unable to access global tavern memory"));
+		return Objects.requireNonNull(Minecraft.getInstance().world).getCapability(TavernMemory.GLOBAL).orElseThrow(() -> new RuntimeException("Unable to access global tavern memory"));
 	}
 }

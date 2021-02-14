@@ -6,13 +6,13 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import tictim.hearthstones.Hearthstones;
+import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.logic.Tavern;
 
 import javax.annotation.Nonnull;
@@ -39,11 +39,7 @@ public class TavernMemory implements ICapabilitySerializable<CompoundNBT>{
 
 	@Nullable
 	public TavernRecord delete(World world, BlockPos pos){
-		return delete(new TavernPos(world.getDimension(), pos));
-	}
-	@Nullable
-	public TavernRecord delete(DimensionType dim, BlockPos pos){
-		return delete(new TavernPos(dim, pos));
+		return delete(new TavernPos(world, pos));
 	}
 	@Nullable
 	public TavernRecord delete(TavernPos key){
@@ -66,12 +62,14 @@ public class TavernMemory implements ICapabilitySerializable<CompoundNBT>{
 		if(memories.containsKey(pos)){
 			TavernRecord t = memories.get(pos);
 			t.update(tavern);
-			//Hearthstones.LOGGER.info("Updated tavern at {}", pos);
+			if(ModCfg.traceTavernUpdate())
+				Hearthstones.LOGGER.info("Updated tavern at {}", pos);
 			return t;
 		}else{
 			TavernRecord t = new TavernRecord(tavern);
 			memories.put(t.getTavernPos(), t);
-			//Hearthstones.LOGGER.info("Added tavern at {}", pos);
+			if(ModCfg.traceTavernUpdate())
+				Hearthstones.LOGGER.info("Added tavern at {}", pos);
 			return t;
 		}
 	}

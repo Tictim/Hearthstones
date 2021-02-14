@@ -15,19 +15,26 @@ public final class ModCfg{
 
 	private static final BooleanValue easyMode;
 
+	private static final BooleanValue traceHearthstoneUsage;
+	private static final BooleanValue traceTavernUpdate;
+
 	private static final ForgeConfigSpec spec;
 
 	static{
-		ForgeConfigSpec.Builder commonConfigSpecBuilder = new ForgeConfigSpec.Builder();
-		hearthstone = new HearthstoneConfig(commonConfigSpecBuilder, "hearthstone", "Hearthstone", 0, 75);
-		hearthingPlanks = new HearthstoneConfig(commonConfigSpecBuilder, "hearthingPlanks", "Hearthing Planks", 30, 75);
-		hearthingGem = new HearthingGemConfig(commonConfigSpecBuilder, "hearthingGem", "Hearthing Gem", 0, 150);
-		companionHearthstone = new HearthstoneConfig(commonConfigSpecBuilder, "companionHearthstone", "Companion Hearthstone", 0, 225);
+		ForgeConfigSpec.Builder b = new ForgeConfigSpec.Builder();
+		hearthstone = new HearthstoneConfig(b, "hearthstone", "Hearthstone", 0, 75);
+		hearthingPlanks = new HearthstoneConfig(b, "hearthingPlanks", "Hearthing Planks", 30, 75);
+		hearthingGem = new HearthingGemConfig(b, "hearthingGem", "Hearthing Gem", 0, 150);
+		companionHearthstone = new HearthstoneConfig(b, "companionHearthstone", "Companion Hearthstone", 0, 225);
 
-		easyMode = commonConfigSpecBuilder.comment("Removes the recipe of Shabby Tavern/Hearthing Planks, and reverts the recipe of Tavern/Hearthstone to much cheaper version.")
+		easyMode = b.comment("Removes the recipe of Shabby Tavern/Hearthing Planks, and reverts the recipe of Tavern/Hearthstone to much cheaper version.")
 				.worldRestart()
 				.define("easyMode", false);
-		spec = commonConfigSpecBuilder.build();
+
+		traceHearthstoneUsage = b.define("traceHearthstoneUsage", false);
+		traceTavernUpdate = b.define("traceTavernUpdate", false);
+
+		spec = b.build();
 	}
 
 	private static boolean initCalled = false;
@@ -40,5 +47,11 @@ public final class ModCfg{
 
 	public static boolean easyMode(){
 		return easyMode.get();
+	}
+	public static boolean traceHearthstoneUsage(){
+		return traceHearthstoneUsage.get();
+	}
+	public static boolean traceTavernUpdate(){
+		return traceTavernUpdate.get();
 	}
 }

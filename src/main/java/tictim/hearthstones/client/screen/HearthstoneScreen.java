@@ -1,6 +1,6 @@
 package tictim.hearthstones.client.screen;
 
-import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -10,9 +10,13 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import tictim.hearthstones.Hearthstones;
 import tictim.hearthstones.client.render.TavernRenderHelper;
@@ -27,6 +31,7 @@ import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.net.TavernMemoryOperation;
 import tictim.hearthstones.utils.TavernType;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -63,16 +68,16 @@ public class HearthstoneScreen extends AbstractScreen{
 	public void resetTavernButtons(){
 		this.buttons.removeIf(b -> b instanceof TavernButton||b instanceof TavernButton.PropertyButton);
 		this.children.removeIf(b -> b instanceof TavernButton||b instanceof TavernButton.PropertyButton);
-		DimensionType dim = minecraft.player.world.getDimension().getType();
+		RegistryKey<World> dim = minecraft.player.world.getDimensionKey();
 		TreeSet<TavernRecord> set = new TreeSet<>((e1, e2) -> {
 			int i;
 			// home
 			TavernRecord homeTavern = memory.getHomeTavern();
 			i = Boolean.compare(homeTavern==e2, homeTavern==e1);
 			if(i!=0) return i;
-			DimensionType d1 = e1.getDimensionType();
-			DimensionType d2 = e2.getDimensionType();
-			if(d1==d2&&dim==d1){// #3(Optional) distance
+			ResourceLocation d1 = e1.getDimensionType();
+			ResourceLocation d2 = e2.getDimensionType();
+			if(d1==d2&&dim.getLocation().equals(d1)){// #3(Optional) distance
 				double s1 = minecraft.player.getDistanceSq(e1.getPos().getX()+0.5, e1.getPos().getY()+0.5, e1.getPos().getZ()+0.5);
 				double s2 = minecraft.player.getDistanceSq(e2.getPos().getX()+0.5, e2.getPos().getY()+0.5, e2.getPos().getZ()+0.5);
 				i = Double.compare(s1, s2);
@@ -97,23 +102,23 @@ public class HearthstoneScreen extends AbstractScreen{
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks){
+	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
 		if(flagResetButtons) resetTavernButtons();
 
 		int mouseY2 = mouseY+yOffset;
-		this.renderBackground();
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(0, -yOffset, 0);
-		super.render(mouseX, mouseY2, partialTicks);
-		RenderSystem.popMatrix();
-		super.drawTooltip(mouseX, mouseY);
+		this.renderBackground(matrixStack);
+		matrixStack.push();
+		matrixStack.translate(0, -yOffset, 0);
+		super.render(matrixStack, mouseX, mouseY2, partialTicks);
+		matrixStack.pop();
+		super.drawTooltip(matrixStack, mouseX, mouseY);
 		this.yOffsetFloat = MathHelper.lerp(0.4, yOffsetFloat, this.yOffsetDest = MathHelper.clamp(yOffsetDest, 0, Math.max(0, heightCache-width/2)));
 		this.yOffset = (int)Math.round(yOffsetFloat);
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-		if(this.buttons.isEmpty()) this.drawCenteredString(this.font, I18n.format("info.hearthstones.screen.empty"), this.xSize/2, this.ySize/2-5, 0xFFFFFF);
+	protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY){
+		if(this.buttons.isEmpty()) drawCenteredString(matrixStack, font, I18n.format("info.hearthstones.screen.empty"), this.xSize/2, this.ySize/2-5, 0xFFFFFF);
 		/*else{
 			String s1 = String.format("yOffset: %d (%s)", yOffset, ItemStack.DECIMALFORMAT.format(yOffsetFloat));
 			String s2 = String.format("yOffsetDest: %s ", yOffsetDest);
@@ -125,7 +130,7 @@ public class HearthstoneScreen extends AbstractScreen{
 	}
 
 	@Override
-	protected void drawTooltip(int mouseX, int mouseY){}
+	protected void drawTooltip(MatrixStack matrixStack, int mouseX, int mouseY){}
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button){
@@ -155,8 +160,10 @@ public class HearthstoneScreen extends AbstractScreen{
 		}else return false;
 	}
 
-	private static final List<String> howto1 = Collections.singletonList(I18n.format("info.hearthstones.screen.howtouse.1"));
-	private static final List<String> howto2 = ImmutableList.of(I18n.format("info.hearthstones.screen.howtouse.1"), I18n.format("info.hearthstones.screen.howtouse.2"));
+	private static final List<ITextComponent> howto1 = Collections.singletonList(new TranslationTextComponent("info.hearthstones.screen.howtouse.1"));
+	private static final List<ITextComponent> howto2 = Arrays.asList(
+			new TranslationTextComponent("info.hearthstones.screen.howtouse.1"),
+			new TranslationTextComponent("info.hearthstones.screen.howtouse.2"));
 
 	private class TavernButton extends Button{
 		public static final int BASE_WIDTH = 179;
@@ -170,7 +177,7 @@ public class HearthstoneScreen extends AbstractScreen{
 		private final Map<TavernProperty, PropertyButton> properties = new HashMap<>();
 
 		private TavernButton(int x, int y, TavernRecord tavern, boolean isFromGlobal){
-			super(x, y, WIDTH, HEIGHT, "", button -> {});
+			super(x, y, WIDTH, HEIGHT, StringTextComponent.EMPTY, button -> {});
 			this.tavern = tavern;
 			this.sign = TavernSign.of(tavern);
 			this.isFromGlobal = isFromGlobal;
@@ -181,22 +188,24 @@ public class HearthstoneScreen extends AbstractScreen{
 		}
 
 		@Override
-		public void renderButton(int mouseX, int mouseY, float partialTicks){
+		public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
 			if(this.visible){
-				RenderSystem.pushMatrix();
+				matrixStack.push();
+				//noinspection deprecation
 				RenderSystem.color4f(1, 1, 1, 1);
 				RenderSystem.enableBlend();
 				RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-				RenderSystem.translatef(x, y, 0);
-				TavernRenderHelper.renderTavernUIBase(tavern.getTavernType(), memory.getSelectedTavern()==tavern);
-				RenderSystem.translatef(6*2, 1*2, 0);
-				TavernRenderHelper.renderAccess(tavern.getOwner().getAccessModifier());
-				RenderSystem.popMatrix();
-				font.drawStringWithShadow(sign.nameAndDistance(), x+25*2, y+9*2-1, 0xFFFFFF);
+				matrixStack.translate(x, y, 0);
+				TavernRenderHelper.renderTavernUIBase(matrixStack, tavern.getTavernType(), memory.getSelectedTavern()==tavern);
+				matrixStack.translate(6*2, 1*2, 0);
+				TavernRenderHelper.renderAccess(matrixStack, tavern.getOwner().getAccessModifier());
+				matrixStack.pop();
+
+				font.drawStringWithShadow(matrixStack, sign.nameAndDistance(), x+25*2, y+9*2-1, 0xFFFFFF);
 				String ownerText = sign.owner();
 				int ownerWidth = font.getStringWidth(ownerText);
-				font.drawStringWithShadow(sign.owner(), x+25*2, y+14*2-1, 0xFFFFFF);
-				font.drawString(sign.position(), x+25*2+ownerWidth+font.getStringWidth(" "), y+14*2-1, 0xFFFFFF);
+				font.drawStringWithShadow(matrixStack, sign.owner(), x+25*2, y+14*2-1, 0xFFFFFF);
+				font.drawString(matrixStack, sign.position(), x+25*2+ownerWidth+font.getStringWidth(" "), y+14*2-1, 0xFFFFFF);
 			}
 		}
 
@@ -230,10 +239,10 @@ public class HearthstoneScreen extends AbstractScreen{
 		}
 
 
-		public void renderToolTip(int mouseX, int mouseY){
+		public void renderToolTip(MatrixStack matrixStack, int mouseX, int mouseY){
 			if(isHovered()){
 				for(PropertyButton propertyButton : this.properties.values()) if(propertyButton.isHovered()) return;
-				GuiUtils.drawHoveringText(isFromGlobal ? howto1 : howto2, mouseX, mouseY, HearthstoneScreen.this.width, HearthstoneScreen.this.height, -1, font);
+				GuiUtils.drawHoveringText(matrixStack, isFromGlobal ? howto1 : howto2, mouseX, mouseY, HearthstoneScreen.this.width, HearthstoneScreen.this.height, -1, font);
 			}
 		}
 
@@ -251,7 +260,7 @@ public class HearthstoneScreen extends AbstractScreen{
 			private final TavernProperty property;
 
 			public PropertyButton(int widthIn, int heightIn, TavernProperty property){
-				super(widthIn, heightIn, 14, 14, "", e -> {});
+				super(widthIn, heightIn, 14, 14, StringTextComponent.EMPTY, e -> {});
 				this.property = property;
 			}
 
@@ -261,14 +270,14 @@ public class HearthstoneScreen extends AbstractScreen{
 			}
 
 			@Override
-			public void renderButton(int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_){
+			public void renderButton(MatrixStack matrixStack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_){
 				minecraft.getTextureManager().bindTexture(HearthstoneScreen.ICONS);
-				blit(this.x, this.y, 7*2*property.ordinal(), 0, 7*2, 7*2);
+				blit(matrixStack, this.x, this.y, 7*2*property.ordinal(), 0, 7*2, 7*2);
 			}
 
 			@Override
-			public void renderToolTip(int mouseX, int mouseY){
-				if(isHovered) GuiUtils.drawHoveringText(property.getTooltip(), mouseX, mouseY, HearthstoneScreen.this.width, HearthstoneScreen.this.height, -1, font);
+			public void renderToolTip(MatrixStack matrixStack, int mouseX, int mouseY){
+				if(isHovered) GuiUtils.drawHoveringText(matrixStack, property.getTooltip(), mouseX, mouseY, HearthstoneScreen.this.width, HearthstoneScreen.this.height, -1, font);
 			}
 		}
 	}
@@ -281,11 +290,13 @@ public class HearthstoneScreen extends AbstractScreen{
 		TOO_FAR(button -> {
 			PlayerEntity player = Minecraft.getInstance().player;
 			return (player.getHeldItem(Hand.MAIN_HAND).getItem()==ModItems.HEARTHING_GEM.get()||player.getHeldItem(Hand.OFF_HAND).getItem()==ModItems.HEARTHING_GEM.get())&&
-					(button.tavern.getDimensionType()!=player.dimension||
+					(!button.tavern.getDimensionType().equals(player.world.getDimensionKey().getLocation())||
 							Math.sqrt(player.getDistanceSq(button.tavern.getPos().getX(), button.tavern.getPos().getY(), button.tavern.getPos().getZ()))>ModCfg.hearthingGem.travelDistanceThreshold());
 		});
 
 		private final Predicate<TavernButton> matches;
+		private final List<ITextComponent> tooltip = Collections.singletonList(
+				new TranslationTextComponent("info.hearthstones.screen.property."+name().toLowerCase()));
 
 		TavernProperty(Predicate<TavernButton> matches){
 			this.matches = matches;
@@ -295,8 +306,8 @@ public class HearthstoneScreen extends AbstractScreen{
 			return matches.test(button);
 		}
 
-		public List<String> getTooltip(){
-			return Collections.singletonList(I18n.format("info.hearthstones.screen.property."+this.name().toLowerCase()));
+		public List<ITextComponent> getTooltip(){
+			return tooltip;
 		}
 	}
 }

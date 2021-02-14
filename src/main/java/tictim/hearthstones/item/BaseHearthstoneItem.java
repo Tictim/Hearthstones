@@ -15,7 +15,6 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
@@ -34,7 +33,6 @@ public abstract class BaseHearthstoneItem extends Item implements HearthstoneIte
 	public BaseHearthstoneItem(Properties properties, Hearthstone hearthstone){
 		super(properties);
 		this.hearthstone = Objects.requireNonNull(hearthstone);
-		this.addPropertyOverride(new ResourceLocation("has_cooldown"), (s, w, e) -> e instanceof PlayerEntity ? ((s.hasTag()&&s.getTag().getBoolean("hasCooldown")) ? 1 : 0) : 0);
 	}
 
 	@Override public Hearthstone getHearthstone(){
@@ -74,9 +72,12 @@ public abstract class BaseHearthstoneItem extends Item implements HearthstoneIte
 		if(!world.isRemote&&entity instanceof PlayerEntity){
 			PlayerEntity player = (PlayerEntity)entity;
 			PlayerTavernMemory memory = PlayerTavernMemory.get(player);
+
 			boolean hasCooldown = !player.isCreative()&&memory.hasCooldown();
-			if(hasCooldown!=(stack.hasTag()&&stack.getTag().getBoolean("hasCooldown"))){
-				CompoundNBT nbt = stack.getTag();
+
+			CompoundNBT tag = stack.getTag();
+			if(hasCooldown!=(tag!=null&&tag.getBoolean("hasCooldown"))){
+				CompoundNBT nbt = tag;
 				if(nbt==null) stack.setTag(nbt = new CompoundNBT());
 				nbt.putBoolean("hasCooldown", hasCooldown);
 			}

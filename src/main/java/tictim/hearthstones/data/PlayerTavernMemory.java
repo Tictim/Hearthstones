@@ -106,8 +106,8 @@ public class PlayerTavernMemory extends TavernMemory implements ICapabilityProvi
 	@Override
 	public void deserializeNBT(CompoundNBT nbt){
 		super.deserializeNBT(nbt);
-		selected = nbt.contains("selected", NBT.TAG_COMPOUND) ? TavernPos.tryParse(nbt.getCompound("selected")) : null;
-		homeTavern = nbt.contains("homeTavern", NBT.TAG_COMPOUND) ? TavernPos.tryParse(nbt.getCompound("homeTavern")) : null;
+		selected = nbt.contains("selected", NBT.TAG_COMPOUND) ? new TavernPos(nbt.getCompound("selected")) : null;
+		homeTavern = nbt.contains("homeTavern", NBT.TAG_COMPOUND) ? new TavernPos(nbt.getCompound("homeTavern")) : null;
 	}
 
 	@Nullable

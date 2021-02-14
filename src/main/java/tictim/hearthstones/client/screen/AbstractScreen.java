@@ -1,5 +1,6 @@
 package tictim.hearthstones.client.screen;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
@@ -25,10 +26,10 @@ public abstract class AbstractScreen extends Screen{
 	protected abstract void onInit();
 	protected void onResize(){}
 
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){}
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){}
-	protected void drawTooltip(int mouseX, int mouseY){
-		for(Widget button : this.buttons) button.renderToolTip(mouseX, mouseY);
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY){}
+	protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY){}
+	protected void drawTooltip(MatrixStack matrixStack, int mouseX, int mouseY){
+		for(Widget button : this.buttons) button.renderToolTip(matrixStack, mouseX, mouseY);
 	}
 
 	@Override protected void init(){
@@ -38,33 +39,31 @@ public abstract class AbstractScreen extends Screen{
 		onInit();
 	}
 
-	@Override public void setSize(int w, int h){
-		super.setSize(w, h);
-		onResize();
-		this.guiLeft = (this.width-this.xSize)/2;
-		this.guiTop = (this.height-this.ySize)/2;
-	}
-
 	// ripping off ContainerScreen? Yes papa
-	@Override public void render(int mouseX, int mouseY, float partialTicks){
-		this.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+	@Override public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
+		this.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
 
+		//noinspection deprecation
 		RenderSystem.disableRescaleNormal();
 		RenderSystem.disableDepthTest();
-		super.render(mouseX, mouseY, partialTicks);
+		super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(this.guiLeft, this.guiTop, 0);
+		matrixStack.push();
+		matrixStack.translate(guiLeft, guiTop, 0);
+		//noinspection deprecation
 		RenderSystem.color4f(1, 1, 1, 1);
+		//noinspection deprecation
 		RenderSystem.enableRescaleNormal();
 
+		//noinspection deprecation
 		RenderSystem.glMultiTexCoord2f(GL13.GL_TEXTURE2, 240, 240);
+		//noinspection deprecation
 		RenderSystem.color4f(1, 1, 1, 1);
 
-		this.drawGuiContainerForegroundLayer(mouseX, mouseY);
+		this.drawGuiContainerForegroundLayer(matrixStack, mouseX, mouseY);
 
-		RenderSystem.popMatrix();
-		drawTooltip(mouseX, mouseY);
+		matrixStack.pop();
+		drawTooltip(matrixStack, mouseX, mouseY);
 		RenderSystem.enableDepthTest();
 	}
 

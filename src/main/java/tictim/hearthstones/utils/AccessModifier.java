@@ -1,7 +1,8 @@
 package tictim.hearthstones.utils;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import tictim.hearthstones.data.Owner;
 
 public enum AccessModifier{
@@ -33,11 +34,11 @@ public enum AccessModifier{
 		}
 	}
 
-	private String localizeKey;
+	private TranslationTextComponent localized;
 
-	public String localize(){
-		if(localizeKey==null) localizeKey = "info.hearthstones.access."+this.name().toLowerCase();
-		return I18n.format(localizeKey); // TODO check whether this code explodes or not
+	public ITextComponent toTextComponent(){
+		if(localized==null) localized = new TranslationTextComponent("info.hearthstones.access."+this.name().toLowerCase());
+		return localized;
 	}
 
 	public static AccessModifier fromMeta(int meta){

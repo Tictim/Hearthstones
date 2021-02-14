@@ -34,7 +34,7 @@ public abstract class TavernSign{
 		if(isMissing()) stb.append(RED);
 		ITextComponent name = getTavernName();
 		if(name==null) stb.append(I18n.format("info.hearthstones.tavern.noName"));
-		else stb.append(BOLD).append(name.getFormattedText());
+		else stb.append(BOLD).append(name.getString());
 		return stb.toString();
 	}
 	public String owner(){
@@ -43,7 +43,7 @@ public abstract class TavernSign{
 	public String distance(){
 		TavernPos pos = getTavernPos();
 		PlayerEntity p = Minecraft.getInstance().player;
-		if(p.world.getDimension().getType()!=pos.dim) return I18n.format("info.hearthstones.tavern.another_dim");
+		if(!pos.isSameDimension(p.world)) return I18n.format("info.hearthstones.tavern.another_dim");
 		double dist = Math.sqrt(p.getDistanceSq(pos.pos.getX()+0.5, pos.pos.getY()+0.5, pos.pos.getZ()+0.5));
 		if(dist>=FAR_AWAY) return I18n.format("info.hearthstones.tavern.far_away");
 		else if(dist<=NEARBY) return I18n.format("info.hearthstones.tavern.nearby");

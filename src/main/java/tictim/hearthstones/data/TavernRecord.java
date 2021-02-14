@@ -1,13 +1,13 @@
 package tictim.hearthstones.data;
 
 import com.google.common.base.MoreObjects;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.INBTSerializable;
-import tictim.hearthstones.Hearthstones;
 import tictim.hearthstones.logic.Tavern;
 import tictim.hearthstones.utils.TavernType;
 
@@ -35,7 +35,7 @@ public final class TavernRecord implements INBTSerializable<CompoundNBT>, Compar
 		this.tavernType = Objects.requireNonNull(tavernType);
 	}
 
-	public DimensionType getDimensionType(){
+	public ResourceLocation getDimensionType(){
 		return this.pos.dim;
 	}
 	public TavernPos getTavernPos(){
@@ -70,6 +70,10 @@ public final class TavernRecord implements INBTSerializable<CompoundNBT>, Compar
 		this.tavernType = tavern.tavernType();
 	}
 
+	public boolean isInSameDimension(Entity entity){
+		return entity.world.getDimensionKey().getLocation().equals(pos.dim);
+	}
+
 	@Override
 	public CompoundNBT serializeNBT(){
 		CompoundNBT nbt = new CompoundNBT();
@@ -84,12 +88,8 @@ public final class TavernRecord implements INBTSerializable<CompoundNBT>, Compar
 
 	@Override
 	public void deserializeNBT(CompoundNBT nbt){
-		this.pos = TavernPos.tryParse(nbt.getCompound("pos"));
-		if(pos==null){
-			Hearthstones.LOGGER.error("Error occurred during deserialization of TavernPos, couldn't find dimension named {}.", nbt.getCompound("pos").getString("dim"));
-			pos = TavernPos.OVERWORLD_ORIGIN;
-		}
-		if(nbt.contains("name", NBT.TAG_STRING)) this.name = ITextComponent.Serializer.fromJson(nbt.getString("name"));
+		this.pos = new TavernPos(nbt.getCompound("pos"));
+		if(nbt.contains("name", NBT.TAG_STRING)) this.name = ITextComponent.Serializer.getComponentFromJson(nbt.getString("name"));
 		this.owner = new Owner(nbt.getCompound("owner"));
 		this.missing = nbt.getBoolean("missing");
 		this.tavernType = TavernType.of(nbt.getByte("type"));
@@ -130,9 +130,7 @@ public final class TavernRecord implements INBTSerializable<CompoundNBT>, Compar
 		i = Boolean.compare(isMissing(), o.isMissing());
 		if(i!=0) return i;
 		// dimension
-		DimensionType d1 = getDimensionType();
-		DimensionType d2 = o.getDimensionType();
-		i = d1.getRegistryName().compareTo(d2.getRegistryName());
+		i = getDimensionType().compareTo(o.getDimensionType());
 		if(i!=0) return i;
 		// name
 		if((getName()==null)!=(o.getName()==null)) return getName()==null ? -1 : 1;

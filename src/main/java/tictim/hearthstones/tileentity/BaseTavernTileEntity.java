@@ -1,6 +1,6 @@
 package tictim.hearthstones.tileentity;
 
-import com.google.common.base.MoreObjects;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -64,10 +64,13 @@ public abstract class BaseTavernTileEntity extends TileEntity implements Tavern{
 		return write(new CompoundNBT());
 	}
 
-	@Override
-	public void read(CompoundNBT nbt){
-		super.read(nbt);
-		this.name = nbt.contains("name", NBT.TAG_STRING) ? ITextComponent.Serializer.fromJson(nbt.getString("name")) : null;
+	@Override public void read(BlockState state, CompoundNBT nbt){
+		super.read(state, nbt);
+		read(nbt);
+	}
+
+	private void read(CompoundNBT nbt){
+		this.name = nbt.contains("name", NBT.TAG_STRING) ? ITextComponent.Serializer.getComponentFromJson(nbt.getString("name")) : null;
 		if(nbt.contains("owner", NBT.TAG_COMPOUND)) this.owner.deserializeNBT(nbt.getCompound("owner"));
 		else this.owner.reset();
 	}
@@ -86,8 +89,10 @@ public abstract class BaseTavernTileEntity extends TileEntity implements Tavern{
 		return nbt;
 	}
 
-	@Override
-	public String toString(){
-		return MoreObjects.toStringHelper(this).omitNullValues().add("Owner", owner).add("Name", hasCustomName() ? name : null).toString();
+	@Override public String toString(){
+		return "BaseTavernTileEntity{"+
+				"owner="+owner+
+				", name="+(name!=null ? name : null)+
+				'}';
 	}
 }

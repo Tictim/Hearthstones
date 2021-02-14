@@ -29,7 +29,7 @@ public abstract class BaseTavernUpgradeItem extends Item{
 				if(!context.getWorld().isRemote){
 					BlockState stateCache = context.getWorld().getBlockState(context.getPos());
 					BlockState state = getStateToReplace(tavern);
-					if(state.has(BlockStateProperties.HORIZONTAL_FACING)){
+					if(state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)){
 						state = state.with(BlockStateProperties.HORIZONTAL_FACING, stateCache.get(BlockStateProperties.HORIZONTAL_FACING));
 					}
 					context.getWorld().setBlockState(context.getPos(), state);
@@ -39,7 +39,7 @@ public abstract class BaseTavernUpgradeItem extends Item{
 						if(tavern.hasCustomName()) tavern2.setName(tavern.getName());
 						tavern2.owner().reset(tavern.owner());
 						if(tavern.tavernType()==TavernType.GLOBAL) GlobalTavernMemory.get().delete(tavern.tavernPos());
-						context.getWorld().markAndNotifyBlock(context.getPos(), context.getWorld().getChunkAt(context.getPos()), state, state, 2); // TODO looks weird
+						context.getWorld().notifyBlockUpdate(context.getPos(), state, state, 0);
 
 						if(context.getPlayer()==null||!context.getPlayer().isCreative()){
 							stack.shrink(1);

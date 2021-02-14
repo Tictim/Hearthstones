@@ -5,7 +5,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.OpEntry;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import tictim.hearthstones.data.GlobalTavernMemory;
@@ -17,7 +16,9 @@ import tictim.hearthstones.net.SyncTavernMemory;
 public class ServerProxy implements IProxy{
 	@Override
 	public boolean isOp(PlayerEntity player){
-		OpEntry e = player.getServer().getPlayerList().getOppedPlayers().getEntry(player.getGameProfile());
+		MinecraftServer server = player.getServer();
+		if(server==null) return false;
+		OpEntry e = server.getPlayerList().getOppedPlayers().getEntry(player.getGameProfile());
 		return e!=null&&e.getPermissionLevel()>=0;
 	}
 
@@ -29,6 +30,6 @@ public class ServerProxy implements IProxy{
 	@Override
 	public GlobalTavernMemory getGlobalTavernMemory(){
 		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-		return server.getWorld(DimensionType.OVERWORLD).getCapability(TavernMemory.GLOBAL).orElseThrow(() -> new RuntimeException("Unable to access global tavern memory"));
+		return server.func_241755_D_().getCapability(TavernMemory.GLOBAL).orElseThrow(() -> new RuntimeException("Unable to access global tavern memory"));
 	}
 }

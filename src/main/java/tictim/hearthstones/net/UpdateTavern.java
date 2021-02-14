@@ -7,11 +7,11 @@ import tictim.hearthstones.utils.AccessModifier;
 import javax.annotation.Nullable;
 
 public class UpdateTavern{
-	@Nullable public TavernPos pos;
+	public TavernPos pos;
 	@Nullable public ITextComponent name;
 	public AccessModifier access;
 
-	public UpdateTavern(@Nullable TavernPos pos, @Nullable ITextComponent name, AccessModifier access){
+	public UpdateTavern(TavernPos pos, @Nullable ITextComponent name, AccessModifier access){
 		this.pos = pos;
 		this.name = name;
 		this.access = access;

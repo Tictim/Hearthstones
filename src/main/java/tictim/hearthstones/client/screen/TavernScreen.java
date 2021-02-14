@@ -1,11 +1,10 @@
 package tictim.hearthstones.client.screen;
 
-import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
@@ -13,6 +12,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.glfw.GLFW;
 import tictim.hearthstones.client.render.TavernRenderHelper;
@@ -27,7 +27,6 @@ import tictim.hearthstones.utils.Accessibility;
 import tictim.hearthstones.utils.TavernType;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
 
 import static tictim.hearthstones.Hearthstones.MODID;
 
@@ -40,7 +39,7 @@ public class TavernScreen extends AbstractScreen{
 	private static final ITextComponent NO_NAME = new TranslationTextComponent("info.hearthstones.tavern.noName");
 
 	static{
-		NO_NAME.getStyle().setColor(TextFormatting.GRAY).setItalic(true);
+		NO_NAME.getStyle().setFormatting(TextFormatting.GRAY).setItalic(true);
 	}
 
 	private final TavernPos pos;
@@ -70,7 +69,7 @@ public class TavernScreen extends AbstractScreen{
 	@Override
 	protected void onInit(){
 		minecraft.keyboardListener.enableRepeatEvents(true);
-		nameField = this.addButton(new TextFieldWidget(font, getLeft()+24*2, getTop()+7*2, 139*2, 4*2, ""));
+		nameField = this.addButton(new TextFieldWidget(font, getLeft()+24*2, getTop()+7*2, 139*2, 4*2, StringTextComponent.EMPTY));
 		nameField.setText(originalName);
 		nameField.setMaxStringLength(100);
 		nameField.setEnableBackgroundDrawing(false);
@@ -86,32 +85,30 @@ public class TavernScreen extends AbstractScreen{
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks){
-		this.renderBackground();
-		super.render(mouseX, mouseY, partialTicks);
+	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
+		this.renderBackground(matrixStack);
+		super.render(matrixStack, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(6, 6, 0);
-		TavernRenderHelper.renderTavernUIBase(type, false);
-		RenderSystem.popMatrix();
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY){
+		matrixStack.push();
+		matrixStack.translate(6, 6, 0);
+		TavernRenderHelper.renderTavernUIBase(matrixStack, type, false);
+		matrixStack.pop();
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
-		//RenderSystem.pushMatrix();
-		if(!nameField.isFocused()&&StringUtils.isNullOrEmpty(nameField.getText())) this.drawString(font, NO_NAME.getFormattedText(), 24*2, 7*2+1, 0xFFFFFF);
-		this.drawString(font, TavernSign.formatOwner(owner), 24*2, 13*2-1, 0xFFFFFF);
-		//RenderSystem.popMatrix();
+	protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY){
+		if(!nameField.isFocused()&&StringUtils.isNullOrEmpty(nameField.getText())) drawString(matrixStack, font, NO_NAME.getString(), 24*2, 7*2+1, 0xFFFFFF);
+		drawString(matrixStack, font, TavernSign.formatOwner(owner), 24*2, 13*2-1, 0xFFFFFF);
 	}
 
 	@Override
-	public void renderBackground(int tint){
+	public void renderBackground(MatrixStack matrixStack, int tint){
 		if(this.minecraft.world!=null){
-			this.fillGradient(0, 0, this.width, this.height, 0x90101010, 0xA0101010);
-			MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent(this));
+			this.fillGradient(matrixStack, 0, 0, this.width, this.height, 0x90101010, 0xA0101010);
+			MinecraftForge.EVENT_BUS.post(new BackgroundDrawnEvent(this, matrixStack));
 		}else this.renderDirtBackground(tint);
 	}
 
@@ -142,19 +139,20 @@ public class TavernScreen extends AbstractScreen{
 
 	private class AccessibilityButton extends Button{
 		public AccessibilityButton(int x, int y){
-			super(x, y, 32, 32, "", button -> {});
+			super(x, y, 32, 32, StringTextComponent.EMPTY, button -> {});
 		}
 
 		@Override
-		public void renderButton(int mouseX, int mouseY, float partialTicks){
+		public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
 			if(this.visible){
-				RenderSystem.pushMatrix();
+				matrixStack.push();
+				matrixStack.translate(x, y, 0);
+				//noinspection deprecation
 				RenderSystem.color4f(1, 1, 1, 1);
-				RenderSystem.translated(x, y, 0);
 				RenderSystem.enableBlend();
 				RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-				TavernRenderHelper.renderAccess(owner.getAccessModifier());
-				RenderSystem.popMatrix();
+				TavernRenderHelper.renderAccess(matrixStack, owner.getAccessModifier());
+				matrixStack.pop();
 			}
 		}
 
@@ -173,24 +171,29 @@ public class TavernScreen extends AbstractScreen{
 		}
 
 		@Override
-		public void renderToolTip(int mouseX, int mouseY){
-			if(isHovered()) renderTooltip(ImmutableList.of(owner.getAccessModifier().localize()), mouseX, mouseY);
+		public void renderToolTip(MatrixStack matrixStack, int mouseX, int mouseY){
+			if(isHovered()) renderTooltip(matrixStack, owner.getAccessModifier().toTextComponent(), mouseX, mouseY);
 		}
 	}
 
+	private static final ITextComponent HOME_TOOLTIP = new TranslationTextComponent("info.hearthstones.screen.property.home");
+	private static final ITextComponent SET_HOME_TOOLTIP = new TranslationTextComponent("info.hearthstones.screen.set_home");
+
 	private class SetHomeButton extends Button{
+
 		private boolean isPressed;
 
 		public SetHomeButton(int x, int y){
-			super(x, y, 7*2, 7*2, "", button -> {});
+			super(x, y, 7*2, 7*2, StringTextComponent.EMPTY, button -> {});
 		}
 
 		@Override
-		public void renderButton(int mouseX, int mouseY, float partialTicks){
+		public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
 			if(this.visible){
 				minecraft.getTextureManager().bindTexture(HearthstoneScreen.ICONS);
+				//noinspection deprecation
 				RenderSystem.color4f(1, 1, 1, 1);
-				this.blit(x, y, getTextureX(), getTextureY(), 7*2, 7*2);
+				this.blit(matrixStack, x, y, getTextureX(), getTextureY(), 7*2, 7*2);
 			}
 		}
 
@@ -218,8 +221,8 @@ public class TavernScreen extends AbstractScreen{
 		}
 
 		@Override
-		public void renderToolTip(int mouseX, int mouseY){
-			if(isHovered()) renderTooltip(Collections.singletonList(I18n.format(isHome ? "info.hearthstones.screen.property.home" : "info.hearthstones.screen.set_home")), mouseX, mouseY);
+		public void renderToolTip(MatrixStack matrixStack, int mouseX, int mouseY){
+			if(isHovered()) renderTooltip(matrixStack, isHome ? HOME_TOOLTIP : SET_HOME_TOOLTIP, mouseX, mouseY);
 		}
 	}
 }
