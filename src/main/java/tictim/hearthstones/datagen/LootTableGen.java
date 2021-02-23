@@ -22,6 +22,7 @@ import net.minecraft.world.storage.loot.functions.CopyNbt;
 import net.minecraft.world.storage.loot.functions.SetCount;
 import net.minecraftforge.fml.RegistryObject;
 import tictim.hearthstones.contents.ModBlocks;
+import tictim.hearthstones.contents.ModItems;
 
 import java.util.Collections;
 import java.util.List;
@@ -48,7 +49,7 @@ public class LootTableGen extends LootTableProvider{
 			registerLootTable(ModBlocks.AQUAMARINE_ORE.get(),
 					b -> droppingWithSilkTouch(b,
 							withExplosionDecay(b,
-									ItemLootEntry.builder(Items.LAPIS_LAZULI)
+									ItemLootEntry.builder(ModItems.AQUAMARINE_ORE.get())
 											.acceptFunction(SetCount.builder(RandomValueRange.of(1, 2)))
 											.acceptFunction(ApplyBonus.oreDrops(Enchantments.FORTUNE)))));
 
