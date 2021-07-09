@@ -48,7 +48,7 @@
 	"info.hearthstones.tavern.far_away": "§a아주 먼 거리",
 	"info.hearthstones.tavern.nearby": "§a§l근방",
 	"info.hearthstones.tavern.tooltip": "§e귀환석을 사용하여 여관으로 돌아올 수 있습니다.§r",
-	"info.hearthstones.tavern.shabby.tooltip": "§c귀환 통나무만을 사용하여 귀환할 수 없습니다.§r",
+	"info.hearthstones.tavern.shabby.tooltip": "§c귀환 통나무만 사용이 가능합니다.§r",
 	"info.hearthstones.tavern.global.tooltip.0": "§a이 여관을 방문하지 않은 플레이어도 여관을 사용할 수 있습니다.§r",
 	"info.hearthstones.tavern.global.tooltip.1": "§o일반 여관에 푸른색 여관 가죽을 사용하여 제작할 수 있습니다.§r",
 
