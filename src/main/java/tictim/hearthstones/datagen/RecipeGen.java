@@ -179,6 +179,17 @@ public class RecipeGen extends RecipeProvider{
 				.build(consumer, MODID, "not_easy_mode/hearthstone");
 		ConditionalRecipe.builder()
 				.addCondition(notEasyModeCondition).addRecipe(c ->
+				ShapedRecipeBuilder.shapedRecipe(HEARTHING_PLANKS.get())
+						.patternLine(" 11")
+						.patternLine("121")
+						.patternLine("11 ")
+						.key('1', ItemTags.LOGS)
+						.key('2', ModTags.GEMS_AQUAMARINE)
+						.addCriterion("has_aquamarine", hasItem(AQUAMARINE.get()))
+						.build(c))
+				.build(consumer, MODID, "not_easy_mode/hearthing_planks");
+		ConditionalRecipe.builder()
+				.addCondition(notEasyModeCondition).addRecipe(c ->
 				ShapedRecipeBuilder.shapedRecipe(SHABBY_TAVERN.get())
 						.patternLine("111")
 						.patternLine("121")
