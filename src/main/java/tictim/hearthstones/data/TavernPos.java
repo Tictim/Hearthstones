@@ -1,39 +1,39 @@
 package tictim.hearthstones.data;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Dimension;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.Level;
 
 import java.util.Objects;
 
 public final class TavernPos{
-	public static final TavernPos OVERWORLD_ORIGIN = new TavernPos(Dimension.OVERWORLD.location(), 0, 0, 0);
+	public static final TavernPos OVERWORLD_ORIGIN = new TavernPos(LevelStem.OVERWORLD.location(), 0, 0, 0);
 
 	public final ResourceLocation dim;
 	public final BlockPos pos;
 
-	public TavernPos(World world, int x, int y, int z){
+	public TavernPos(Level world, int x, int y, int z){
 		this(world.dimension().location(), x, y, z);
 	}
 	public TavernPos(ResourceLocation dim, int x, int y, int z){
 		this(dim, new BlockPos(x, y, z));
 	}
-	public TavernPos(World world, BlockPos pos){
+	public TavernPos(Level world, BlockPos pos){
 		this(world.dimension().location(), pos);
 	}
-	public TavernPos(TileEntity tileEntity){
+	public TavernPos(BlockEntity tileEntity){
 		this(Objects.requireNonNull(tileEntity.getLevel()), tileEntity.getBlockPos());
 	}
-	public TavernPos(CompoundNBT nbt){
-		this(new ResourceLocation(nbt.getString("dim")), NBTUtil.readBlockPos(nbt.getCompound("pos")));
+	public TavernPos(CompoundTag nbt){
+		this(new ResourceLocation(nbt.getString("dim")), NbtUtils.readBlockPos(nbt.getCompound("pos")));
 	}
-	public TavernPos(PacketBuffer buffer){
+	public TavernPos(FriendlyByteBuf buffer){
 		this(buffer.readResourceLocation(), buffer.readBlockPos());
 	}
 
@@ -42,28 +42,28 @@ public final class TavernPos{
 		this.pos = pos.immutable();
 	}
 
-	public boolean isSameTile(TileEntity te){
+	public boolean isSameTile(BlockEntity te){
 		return Objects.requireNonNull(te.getLevel()).dimension().location()==dim&&pos.equals(te.getBlockPos());
 	}
 
-	public boolean isSameDimension(World world){
+	public boolean isSameDimension(Level world){
 		return isSameDimension(world.dimension());
 	}
-	public boolean isSameDimension(RegistryKey<World> registryKey){
+	public boolean isSameDimension(ResourceKey<Level> registryKey){
 		return isSameDimension(registryKey.location());
 	}
 	public boolean isSameDimension(ResourceLocation dim){
 		return this.dim.equals(dim);
 	}
 
-	public CompoundNBT serialize(){
-		CompoundNBT nbt = new CompoundNBT();
+	public CompoundTag serialize(){
+		CompoundTag nbt = new CompoundTag();
 		nbt.putString("dim", dim.toString());
-		nbt.put("pos", NBTUtil.writeBlockPos(pos));
+		nbt.put("pos", NbtUtils.writeBlockPos(pos));
 		return nbt;
 	}
 
-	public void write(PacketBuffer buffer){
+	public void write(FriendlyByteBuf buffer){
 		buffer.writeResourceLocation(dim);
 		buffer.writeBlockPos(pos);
 	}

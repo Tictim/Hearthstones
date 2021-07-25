@@ -1,13 +1,14 @@
 package tictim.hearthstones.data;
 
 import com.google.common.collect.Maps;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
@@ -21,11 +22,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-public class TavernMemory implements ICapabilitySerializable<CompoundNBT>{
-	@CapabilityInject(PlayerTavernMemory.class)
-	public static Capability<PlayerTavernMemory> PLAYER = null;
-	@CapabilityInject(GlobalTavernMemory.class)
-	public static Capability<GlobalTavernMemory> GLOBAL = null;
+public class TavernMemory implements ICapabilitySerializable<CompoundTag>{
+	public static final Capability<PlayerTavernMemory> PLAYER = CapabilityManager.get(new CapabilityToken<>(){});
+	public static final Capability<GlobalTavernMemory> GLOBAL = CapabilityManager.get(new CapabilityToken<>(){});
 
 	private final Map<TavernPos, TavernRecord> memories = Maps.newHashMap();
 	private final Map<TavernPos, TavernRecord> view = Collections.unmodifiableMap(memories);
@@ -38,7 +37,7 @@ public class TavernMemory implements ICapabilitySerializable<CompoundNBT>{
 	}
 
 	@Nullable
-	public TavernRecord delete(World world, BlockPos pos){
+	public TavernRecord delete(Level world, BlockPos pos){
 		return delete(new TavernPos(world, pos));
 	}
 	@Nullable
@@ -92,9 +91,9 @@ public class TavernMemory implements ICapabilitySerializable<CompoundNBT>{
 	}
 
 	@Override
-	public CompoundNBT serializeNBT(){
-		CompoundNBT nbt = new CompoundNBT();
-		ListNBT list = new ListNBT();
+	public CompoundTag serializeNBT(){
+		CompoundTag nbt = new CompoundTag();
+		ListTag list = new ListTag();
 		for(TavernRecord e : memories.values()) list.add(e.serializeNBT());
 		nbt.put("memory", list);
 		return nbt;
@@ -102,9 +101,9 @@ public class TavernMemory implements ICapabilitySerializable<CompoundNBT>{
 
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt){
+	public void deserializeNBT(CompoundTag nbt){
 		this.memories.clear();
-		ListNBT list = nbt.getList("memory", NBT.TAG_COMPOUND);
+		ListTag list = nbt.getList("memory", NBT.TAG_COMPOUND);
 		for(int i = 0; i<list.size(); i++){
 			TavernRecord e = new TavernRecord(list.getCompound(i));
 			if(memories.containsKey(e.getTavernPos())) Hearthstones.LOGGER.error("Error occurred during deserialization of TavernMemory, duplicated tavern data at {}", e.getTavernPos());

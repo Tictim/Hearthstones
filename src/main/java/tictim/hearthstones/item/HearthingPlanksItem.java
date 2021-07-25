@@ -1,18 +1,20 @@
 package tictim.hearthstones.item;
 
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.logic.HearthingPlanksHearthstone;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class HearthingPlanksItem extends BaseHearthstoneItem{
 	public HearthingPlanksItem(Properties properties){
@@ -24,12 +26,12 @@ public class HearthingPlanksItem extends BaseHearthstoneItem{
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
 		if(this.allowdedIn(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
 	}
 
-	@Override public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("info.hearthstones.hearthing_planks.tooltip.0"));
-		tooltip.add(new TranslationTextComponent("info.hearthstones.hearthing_planks.tooltip.1"));
+	@Override public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+		tooltip.add(new TranslatableComponent("info.hearthstones.hearthing_planks.tooltip.0"));
+		tooltip.add(new TranslatableComponent("info.hearthstones.hearthing_planks.tooltip.1"));
 	}
 }

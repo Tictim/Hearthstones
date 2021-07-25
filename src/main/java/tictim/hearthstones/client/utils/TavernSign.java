@@ -2,9 +2,9 @@ package tictim.hearthstones.client.utils;
 
 import com.google.common.math.DoubleMath;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import tictim.hearthstones.data.Owner;
 import tictim.hearthstones.data.TavernPos;
 import tictim.hearthstones.data.TavernRecord;
@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.math.RoundingMode;
 
-import static net.minecraft.util.text.TextFormatting.*;
+import static net.minecraft.ChatFormatting.*;
 import static tictim.hearthstones.utils.HearthingContext.FAR_AWAY;
 import static tictim.hearthstones.utils.HearthingContext.NEARBY;
 
@@ -32,7 +32,7 @@ public abstract class TavernSign{
 	public String name(){
 		StringBuilder stb = new StringBuilder();
 		if(isMissing()) stb.append(RED);
-		ITextComponent name = getTavernName();
+		Component name = getTavernName();
 		if(name==null) stb.append(I18n.get("info.hearthstones.tavern.noName"));
 		else stb.append(BOLD).append(name.getString());
 		return stb.toString();
@@ -42,7 +42,7 @@ public abstract class TavernSign{
 	}
 	public String distance(){
 		TavernPos pos = getTavernPos();
-		PlayerEntity p = Minecraft.getInstance().player;
+		Player p = Minecraft.getInstance().player;
 		if(!pos.isSameDimension(p.level)) return I18n.get("info.hearthstones.tavern.another_dim");
 		double dist = Math.sqrt(p.distanceToSqr(pos.pos.getX()+0.5, pos.pos.getY()+0.5, pos.pos.getZ()+0.5));
 		if(dist>=FAR_AWAY) return I18n.get("info.hearthstones.tavern.far_away");
@@ -57,7 +57,7 @@ public abstract class TavernSign{
 	}
 
 	@Nullable
-	protected abstract ITextComponent getTavernName();
+	protected abstract Component getTavernName();
 	protected abstract Owner getOwner();
 	protected abstract TavernPos getTavernPos();
 	protected abstract boolean isMissing();
@@ -72,7 +72,7 @@ public abstract class TavernSign{
 
 		@Nullable
 		@Override
-		protected ITextComponent getTavernName(){
+		protected Component getTavernName(){
 			return tavern.hasCustomName() ? tavern.getName() : null;
 		}
 		@Override
@@ -98,7 +98,7 @@ public abstract class TavernSign{
 
 		@Nullable
 		@Override
-		protected ITextComponent getTavernName(){
+		protected Component getTavernName(){
 			return record.getName();
 		}
 		@Override

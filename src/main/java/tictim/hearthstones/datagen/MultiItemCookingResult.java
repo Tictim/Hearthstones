@@ -1,18 +1,18 @@
 package tictim.hearthstones.datagen;
 
 import com.google.gson.JsonObject;
-import net.minecraft.data.CookingRecipeBuilder;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 
-public class MultiItemCookingResult implements IFinishedRecipe{
-	private final CookingRecipeBuilder.Result resultDelegate;
+public class MultiItemCookingResult implements FinishedRecipe{
+	private final SimpleCookingRecipeBuilder.Result resultDelegate;
 	private final int count;
 
-	public MultiItemCookingResult(CookingRecipeBuilder.Result resultDelegate, int count){
+	public MultiItemCookingResult(SimpleCookingRecipeBuilder.Result resultDelegate, int count){
 		this.resultDelegate = resultDelegate;
 		this.count = count;
 	}
@@ -25,7 +25,7 @@ public class MultiItemCookingResult implements IFinishedRecipe{
 		json.add("result", o);
 	}
 
-	@Override public IRecipeSerializer<?> getType(){return resultDelegate.getType();}
+	@Override public RecipeSerializer<?> getType(){return resultDelegate.getType();}
 	@Override public ResourceLocation getId(){return resultDelegate.getId();}
 	@Override @Nullable public JsonObject serializeAdvancement(){return resultDelegate.serializeAdvancement();}
 	@Override @Nullable public ResourceLocation getAdvancementId(){return resultDelegate.getAdvancementId();}

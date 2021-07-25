@@ -1,9 +1,9 @@
 package tictim.hearthstones.event;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -23,15 +23,15 @@ public final class TavernMemoryEventHandler{
 	private static final ResourceLocation KEY_PLAYER = new ResourceLocation(Hearthstones.MODID, "player_tavern_memory");
 
 	@SubscribeEvent
-	public static void attachWorldCapabilities(AttachCapabilitiesEvent<World> event){
-		World w = event.getObject();
-		if(w.isClientSide||w.dimension().equals(World.OVERWORLD)) event.addCapability(KEY_GLOBAL, new GlobalTavernMemory());
+	public static void attachWorldCapabilities(AttachCapabilitiesEvent<Level> event){
+		Level w = event.getObject();
+		if(w.isClientSide||w.dimension().equals(Level.OVERWORLD)) event.addCapability(KEY_GLOBAL, new GlobalTavernMemory());
 	}
 
 	@SubscribeEvent
 	public static void attachPlayerCapabilities(AttachCapabilitiesEvent<Entity> event){
-		if(event.getObject() instanceof PlayerEntity)
-			event.addCapability(KEY_PLAYER, new PlayerTavernMemory((PlayerEntity)event.getObject()));
+		if(event.getObject() instanceof Player)
+			event.addCapability(KEY_PLAYER, new PlayerTavernMemory((Player)event.getObject()));
 	}
 
 	@SubscribeEvent

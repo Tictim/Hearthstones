@@ -1,16 +1,16 @@
 package tictim.hearthstones.datagen;
 
-import net.minecraft.data.CookingRecipeBuilder;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.data.RecipeProvider;
-import net.minecraft.data.ShapedRecipeBuilder;
-import net.minecraft.data.ShapelessRecipeBuilder;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
@@ -28,7 +28,7 @@ public class RecipeGen extends RecipeProvider{
 		super(generatorIn);
 	}
 
-	@Override protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer){
+	@Override protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer){
 		// Shaped Recipe
 		ShapedRecipeBuilder.shaped(AQUAMARINE_BLOCK.get())
 				.pattern("111")
@@ -190,17 +190,6 @@ public class RecipeGen extends RecipeProvider{
 				.build(consumer, MODID, "not_easy_mode/hearthing_planks");
 		ConditionalRecipe.builder()
 				.addCondition(notEasyModeCondition).addRecipe(c ->
-				ShapedRecipeBuilder.shaped(HEARTHING_PLANKS.get())
-						.pattern(" 11")
-						.pattern("121")
-						.pattern("11 ")
-						.define('1', ItemTags.LOGS)
-						.define('2', ModTags.GEMS_AQUAMARINE)
-						.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
-						.save(c))
-				.build(consumer, MODID, "not_easy_mode/hearthing_planks");
-		ConditionalRecipe.builder()
-				.addCondition(notEasyModeCondition).addRecipe(c ->
 				ShapedRecipeBuilder.shaped(SHABBY_TAVERN.get())
 						.pattern("111")
 						.pattern("121")
@@ -283,20 +272,20 @@ public class RecipeGen extends RecipeProvider{
 				.build(consumer, MODID, "not_easy_mode/taverncloth");
 
 		// Furnace Recipe
-		Consumer<IFinishedRecipe> c = result -> consumer.accept(result instanceof CookingRecipeBuilder.Result ? new MultiItemCookingResult((CookingRecipeBuilder.Result)result, 9) : result);
-		CookingRecipeBuilder.smelting(Ingredient.of(AQUAMARINE_ORE.get()), AQUAMARINE.get(), 0.5f, 200)
+		Consumer<FinishedRecipe> c = result -> consumer.accept(result instanceof SimpleCookingRecipeBuilder.Result ? new MultiItemCookingResult((SimpleCookingRecipeBuilder.Result)result, 9) : result);
+		SimpleCookingRecipeBuilder.smelting(Ingredient.of(AQUAMARINE_ORE.get()), AQUAMARINE.get(), 0.5f, 200)
 				.unlockedBy("has_aquamarine_ore", has(AQUAMARINE_ORE.get()))
 				.save(c, new ResourceLocation(MODID, "smelting/aquamarine"));
-		CookingRecipeBuilder.blasting(Ingredient.of(AQUAMARINE_ORE.get()), AQUAMARINE.get(), 0.5f, 100)
+		SimpleCookingRecipeBuilder.blasting(Ingredient.of(AQUAMARINE_ORE.get()), AQUAMARINE.get(), 0.5f, 100)
 				.unlockedBy("has_aquamarine_ore", has(AQUAMARINE_ORE.get()))
 				.save(c, new ResourceLocation(MODID, "smelting/aquamarine_blasting"));
 	}
 
-	private void addMortarRecipe(Ingredient in, IItemProvider out, Consumer<IFinishedRecipe> consumer){
+	private void addMortarRecipe(Ingredient in, ItemLike out, Consumer<FinishedRecipe> consumer){
 		addMortarRecipe(in, out, null, consumer);
 	}
 
-	private void addMortarRecipe(Ingredient in, IItemProvider out, @Nullable String save, Consumer<IFinishedRecipe> consumer){
+	private void addMortarRecipe(Ingredient in, ItemLike out, @Nullable String save, Consumer<FinishedRecipe> consumer){
 		ShapelessRecipeBuilder b = ShapelessRecipeBuilder.shapeless(out)
 				.requires(MORTAR.get())
 				.requires(in)

@@ -1,11 +1,11 @@
 package tictim.hearthstones.data;
 
 import com.google.common.base.MoreObjects;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.INBTSerializable;
 import tictim.hearthstones.logic.Tavern;
@@ -14,9 +14,9 @@ import tictim.hearthstones.utils.TavernType;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public final class TavernRecord implements INBTSerializable<CompoundNBT>, Comparable<TavernRecord>{
+public final class TavernRecord implements INBTSerializable<CompoundTag>, Comparable<TavernRecord>{
 	private TavernPos pos;
-	@Nullable private ITextComponent name;
+	@Nullable private Component name;
 	private Owner owner;
 	private TavernType tavernType;
 
@@ -25,10 +25,10 @@ public final class TavernRecord implements INBTSerializable<CompoundNBT>, Compar
 	public TavernRecord(Tavern tavern){
 		update(tavern);
 	}
-	public TavernRecord(CompoundNBT nbt){
+	public TavernRecord(CompoundTag nbt){
 		deserializeNBT(nbt);
 	}
-	public TavernRecord(ITextComponent name, TavernPos pos, @Nullable Owner owner, TavernType tavernType){
+	public TavernRecord(Component name, TavernPos pos, @Nullable Owner owner, TavernType tavernType){
 		this.name = Objects.requireNonNull(name);
 		this.pos = Objects.requireNonNull(pos);
 		this.owner = owner;
@@ -44,7 +44,7 @@ public final class TavernRecord implements INBTSerializable<CompoundNBT>, Compar
 	public BlockPos getPos(){
 		return this.pos.pos;
 	}
-	@Nullable public ITextComponent getName(){
+	@Nullable public Component getName(){
 		return this.name;
 	}
 	public Owner getOwner(){
@@ -75,11 +75,11 @@ public final class TavernRecord implements INBTSerializable<CompoundNBT>, Compar
 	}
 
 	@Override
-	public CompoundNBT serializeNBT(){
-		CompoundNBT nbt = new CompoundNBT();
+	public CompoundTag serializeNBT(){
+		CompoundTag nbt = new CompoundTag();
 		nbt.put("pos", pos.serialize());
-		if(name!=null) nbt.putString("name", ITextComponent.Serializer.toJson(name));
-		CompoundNBT subnbt = owner.serializeNBT();
+		if(name!=null) nbt.putString("name", Component.Serializer.toJson(name));
+		CompoundTag subnbt = owner.serializeNBT();
 		if(!subnbt.isEmpty()) nbt.put("owner", subnbt);
 		if(missing) nbt.putBoolean("missing", true);
 		if(tavernType!=TavernType.NORMAL) nbt.putByte("type", tavernType.id);
@@ -87,9 +87,9 @@ public final class TavernRecord implements INBTSerializable<CompoundNBT>, Compar
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt){
+	public void deserializeNBT(CompoundTag nbt){
 		this.pos = new TavernPos(nbt.getCompound("pos"));
-		if(nbt.contains("name", NBT.TAG_STRING)) this.name = ITextComponent.Serializer.fromJson(nbt.getString("name"));
+		if(nbt.contains("name", NBT.TAG_STRING)) this.name = Component.Serializer.fromJson(nbt.getString("name"));
 		this.owner = new Owner(nbt.getCompound("owner"));
 		this.missing = nbt.getBoolean("missing");
 		this.tavernType = TavernType.of(nbt.getByte("type"));
@@ -98,8 +98,7 @@ public final class TavernRecord implements INBTSerializable<CompoundNBT>, Compar
 	@Override
 	public boolean equals(Object o){
 		if(this==o) return true;
-		if(!(o instanceof TavernRecord)) return false;
-		TavernRecord that = (TavernRecord)o;
+		if(!(o instanceof TavernRecord that)) return false;
 		return missing==that.missing&&
 				pos.equals(that.pos)&&
 				Objects.equals(name, that.name)&&

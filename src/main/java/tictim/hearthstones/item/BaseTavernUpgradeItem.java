@@ -1,28 +1,30 @@
 package tictim.hearthstones.item;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
 import tictim.hearthstones.Hearthstones;
 import tictim.hearthstones.data.GlobalTavernMemory;
 import tictim.hearthstones.data.PlayerTavernMemory;
 import tictim.hearthstones.logic.Tavern;
 import tictim.hearthstones.utils.TavernType;
 
+import net.minecraft.world.item.Item.Properties;
+
 public abstract class BaseTavernUpgradeItem extends Item{
 	public BaseTavernUpgradeItem(Properties properties){
 		super(properties);
 	}
 
-	@Override public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context){
-		TileEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
+	@Override public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context){
+		BlockEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
 		if(te instanceof Tavern){
 			Tavern tavern = (Tavern)te;
 			if(isValidTarget(tavern)){
@@ -33,7 +35,7 @@ public abstract class BaseTavernUpgradeItem extends Item{
 						state = state.setValue(BlockStateProperties.HORIZONTAL_FACING, stateCache.getValue(BlockStateProperties.HORIZONTAL_FACING));
 					}
 					context.getLevel().setBlockAndUpdate(context.getClickedPos(), state);
-					TileEntity te2 = context.getLevel().getBlockEntity(context.getClickedPos());
+					BlockEntity te2 = context.getLevel().getBlockEntity(context.getClickedPos());
 					if(te2 instanceof Tavern){
 						Tavern tavern2 = (Tavern)te2;
 						if(tavern.hasCustomName()) tavern2.setName(tavern.getName());
@@ -44,7 +46,7 @@ public abstract class BaseTavernUpgradeItem extends Item{
 						if(context.getPlayer()==null||!context.getPlayer().isCreative()){
 							stack.shrink(1);
 							ItemStack s = tavern.createUpgradeItem();
-							if(!s.isEmpty()) InventoryHelper.dropItemStack(context.getLevel(), context.getClickedPos().getX()+0.5, context.getClickedPos().getY()+0.5, context.getClickedPos().getZ()+0.5, s);
+							if(!s.isEmpty()) Containers.dropItemStack(context.getLevel(), context.getClickedPos().getX()+0.5, context.getClickedPos().getY()+0.5, context.getClickedPos().getZ()+0.5, s);
 						}
 						if(context.getPlayer()!=null){
 							PlayerTavernMemory memory = PlayerTavernMemory.get(context.getPlayer());
@@ -60,12 +62,12 @@ public abstract class BaseTavernUpgradeItem extends Item{
 							memory.sync();
 						}
 					}
-					context.getLevel().playSound(null, context.getClickedPos().getX()+0.5, context.getClickedPos().getY()+0.5, context.getClickedPos().getZ()+0.5, SoundEvents.ARMOR_EQUIP_LEATHER, SoundCategory.BLOCKS, 0.8f, 1);
-					return ActionResultType.SUCCESS;
+					context.getLevel().playSound(null, context.getClickedPos().getX()+0.5, context.getClickedPos().getY()+0.5, context.getClickedPos().getZ()+0.5, SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.BLOCKS, 0.8f, 1);
+					return InteractionResult.SUCCESS;
 				}
 			}
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	protected boolean isValidTarget(Tavern tavern){

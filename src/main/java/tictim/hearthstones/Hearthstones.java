@@ -1,25 +1,21 @@
 package tictim.hearthstones;
 
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.item.ItemPropertyFunction;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.IItemPropertyGetter;
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.OreFeatureConfig;
-import net.minecraft.world.gen.placement.Placement;
-import net.minecraft.world.gen.placement.TopSolidRangeConfig;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -30,15 +26,15 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tictim.hearthstones.config.ModCfg;
+import tictim.hearthstones.contents.ModBlockEntities;
 import tictim.hearthstones.contents.ModBlocks;
 import tictim.hearthstones.contents.ModEnchantments;
 import tictim.hearthstones.contents.ModItems;
-import tictim.hearthstones.contents.ModTileEntities;
 import tictim.hearthstones.data.PlayerTavernMemory;
 import tictim.hearthstones.datagen.BlockTagGen;
 import tictim.hearthstones.datagen.ItemTagGen;
@@ -48,8 +44,6 @@ import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.proxy.ClientProxy;
 import tictim.hearthstones.proxy.IProxy;
 import tictim.hearthstones.proxy.ServerProxy;
-
-import javax.annotation.Nullable;
 
 @Mod(Hearthstones.MODID)
 @Mod.EventBusSubscriber(modid = Hearthstones.MODID, bus = Bus.MOD)
@@ -63,36 +57,32 @@ public class Hearthstones{
 		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		ModCfg.init();
 
-		ModBlocks.BLOCKS.register(eventBus);
-		ModItems.ITEMS.register(eventBus);
-		ModEnchantments.ENCHANTMENTS.register(eventBus);
-		ModTileEntities.TILE_ENTITIES.register(eventBus);
+		ModBlocks.REGISTER.register(eventBus);
+		ModItems.REGISTER.register(eventBus);
+		ModEnchantments.REGISTER.register(eventBus);
+		ModBlockEntities.REGISTER.register(eventBus);
 	}
 
 	@SubscribeEvent
 	public static void setup(FMLCommonSetupEvent event){
-		Registry.register(
-				WorldGenRegistries.CONFIGURED_FEATURE,
-				new ResourceLocation(MODID, "aquamarine"),
-				Feature.ORE.configured(
-						new OreFeatureConfig(
-								OreFeatureConfig.FillerBlockType.NATURAL_STONE,
-								ModBlocks.AQUAMARINE_ORE.get().defaultBlockState(),
-								5))
-						.decorated(Placement.RANGE.configured(new TopSolidRangeConfig(0, 0, 50))
-								.squared() // TODO what does this shit do
-								.count(12)));
-
-		CapabilityManager.INSTANCE.register(PlayerTavernMemory.class, new Capability.IStorage<PlayerTavernMemory>(){
-			@Nullable @Override public INBT writeNBT(Capability<PlayerTavernMemory> capability, PlayerTavernMemory instance, Direction side){
-				return null;
-			}
-			@Override public void readNBT(Capability<PlayerTavernMemory> capability, PlayerTavernMemory instance, Direction side, INBT nbt){}
-		}, () -> {
-			throw new UnsupportedOperationException();
+		event.enqueueWork(() -> {
+			Registry.register(
+					BuiltinRegistries.CONFIGURED_FEATURE,
+					new ResourceLocation(MODID, "aquamarine"),
+					Feature.ORE.configured(new OreConfiguration(
+									OreConfiguration.Predicates.NATURAL_STONE,
+									ModBlocks.AQUAMARINE_ORE.get().defaultBlockState(),
+									5))
+							.rangeUniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(50))
+							.squared()
+							.count(12));
+			ModNet.init();
 		});
+	}
 
-		ModNet.init();
+	@SubscribeEvent
+	public static void registerCapabilities(RegisterCapabilitiesEvent event){
+		event.register(PlayerTavernMemory.class);
 	}
 
 	@SubscribeEvent
@@ -112,18 +102,21 @@ public class Hearthstones{
 	public static final class Client{
 		@SubscribeEvent
 		public static void clientSetup(FMLClientSetupEvent event){
-			ResourceLocation key = new ResourceLocation("has_cooldown");
-			IItemPropertyGetter itemPropertyGetter = (s, w, e) -> {
-				if(e instanceof PlayerEntity){
-					CompoundNBT tag = s.getTag();
-					return tag!=null&&tag.getBoolean("hasCooldown") ? 1 : 0;
-				}else return 0;
-			};
+			event.enqueueWork(() -> {
+				ResourceLocation key = new ResourceLocation("has_cooldown");
+				//noinspection deprecation
+				ItemPropertyFunction itemPropertyGetter = (s, w, e, wtf) -> { // TODO wtf
+					if(e instanceof Player){
+						CompoundTag tag = s.getTag();
+						return tag!=null&&tag.getBoolean("hasCooldown") ? 1 : 0;
+					}else return 0;
+				};
 
-			ItemModelsProperties.register(ModItems.HEARTHSTONE.get(), key, itemPropertyGetter);
-			ItemModelsProperties.register(ModItems.HEARTHING_PLANKS.get(), key, itemPropertyGetter);
-			ItemModelsProperties.register(ModItems.HEARTHING_GEM.get(), key, itemPropertyGetter);
-			ItemModelsProperties.register(ModItems.COMPANION_HEARTHSTONE.get(), key, itemPropertyGetter);
+				ItemProperties.register(ModItems.HEARTHSTONE.get(), key, itemPropertyGetter);
+				ItemProperties.register(ModItems.HEARTHING_PLANKS.get(), key, itemPropertyGetter);
+				ItemProperties.register(ModItems.HEARTHING_GEM.get(), key, itemPropertyGetter);
+				ItemProperties.register(ModItems.COMPANION_HEARTHSTONE.get(), key, itemPropertyGetter);
+			});
 		}
 	}
 
@@ -136,11 +129,11 @@ public class Hearthstones{
 
 		@SubscribeEvent(priority = EventPriority.LOW)
 		public static void loadBiome(BiomeLoadingEvent event){
-			if(event.getCategory()==Biome.Category.NETHER||event.getCategory()==Biome.Category.THEEND) return;
+			if(event.getCategory()==Biome.BiomeCategory.NETHER||event.getCategory()==Biome.BiomeCategory.THEEND) return;
 
-			ConfiguredFeature<?, ?> aquamarine = WorldGenRegistries.CONFIGURED_FEATURE.get(new ResourceLocation(MODID, "aquamarine"));
+			ConfiguredFeature<?, ?> aquamarine = BuiltinRegistries.CONFIGURED_FEATURE.get(new ResourceLocation(MODID, "aquamarine"));
 			if(aquamarine!=null){
-				event.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, aquamarine);
+				event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, aquamarine);
 			}
 		}
 	}

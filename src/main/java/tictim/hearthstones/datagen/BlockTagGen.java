@@ -1,7 +1,8 @@
 package tictim.hearthstones.datagen;
 
-import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraft.tags.BlockTags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import tictim.hearthstones.Hearthstones;
 import tictim.hearthstones.contents.ModBlocks;
@@ -21,5 +22,8 @@ public class BlockTagGen extends BlockTagsProvider{
 		tag(ORES).addTag(ORES_AQUAMARINE);
 		tag(ORES_AQUAMARINE).add(ModBlocks.AQUAMARINE_ORE.get());
 		tag(TAVERNS).add(ModBlocks.TAVERN.get(), ModBlocks.SHABBY_TAVERN.get(), ModBlocks.GLOBAL_TAVERN.get());
+
+		tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.AQUAMARINE_ORE.get(), ModBlocks.AQUAMARINE_BLOCK.get());
+		tag(BlockTags.NEEDS_STONE_TOOL).add(ModBlocks.AQUAMARINE_ORE.get(), ModBlocks.AQUAMARINE_BLOCK.get());
 	}
 }

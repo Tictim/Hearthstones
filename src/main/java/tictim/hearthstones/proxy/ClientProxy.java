@@ -1,10 +1,10 @@
 package tictim.hearthstones.proxy;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 import tictim.hearthstones.client.screen.HearthstoneScreen;
 import tictim.hearthstones.data.GlobalTavernMemory;
 import tictim.hearthstones.data.PlayerTavernMemory;
@@ -14,14 +14,14 @@ import java.util.Objects;
 
 public class ClientProxy extends ServerProxy{
 	@Override
-	public boolean isOp(PlayerEntity player){
+	public boolean isOp(Player player){
 		return player.getServer()==null ? player.hasPermissions(1) : super.isOp(player);
 	}
 
 	@Override
-	public void openHearthstoneGui(World world, PlayerEntity player){
+	public void openHearthstoneGui(Level world, Player player){
 		if(player.getServer()!=null){
-			if(player instanceof ServerPlayerEntity) super.openHearthstoneGui(world, player);
+			if(player instanceof ServerPlayer) super.openHearthstoneGui(world, player);
 		}else Minecraft.getInstance().setScreen(new HearthstoneScreen(PlayerTavernMemory.get(player)));
 	}
 

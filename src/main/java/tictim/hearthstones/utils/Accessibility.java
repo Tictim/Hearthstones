@@ -13,26 +13,18 @@ public enum Accessibility{
 	}
 
 	public int getMeta(){
-		switch(this){
-			case MODIFIABLE:
-				return 0;
-			case PARTIALLY_MODIFIABLE:
-				return 1;
-			case READ_ONLY:
-				return -1;
-			default:
-				throw new IllegalStateException(name());
-		}
+		return switch(this){
+			case MODIFIABLE -> 0;
+			case PARTIALLY_MODIFIABLE -> 1;
+			case READ_ONLY -> -1;
+		};
 	}
 
 	public static Accessibility fromMeta(int meta){
-		switch(meta){
-			case 0:
-				return MODIFIABLE;
-			case 1:
-				return PARTIALLY_MODIFIABLE;
-			default:
-				return READ_ONLY;
-		}
+		return switch(meta){
+			case 0 -> MODIFIABLE;
+			case 1 -> PARTIALLY_MODIFIABLE;
+			default -> READ_ONLY;
+		};
 	}
 }

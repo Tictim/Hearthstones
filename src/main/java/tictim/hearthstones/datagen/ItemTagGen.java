@@ -1,9 +1,9 @@
 package tictim.hearthstones.datagen;
 
-import net.minecraft.data.BlockTagsProvider;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.ItemTagsProvider;
-import net.minecraft.item.Items;
+import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import tictim.hearthstones.Hearthstones;
@@ -20,6 +20,7 @@ public class ItemTagGen extends ItemTagsProvider{
 		copy(ModTags.Blocks.STORAGE_BLOCKS_AQUAMARINE, ModTags.STORAGE_BLOCKS_AQUAMARINE);
 		copy(ModTags.Blocks.ORES_AQUAMARINE, ModTags.ORES_AQUAMARINE);
 
+		//noinspection unchecked
 		tag(Tags.Items.DUSTS).addTags(ModTags.DUSTS_AQUAMARINE, ModTags.DUSTS_DEEP_BLUE, ModTags.DUSTS_DIAMOND, ModTags.DUSTS_LAPIS);
 		tag(ModTags.DUSTS_AQUAMARINE).add(ModItems.AQUAMARINE_DUST.get());
 		tag(ModTags.DUSTS_DEEP_BLUE).add(ModItems.DEEP_BLUE.get());

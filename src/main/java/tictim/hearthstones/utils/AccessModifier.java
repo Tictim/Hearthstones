@@ -1,8 +1,8 @@
 package tictim.hearthstones.utils;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
 import tictim.hearthstones.data.Owner;
 
 public enum AccessModifier{
@@ -11,33 +11,26 @@ public enum AccessModifier{
 	TEAM,
 	PRIVATE;
 
-	public boolean hasAccessPermission(PlayerEntity player, Owner owner){
-		switch(this){
-			case TEAM:
-				return owner.isOwnerOrOp(player)||owner.isSameTeam(player);
-			case PRIVATE:
-				return owner.isOwnerOrOp(player);
-			default:
-				return true; // case PUBLIC: case PROTECTED:
-		}
+	public boolean hasAccessPermission(Player player, Owner owner){
+		return switch(this){
+			case TEAM -> owner.isOwnerOrOp(player)||owner.isSameTeam(player);
+			case PRIVATE -> owner.isOwnerOrOp(player);
+			default -> true; // case PUBLIC: case PROTECTED:
+		};
 	}
 
-	public boolean hasModifyPermission(PlayerEntity player, Owner owner){
-		switch(this){
-			case TEAM:
-				return owner.isOwnerOrOp(player)||owner.isSameTeam(player);
-			case PROTECTED:
-			case PRIVATE:
-				return owner.isOwnerOrOp(player);
-			default:
-				return true; // case PUBLIC:
-		}
+	public boolean hasModifyPermission(Player player, Owner owner){
+		return switch(this){
+			case TEAM -> owner.isOwnerOrOp(player)||owner.isSameTeam(player);
+			case PROTECTED, PRIVATE -> owner.isOwnerOrOp(player);
+			default -> true; // case PUBLIC:
+		};
 	}
 
-	private TranslationTextComponent localized;
+	private TranslatableComponent localized;
 
-	public ITextComponent toTextComponent(){
-		if(localized==null) localized = new TranslationTextComponent("info.hearthstones.access."+this.name().toLowerCase());
+	public Component toTextComponent(){
+		if(localized==null) localized = new TranslatableComponent("info.hearthstones.access."+this.name().toLowerCase());
 		return localized;
 	}
 

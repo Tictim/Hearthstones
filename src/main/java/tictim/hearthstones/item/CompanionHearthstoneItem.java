@@ -1,15 +1,17 @@
 package tictim.hearthstones.item;
 
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import tictim.hearthstones.contents.ModTags;
 import tictim.hearthstones.logic.CompanionHearthstone;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class CompanionHearthstoneItem extends GuiHearthstoneItem{
 	public CompanionHearthstoneItem(Properties properties){
@@ -20,9 +22,9 @@ public class CompanionHearthstoneItem extends GuiHearthstoneItem{
 		return ModTags.HEARTHSTONE_MATERIAL.contains(repair.getItem());
 	}
 
-	@Override public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("info.hearthstones.hearthstone.tooltip"));
-		tooltip.add(new TranslationTextComponent("info.hearthstones.companion_hearthstone.tooltip.0"));
-		tooltip.add(new TranslationTextComponent("info.hearthstones.companion_hearthstone.tooltip.1"));
+	@Override public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+		tooltip.add(new TranslatableComponent("info.hearthstones.hearthstone.tooltip"));
+		tooltip.add(new TranslatableComponent("info.hearthstones.companion_hearthstone.tooltip.0"));
+		tooltip.add(new TranslatableComponent("info.hearthstones.companion_hearthstone.tooltip.1"));
 	}
 }

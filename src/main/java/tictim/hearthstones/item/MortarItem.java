@@ -1,10 +1,14 @@
 package tictim.hearthstones.item;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.Tags;
 
+import java.util.Random;
+
 public class MortarItem extends Item{
+	private static final Random RNG = new Random();
+
 	public MortarItem(Properties properties){
 		super(properties);
 	}
@@ -17,7 +21,7 @@ public class MortarItem extends Item{
 	@Override
 	public ItemStack getContainerItem(ItemStack stack){
 		ItemStack copy = stack.copy();
-		if(copy.hurt(1, Item.random, null)){
+		if(copy.hurt(1, RNG, null)){
 			copy.shrink(1);
 			copy.setDamageValue(0);
 		}

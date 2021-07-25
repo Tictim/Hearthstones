@@ -1,13 +1,13 @@
 package tictim.hearthstones.item;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.contents.ModBlocks;
 import tictim.hearthstones.logic.Tavern;
@@ -24,11 +24,11 @@ public class ShabbyTavernUpgradeItem extends BaseTavernUpgradeItem{
 		return ModBlocks.SHABBY_TAVERN.get().defaultBlockState();
 	}
 
-	@Override public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+	@Override public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
 		if(this.allowdedIn(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
 	}
 
-	@Override public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		tooltip.add(new TranslationTextComponent("info.hearthstones.tattered_taverncloth.tooltip"));
+	@Override public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+		tooltip.add(new TranslatableComponent("info.hearthstones.tattered_taverncloth.tooltip"));
 	}
 }

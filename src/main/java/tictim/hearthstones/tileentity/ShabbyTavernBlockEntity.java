@@ -1,14 +1,16 @@
 package tictim.hearthstones.tileentity;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import tictim.hearthstones.contents.ModBlockEntities;
 import tictim.hearthstones.contents.ModItems;
-import tictim.hearthstones.contents.ModTileEntities;
 import tictim.hearthstones.utils.HearthingContext;
 import tictim.hearthstones.utils.TavernType;
 
-public class ShabbyTavernTileEntity extends BaseTavernTileEntity{
-	public ShabbyTavernTileEntity(){
-		super(ModTileEntities.SHABBY_TAVERN.get());
+public class ShabbyTavernBlockEntity extends TavernBlockEntity{
+	public ShabbyTavernBlockEntity(BlockPos pos, BlockState state){
+		super(ModBlockEntities.SHABBY_TAVERN.get(), pos, state);
 	}
 
 	@Override public TavernType tavernType(){

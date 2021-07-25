@@ -2,6 +2,6 @@
 @MethodsReturnNonnullByDefault
 package tictim.hearthstones.client.render;
 
-import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.MethodsReturnNonnullByDefault;
 
 import javax.annotation.ParametersAreNonnullByDefault;

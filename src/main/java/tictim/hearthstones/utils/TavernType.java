@@ -1,8 +1,8 @@
 package tictim.hearthstones.utils;
 
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectArrayMap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
 import tictim.hearthstones.contents.ModItems;
 
 import java.util.Objects;
@@ -50,46 +50,4 @@ public final class TavernType{
 	public void resetRenderStack(){
 		stackForRender = null;
 	}
-
-	/*
-	public TETavern createTileEntity(){
-		switch(this){
-		case SHABBY: return new TETavernShabby();
-		case GLOBAL: return new TETavernGlobal();
-		case NORMAL: return new TETavern();
-		default: throw new IllegalStateException("Fix this shithead");
-		}
-	}
-
-	public Rarity getRarity(){
-		return this==TavernType.GLOBAL ? Rarity.UNCOMMON : Rarity.COMMON;
-	}
-
-	public Block getTavernBlock(){
-		switch(this){
-		case NORMAL: return ModBlocks.TAVERN.get();
-		case SHABBY: return ModBlocks.SHABBY_TAVERN.get();
-		case GLOBAL: return ModBlocks.GLOBAL_TAVERN.get();
-		default: throw new IllegalStateException("Fix this shithead");
-		}
-	}
-
-	public Item getTavernBlockItem(){
-		switch(this){
-		case NORMAL: return ModItems.TAVERN.get();
-		case SHABBY: return ModItems.SHABBY_TAVERN.get();
-		case GLOBAL: return ModItems.GLOBAL_TAVERN.get();
-		default: throw new IllegalStateException("Fix this shithead");
-		}
-	}
-
-	public Item getTavernclothItem(){
-		switch(this){
-		case NORMAL: return ModItems.TAVERNCLOTH.get();
-		case SHABBY: return ModItems.TATTERED_TAVERNCLOTH.get();
-		case GLOBAL: return ModItems.BLUE_TAVERNCLOTH.get();
-		default: throw new IllegalStateException("Fix this shithead");
-		}
-	}
-*/
 }

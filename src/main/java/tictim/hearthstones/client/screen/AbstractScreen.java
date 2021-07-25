@@ -1,69 +1,62 @@
 package tictim.hearthstones.client.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.util.text.ITextComponent;
-import org.lwjgl.opengl.GL13;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 public abstract class AbstractScreen extends Screen{
 	protected int xSize, ySize;
-	private int guiLeft;
-	private int guiTop;
+	private int leftPos;
+	private int topPos;
 
-	protected AbstractScreen(ITextComponent titleIn){
+	protected AbstractScreen(Component titleIn){
 		super(titleIn);
 	}
 
 	public int getLeft(){
-		return guiLeft;
+		return leftPos;
 	}
 	public int getTop(){
-		return guiTop;
+		return topPos;
 	}
 
 	protected abstract void onInit();
 	protected void onResize(){}
 
-	protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY){}
-	protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY){}
-	protected void drawTooltip(MatrixStack matrixStack, int mouseX, int mouseY){
-		for(Widget button : this.buttons) button.renderToolTip(matrixStack, mouseX, mouseY);
+	protected void renderBg(PoseStack pose, float partialTicks, int mouseX, int mouseY){}
+	protected void renderLabels(PoseStack pose, int mouseX, int mouseY){}
+	protected void drawTooltip(PoseStack pose, int mouseX, int mouseY){
+		for(var w : this.renderables)
+			if(w instanceof AbstractWidget w2)
+				w2.renderToolTip(pose, mouseX, mouseY);
 	}
 
 	@Override protected void init(){
 		onResize();
-		this.guiLeft = (this.width-this.xSize)/2;
-		this.guiTop = (this.height-this.ySize)/2;
+		this.leftPos = (this.width-this.xSize)/2;
+		this.topPos = (this.height-this.ySize)/2;
 		onInit();
 	}
 
 	// ripping off ContainerScreen? Yes papa
-	@Override public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
-		this.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
-
-		//noinspection deprecation
-		RenderSystem.disableRescaleNormal();
+	@Override public void render(PoseStack pose, int mouseX, int mouseY, float partialTicks){
+		this.renderBg(pose, partialTicks, mouseX, mouseY);
 		RenderSystem.disableDepthTest();
-		super.render(matrixStack, mouseX, mouseY, partialTicks);
+		super.render(pose, mouseX, mouseY, partialTicks);
 
-		matrixStack.pushPose();
-		matrixStack.translate(guiLeft, guiTop, 0);
-		//noinspection deprecation
-		RenderSystem.color4f(1, 1, 1, 1);
-		//noinspection deprecation
-		RenderSystem.enableRescaleNormal();
+		PoseStack modelView = RenderSystem.getModelViewStack();
+		modelView.pushPose();
+		modelView.translate(leftPos, topPos, 0);
+		RenderSystem.applyModelViewMatrix();
+		RenderSystem.setShaderColor(1, 1, 1, 1);
 
-		//noinspection deprecation
-		RenderSystem.glMultiTexCoord2f(GL13.GL_TEXTURE2, 240, 240);
-		//noinspection deprecation
-		RenderSystem.color4f(1, 1, 1, 1);
+		this.renderLabels(pose, mouseX, mouseY);
 
-		this.drawGuiContainerForegroundLayer(matrixStack, mouseX, mouseY);
-
-		matrixStack.popPose();
-		drawTooltip(matrixStack, mouseX, mouseY);
+		modelView.popPose();
+		drawTooltip(pose, mouseX, mouseY);
+		RenderSystem.applyModelViewMatrix();
 		RenderSystem.enableDepthTest();
 	}
 

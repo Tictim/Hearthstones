@@ -1,12 +1,12 @@
 package tictim.hearthstones.data;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import tictim.hearthstones.logic.Tavern;
 import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.net.SyncTavernMemory;
@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class PlayerTavernMemory extends TavernMemory implements ICapabilityProvider{
-	private final PlayerEntity player;
+	private final Player player;
 
 	private int cooldown;
 	@Nullable
@@ -25,13 +25,13 @@ public class PlayerTavernMemory extends TavernMemory implements ICapabilityProvi
 	@Nullable
 	private TavernPos homeTavern;
 
-	public PlayerTavernMemory(PlayerEntity player){
+	public PlayerTavernMemory(Player player){
 		this.player = player;
 	}
 
 	public void sync(){
-		if(player instanceof ServerPlayerEntity)
-			ModNet.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)player), new SyncTavernMemory(this, GlobalTavernMemory.get(), player));
+		if(player instanceof ServerPlayer)
+			ModNet.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer)player), new SyncTavernMemory(this, GlobalTavernMemory.get(), player));
 	}
 
 	public void requestSync(){
@@ -96,15 +96,15 @@ public class PlayerTavernMemory extends TavernMemory implements ICapabilityProvi
 	}
 
 	@Override
-	public CompoundNBT serializeNBT(){
-		CompoundNBT nbt = super.serializeNBT();
+	public CompoundTag serializeNBT(){
+		CompoundTag nbt = super.serializeNBT();
 		if(selected!=null) nbt.put("selected", selected.serialize());
 		if(homeTavern!=null) nbt.put("homeTavern", homeTavern.serialize());
 		return nbt;
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt){
+	public void deserializeNBT(CompoundTag nbt){
 		super.deserializeNBT(nbt);
 		selected = nbt.contains("selected", NBT.TAG_COMPOUND) ? new TavernPos(nbt.getCompound("selected")) : null;
 		homeTavern = nbt.contains("homeTavern", NBT.TAG_COMPOUND) ? new TavernPos(nbt.getCompound("homeTavern")) : null;
@@ -116,12 +116,12 @@ public class PlayerTavernMemory extends TavernMemory implements ICapabilityProvi
 		return PLAYER;
 	}
 
-	public static PlayerTavernMemory get(PlayerEntity player){
+	public static PlayerTavernMemory get(Player player){
 		return player.getCapability(PLAYER).orElseThrow(() -> new RuntimeException("Unexpected"));
 	}
 
 	@Nullable
-	public static PlayerTavernMemory tryGet(PlayerEntity player){
+	public static PlayerTavernMemory tryGet(Player player){
 		return player.getCapability(PLAYER).orElse(null);
 	}
 }

@@ -1,6 +1,6 @@
 package tictim.hearthstones.logic;
 
-import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.stats.Stats;
 import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.utils.HearthingContext;
@@ -18,7 +18,7 @@ public class HearthingGemHearthstone extends GuiHearthstone{
 				ctx.getStack().shrink(1);
 				ctx.getPlayer().awardStat(Stats.ITEM_BROKEN.get(ctx.getStack().getItem()));
 				ctx.getStack().setDamageValue(0);
-			}else ctx.getStack().hurtAndBreak(1, ctx.getPlayer(), player -> player.broadcastBreakEvent(EquipmentSlotType.MAINHAND));
+			}else ctx.getStack().hurtAndBreak(1, ctx.getPlayer(), player -> player.broadcastBreakEvent(EquipmentSlot.MAINHAND));
 		}
 	}
 }

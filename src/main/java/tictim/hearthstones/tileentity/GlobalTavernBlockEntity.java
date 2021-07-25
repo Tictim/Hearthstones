@@ -1,14 +1,16 @@
 package tictim.hearthstones.tileentity;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import tictim.hearthstones.contents.ModBlockEntities;
 import tictim.hearthstones.contents.ModItems;
-import tictim.hearthstones.contents.ModTileEntities;
 import tictim.hearthstones.data.GlobalTavernMemory;
 import tictim.hearthstones.utils.TavernType;
 
-public class GlobalTavernTileEntity extends BaseTavernTileEntity{
-	public GlobalTavernTileEntity(){
-		super(ModTileEntities.GLOBAL_TAVERN.get());
+public class GlobalTavernBlockEntity extends TavernBlockEntity{
+	public GlobalTavernBlockEntity(BlockPos pos, BlockState state){
+		super(ModBlockEntities.GLOBAL_TAVERN.get(), pos, state);
 	}
 
 	@Override public TavernType tavernType(){

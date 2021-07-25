@@ -1,6 +1,6 @@
 package tictim.hearthstones.contents;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -11,7 +11,7 @@ import tictim.hearthstones.recipes.EasyModeCondition;
 @Mod.EventBusSubscriber(modid = Hearthstones.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRecipes{
 	@SubscribeEvent
-	public static void registerRecipes(RegistryEvent.Register<IRecipeSerializer<?>> event){
+	public static void registerRecipes(RegistryEvent.Register<RecipeSerializer<?>> event){
 		CraftingHelper.register(EasyModeCondition.Serializer.INSTANCE);
 	}
 }

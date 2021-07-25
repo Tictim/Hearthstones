@@ -1,7 +1,7 @@
 package tictim.hearthstones.logic;
 
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import tictim.hearthstones.config.HearthstoneConfig;
 import tictim.hearthstones.data.TavernRecord;
 import tictim.hearthstones.utils.HearthingContext;
@@ -16,13 +16,13 @@ public class GuiHearthstone extends BaseHearthstone{
 	@Nullable @Override public TavernRecord getDestination(HearthingContext ctx){
 		return ctx.getMemory().getSelectedTavern();
 	}
-	@Override public ITextComponent invalidDestinationError(){
-		return new TranslationTextComponent("info.hearthstones.hearthstone.tavern_missing");
+	@Override public Component invalidDestinationError(){
+		return new TranslatableComponent("info.hearthstones.hearthstone.tavern_missing");
 	}
-	@Override public ITextComponent noSelectionError(){
-		return new TranslationTextComponent("info.hearthstones.hearthstone.no_selected");
+	@Override public Component noSelectionError(){
+		return new TranslatableComponent("info.hearthstones.hearthstone.no_selected");
 	}
-	@Override public ITextComponent guideText(){
-		return new TranslationTextComponent("info.hearthstones.hearthstone.help");
+	@Override public Component guideText(){
+		return new TranslatableComponent("info.hearthstones.hearthstone.help");
 	}
 }

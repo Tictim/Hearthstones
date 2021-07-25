@@ -1,6 +1,6 @@
 package tictim.hearthstones.net;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 import tictim.hearthstones.data.Owner;
 import tictim.hearthstones.data.TavernPos;
 import tictim.hearthstones.utils.Accessibility;
@@ -11,12 +11,12 @@ import javax.annotation.Nullable;
 public class OpenTavernScreen{
 	public TavernPos pos;
 	public TavernType type;
-	@Nullable public ITextComponent name;
+	@Nullable public Component name;
 	public Accessibility access;
 	public Owner owner;
 	public boolean isHome;
 
-	public OpenTavernScreen(TavernPos pos, TavernType type, @Nullable ITextComponent name, Accessibility access, Owner owner, boolean isHome){
+	public OpenTavernScreen(TavernPos pos, TavernType type, @Nullable Component name, Accessibility access, Owner owner, boolean isHome){
 		this.pos = pos;
 		this.type = type;
 		this.name = name;

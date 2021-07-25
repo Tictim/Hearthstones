@@ -1,44 +1,43 @@
 package tictim.hearthstones.block;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import tictim.hearthstones.data.GlobalTavernMemory;
 import tictim.hearthstones.data.TavernPos;
-import tictim.hearthstones.tileentity.BaseTavernTileEntity;
-import tictim.hearthstones.tileentity.GlobalTavernTileEntity;
+import tictim.hearthstones.tileentity.GlobalTavernBlockEntity;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class GlobalTavernBlock extends BaseTavernBlock{
-	@Override public BaseTavernTileEntity createTileEntity(BlockState state, IBlockReader world){
-		return new GlobalTavernTileEntity();
+	@Nullable @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return new GlobalTavernBlockEntity(pos, state);
 	}
 
-	@Override public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	@Override public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
-		tooltip.add(new TranslationTextComponent("info.hearthstones.tavern.global.tooltip.1"));
+		tooltip.add(new TranslatableComponent("info.hearthstones.tavern.global.tooltip.1"));
 	}
 
-	@Override protected void addTipInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	@Override protected void addTipInformation(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
 		super.addTipInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add(new TranslationTextComponent("info.hearthstones.tavern.global.tooltip.0"));
+		tooltip.add(new TranslatableComponent("info.hearthstones.tavern.global.tooltip.0"));
 	}
 
 	@Override
-	public void playerWillDestroy(World world, BlockPos pos, BlockState state, PlayerEntity player){
+	public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player){
 		super.playerWillDestroy(world, pos, state, player);
 		if(!world.isClientSide){
-			TileEntity te = world.getBlockEntity(pos);
-			if(te instanceof GlobalTavernTileEntity){
+			BlockEntity te = world.getBlockEntity(pos);
+			if(te instanceof GlobalTavernBlockEntity){
 				GlobalTavernMemory.get().delete(new TavernPos(te));
 			}
 		}

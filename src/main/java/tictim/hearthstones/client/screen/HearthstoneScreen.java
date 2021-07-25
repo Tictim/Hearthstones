@@ -1,23 +1,23 @@
 package tictim.hearthstones.client.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.chat.NarratorChatListener;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.client.gui.GuiUtils;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.fmlclient.gui.GuiUtils;
 import tictim.hearthstones.Hearthstones;
 import tictim.hearthstones.client.render.TavernRenderHelper;
 import tictim.hearthstones.client.utils.TavernSign;
@@ -65,10 +65,11 @@ public class HearthstoneScreen extends AbstractScreen{
 		this.ySize = this.height;
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public void resetTavernButtons(){
-		this.buttons.removeIf(b -> b instanceof TavernButton||b instanceof TavernButton.PropertyButton);
-		this.children.removeIf(b -> b instanceof TavernButton||b instanceof TavernButton.PropertyButton);
-		RegistryKey<World> dim = minecraft.player.level.dimension();
+		this.renderables.removeIf(b -> b instanceof TavernButton||b instanceof TavernButton.PropertyButton);
+		this.children().removeIf(b -> b instanceof TavernButton||b instanceof TavernButton.PropertyButton);
+		ResourceKey<Level> dim = minecraft.level.dimension();
 		TreeSet<TavernRecord> set = new TreeSet<>((e1, e2) -> {
 			int i;
 			// home
@@ -95,42 +96,34 @@ public class HearthstoneScreen extends AbstractScreen{
 
 	private void createButtons(Collection<TavernRecord> taverns, boolean isFromGlobal){
 		for(TavernRecord e : taverns){
-			TavernButton button = this.addButton(new TavernButton(getLeft(), getTop()+heightCache, e, isFromGlobal));
+			TavernButton button = this.addWidget(new TavernButton(getLeft(), getTop()+heightCache, e, isFromGlobal));
 			button.generatePropertyButtons();
 			heightCache += TavernButton.HEIGHT+(7*2)+6;
 		}
 	}
 
 	@Override
-	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
+	public void render(PoseStack pose, int mouseX, int mouseY, float partialTicks){
 		if(flagResetButtons) resetTavernButtons();
 
 		int mouseY2 = mouseY+yOffset;
-		this.renderBackground(matrixStack);
-		matrixStack.pushPose();
-		matrixStack.translate(0, -yOffset, 0);
-		super.render(matrixStack, mouseX, mouseY2, partialTicks);
-		matrixStack.popPose();
-		super.drawTooltip(matrixStack, mouseX, mouseY);
-		this.yOffsetFloat = MathHelper.lerp(0.4, yOffsetFloat, this.yOffsetDest = MathHelper.clamp(yOffsetDest, 0, Math.max(0, heightCache-width/2)));
+		this.renderBackground(pose);
+		pose.pushPose();
+		pose.translate(0, -yOffset, 0);
+		super.render(pose, mouseX, mouseY2, partialTicks);
+		pose.popPose();
+		super.drawTooltip(pose, mouseX, mouseY);
+		this.yOffsetFloat = Mth.lerp(0.4, yOffsetFloat, this.yOffsetDest = Mth.clamp(yOffsetDest, 0, Math.max(0, heightCache-width/2)));
 		this.yOffset = (int)Math.round(yOffsetFloat);
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY){
-		if(this.buttons.isEmpty()) drawCenteredString(matrixStack, font, I18n.get("info.hearthstones.screen.empty"), this.xSize/2, this.ySize/2-5, 0xFFFFFF);
-		/*else{
-			String s1 = String.format("yOffset: %d (%s)", yOffset, ItemStack.DECIMALFORMAT.format(yOffsetFloat));
-			String s2 = String.format("yOffsetDest: %s ", yOffsetDest);
-			String s3 = String.format("heightCache: %s ", heightCache-width/2);
-			this.drawString(this.font, s1, this.xSize+this.getLeft()-this.font.getStringWidth(s1), yOffset-this.getTop(), 0xFFFFFF);
-			this.drawString(this.font, s2, this.xSize+this.getLeft()-this.font.getStringWidth(s2), yOffset-this.getTop()+10, 0xFFFFFF);
-			this.drawString(this.font, s3, this.xSize+this.getLeft()-this.font.getStringWidth(s3), yOffset-this.getTop()+20, 0xFFFFFF);
-		}*/
+	protected void renderLabels(PoseStack pose, int mouseX, int mouseY){
+		if(this.renderables.isEmpty()) drawCenteredString(pose, font, I18n.get("info.hearthstones.screen.empty"), this.xSize/2, this.ySize/2-5, 0xFFFFFF);
 	}
 
 	@Override
-	protected void drawTooltip(MatrixStack matrixStack, int mouseX, int mouseY){}
+	protected void drawTooltip(PoseStack pose, int mouseX, int mouseY){}
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button){
@@ -151,19 +144,20 @@ public class HearthstoneScreen extends AbstractScreen{
 	}
 
 	@Override
-	public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_){
-		if(super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_)) return true;
-		InputMappings.Input mouseKey = InputMappings.getKey(p_keyPressed_1_, p_keyPressed_2_);
-		if(p_keyPressed_1_==256||this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey)){
-			removed();
+	public boolean keyPressed(int keyCode, int scanCode, int modifier){
+		if(super.keyPressed(keyCode, scanCode, modifier)) return true;
+		InputConstants.Key mouseKey = InputConstants.getKey(keyCode, scanCode);
+		//noinspection ConstantConditions
+		if(this.minecraft.options.keyInventory.getKey().equals(mouseKey)){
+			onClose();
 			return true;
 		}else return false;
 	}
 
-	private static final List<ITextComponent> howto1 = Collections.singletonList(new TranslationTextComponent("info.hearthstones.screen.howtouse.1"));
-	private static final List<ITextComponent> howto2 = Arrays.asList(
-			new TranslationTextComponent("info.hearthstones.screen.howtouse.1"),
-			new TranslationTextComponent("info.hearthstones.screen.howtouse.2"));
+	private static final List<Component> howto1 = Collections.singletonList(new TranslatableComponent("info.hearthstones.screen.howtouse.1"));
+	private static final List<Component> howto2 = Arrays.asList(
+			new TranslatableComponent("info.hearthstones.screen.howtouse.1"),
+			new TranslatableComponent("info.hearthstones.screen.howtouse.2"));
 
 	private class TavernButton extends Button{
 		public static final int BASE_WIDTH = 179;
@@ -177,7 +171,7 @@ public class HearthstoneScreen extends AbstractScreen{
 		private final Map<TavernProperty, PropertyButton> properties = new HashMap<>();
 
 		private TavernButton(int x, int y, TavernRecord tavern, boolean isFromGlobal){
-			super(x, y, WIDTH, HEIGHT, StringTextComponent.EMPTY, button -> {});
+			super(x, y, WIDTH, HEIGHT, TextComponent.EMPTY, button -> {});
 			this.tavern = tavern;
 			this.sign = TavernSign.of(tavern);
 			this.isFromGlobal = isFromGlobal;
@@ -188,16 +182,15 @@ public class HearthstoneScreen extends AbstractScreen{
 		}
 
 		@Override
-		public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
+		public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks){
 			if(this.visible){
 				matrixStack.pushPose();
-				//noinspection deprecation
-				RenderSystem.color4f(1, 1, 1, 1);
+				RenderSystem.setShaderColor(1, 1, 1, 1);
 				RenderSystem.enableBlend();
 				RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 				matrixStack.translate(x, y, 0);
 				TavernRenderHelper.renderTavernUIBase(matrixStack, tavern.getTavernType(), memory.getSelectedTavern()==tavern);
-				matrixStack.translate(6*2, 1*2, 0);
+				matrixStack.translate(6*2, 2, 0);
 				TavernRenderHelper.renderAccess(matrixStack, tavern.getOwner().getAccessModifier());
 				matrixStack.popPose();
 
@@ -229,17 +222,13 @@ public class HearthstoneScreen extends AbstractScreen{
 			TavernPos pos = tavern.getTavernPos();
 			ModNet.CHANNEL.sendToServer(new TavernMemoryOperation(pos, operation));
 			switch(operation){
-				case TavernMemoryOperation.SELECT:
-					memory.select(pos);
-					break;
-				case TavernMemoryOperation.DELETE:
-					memory.delete(pos);
-					break;
+				case TavernMemoryOperation.SELECT -> memory.select(pos);
+				case TavernMemoryOperation.DELETE -> memory.delete(pos);
 			}
 		}
 
 
-		public void renderToolTip(MatrixStack matrixStack, int mouseX, int mouseY){
+		public void renderToolTip(PoseStack matrixStack, int mouseX, int mouseY){
 			if(isHovered()){
 				for(PropertyButton propertyButton : this.properties.values()) if(propertyButton.isHovered()) return;
 				GuiUtils.drawHoveringText(matrixStack, isFromGlobal ? howto1 : howto2, mouseX, mouseY, HearthstoneScreen.this.width, HearthstoneScreen.this.height, -1, font);
@@ -252,7 +241,7 @@ public class HearthstoneScreen extends AbstractScreen{
 			for(int i1 = values.length-1; i1>=0; i1--){
 				TavernProperty property = values[i1];
 				if(property.matches(this))
-					this.properties.put(property, addButton(new PropertyButton(this.x+WIDTH-8-16*(i++), this.y+HEIGHT-22, property)));
+					this.properties.put(property, addWidget(new PropertyButton(this.x+WIDTH-8-16*(i++), this.y+HEIGHT-22, property)));
 			}
 		}
 
@@ -260,7 +249,7 @@ public class HearthstoneScreen extends AbstractScreen{
 			private final TavernProperty property;
 
 			public PropertyButton(int widthIn, int heightIn, TavernProperty property){
-				super(widthIn, heightIn, 14, 14, StringTextComponent.EMPTY, e -> {});
+				super(widthIn, heightIn, 14, 14, TextComponent.EMPTY, e -> {});
 				this.property = property;
 			}
 
@@ -270,13 +259,13 @@ public class HearthstoneScreen extends AbstractScreen{
 			}
 
 			@Override
-			public void renderButton(MatrixStack matrixStack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_){
-				minecraft.getTextureManager().bind(HearthstoneScreen.ICONS);
+			public void renderButton(PoseStack matrixStack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_){
+				RenderSystem.setShaderTexture(0, HearthstoneScreen.ICONS);
 				blit(matrixStack, this.x, this.y, 7*2*property.ordinal(), 0, 7*2, 7*2);
 			}
 
 			@Override
-			public void renderToolTip(MatrixStack matrixStack, int mouseX, int mouseY){
+			public void renderToolTip(PoseStack matrixStack, int mouseX, int mouseY){
 				if(isHovered) GuiUtils.drawHoveringText(matrixStack, property.getTooltip(), mouseX, mouseY, HearthstoneScreen.this.width, HearthstoneScreen.this.height, -1, font);
 			}
 		}
@@ -288,15 +277,15 @@ public class HearthstoneScreen extends AbstractScreen{
 		GLOBAL(button -> button.isFromGlobal),
 		SHABBY(button -> button.tavern.getTavernType()==TavernType.SHABBY),
 		TOO_FAR(button -> {
-			PlayerEntity player = Minecraft.getInstance().player;
-			return (player.getItemInHand(Hand.MAIN_HAND).getItem()==ModItems.HEARTHING_GEM.get()||player.getItemInHand(Hand.OFF_HAND).getItem()==ModItems.HEARTHING_GEM.get())&&
+			Player player = Minecraft.getInstance().player;
+			return (player.getItemInHand(InteractionHand.MAIN_HAND).getItem()==ModItems.HEARTHING_GEM.get()||player.getItemInHand(InteractionHand.OFF_HAND).getItem()==ModItems.HEARTHING_GEM.get())&&
 					(!button.tavern.getDimensionType().equals(player.level.dimension().location())||
 							Math.sqrt(player.distanceToSqr(button.tavern.getPos().getX(), button.tavern.getPos().getY(), button.tavern.getPos().getZ()))>ModCfg.hearthingGem.travelDistanceThreshold());
 		});
 
 		private final Predicate<TavernButton> matches;
-		private final List<ITextComponent> tooltip = Collections.singletonList(
-				new TranslationTextComponent("info.hearthstones.screen.property."+name().toLowerCase()));
+		private final List<Component> tooltip = Collections.singletonList(
+				new TranslatableComponent("info.hearthstones.screen.property."+name().toLowerCase()));
 
 		TavernProperty(Predicate<TavernButton> matches){
 			this.matches = matches;
@@ -306,7 +295,7 @@ public class HearthstoneScreen extends AbstractScreen{
 			return matches.test(button);
 		}
 
-		public List<ITextComponent> getTooltip(){
+		public List<Component> getTooltip(){
 			return tooltip;
 		}
 	}

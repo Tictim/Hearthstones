@@ -1,22 +1,22 @@
 package tictim.hearthstones.net;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.Registry;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkRegistry;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 import tictim.hearthstones.Hearthstones;
 import tictim.hearthstones.client.screen.HearthstoneScreen;
 import tictim.hearthstones.client.screen.TavernScreen;
@@ -55,22 +55,21 @@ public final class ModNet{
 			NetworkEvent.Context context = contextSupplier.get();
 			if(context.getDirection()!=NetworkDirection.PLAY_TO_SERVER) return;
 			context.enqueueWork(() -> {
-				ServerPlayerEntity player = context.getSender();
+				ServerPlayer player = context.getSender();
 				if(player==null){
 					Hearthstones.LOGGER.error("Sender doesn't exists.");
 					return;
 				}
-				World w = Objects.requireNonNull(player.getServer()).getLevel(RegistryKey.create(Registry.DIMENSION_REGISTRY, packet.pos.dim));
+				Level w = Objects.requireNonNull(player.getServer()).getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, packet.pos.dim));
 				if(w==null){
 					Hearthstones.LOGGER.error("Dimension {} is not loaded yet.", packet.pos.dim);
 					return;
 				}
-				TileEntity te = w.getBlockEntity(packet.pos.pos);
-				if(!(te instanceof Tavern)){
+				BlockEntity te = w.getBlockEntity(packet.pos.pos);
+				if(!(te instanceof Tavern tavern)){
 					Hearthstones.LOGGER.error("There's no tavern block in {}.", packet.pos);
 					return;
 				}
-				Tavern tavern = (Tavern)te;
 				Owner o = tavern.owner();
 				if(!o.hasModifyPermission(player)){
 					Hearthstones.LOGGER.warn("{} cannot modify option of Tavern on {}.", player, packet.pos);
@@ -104,25 +103,20 @@ public final class ModNet{
 			NetworkEvent.Context context = contextSupplier.get();
 			if(context.getDirection()!=NetworkDirection.PLAY_TO_SERVER) return;
 			context.enqueueWork(() -> {
-				ServerPlayerEntity player = context.getSender();
+				ServerPlayer player = context.getSender();
 				if(player==null){
 					Hearthstones.LOGGER.error("Sender doesn't exists.");
 					return;
 				}
 				PlayerTavernMemory memory = PlayerTavernMemory.get(player);
 				switch(packet.operation){
-					case TavernMemoryOperation.SELECT:
-						memory.select(packet.pos);
-						break;
-					case TavernMemoryOperation.DELETE:
-						memory.delete(packet.pos);
-						break;
-					case TavernMemoryOperation.SET_HOME:
-						memory.setHomeTavern(packet.pos);
-						break;
-					default:
+					case TavernMemoryOperation.SELECT -> memory.select(packet.pos);
+					case TavernMemoryOperation.DELETE -> memory.delete(packet.pos);
+					case TavernMemoryOperation.SET_HOME -> memory.setHomeTavern(packet.pos);
+					default -> {
 						Hearthstones.LOGGER.warn("Unknown operation {} on TavernMemory#operate", packet.operation);
 						return;
+					}
 				}
 				ModNet.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SyncTavernMemory(memory, GlobalTavernMemory.get(), player));
 			});
@@ -132,7 +126,7 @@ public final class ModNet{
 		ModNet.CHANNEL.registerMessage(3, SyncTavernMemoryRequest.class, (packet, buffer) -> {}, buffer -> new SyncTavernMemoryRequest(), (packet, contextSupplier) -> {
 			NetworkEvent.Context context = contextSupplier.get();
 			if(context.getDirection()!=NetworkDirection.PLAY_TO_SERVER) return;
-			ServerPlayerEntity player = context.getSender();
+			ServerPlayer player = context.getSender();
 			if(player==null){
 				Hearthstones.LOGGER.error("Sender doesn't exists.");
 				return;
@@ -163,14 +157,14 @@ public final class ModNet{
 		});
 	}
 
-	private static void writeOptionalName(PacketBuffer buffer, @Nullable ITextComponent name){
+	private static void writeOptionalName(FriendlyByteBuf buffer, @Nullable Component name){
 		buffer.writeBoolean(name!=null);
-		if(name!=null) buffer.writeUtf(ITextComponent.Serializer.toJson(name));
+		if(name!=null) buffer.writeUtf(Component.Serializer.toJson(name));
 	}
 
 	@Nullable
-	private static ITextComponent readOptionalName(PacketBuffer buffer){
-		return buffer.readBoolean() ? ITextComponent.Serializer.fromJson(buffer.readUtf(32767)) : null;
+	private static Component readOptionalName(FriendlyByteBuf buffer){
+		return buffer.readBoolean() ? Component.Serializer.fromJson(buffer.readUtf(32767)) : null;
 	}
 
 	@SuppressWarnings("unused")
@@ -178,13 +172,12 @@ public final class ModNet{
 		private Client(){}
 
 		public static void handleSyncTavernMemory(SyncTavernMemory packet){
-			PlayerEntity p = Minecraft.getInstance().player;
+			Player p = Minecraft.getInstance().player;
 			if(p!=null){
 				PlayerTavernMemory.get(p).deserializeNBT(packet.player);
 				GlobalTavernMemory.get().deserializeNBT(packet.global);
 				//Hearthstones.LOGGER.debug("Synced Tavern Memory.");
-				if(Minecraft.getInstance().screen instanceof HearthstoneScreen){
-					HearthstoneScreen screen = (HearthstoneScreen)Minecraft.getInstance().screen;
+				if(Minecraft.getInstance().screen instanceof HearthstoneScreen screen){
 					screen.flagResetButtons = true;
 					//Hearthstones.LOGGER.debug("Updated Screen.");
 				}

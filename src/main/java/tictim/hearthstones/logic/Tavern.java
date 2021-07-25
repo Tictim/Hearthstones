@@ -1,10 +1,10 @@
 package tictim.hearthstones.logic;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.INameable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.Nameable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import tictim.hearthstones.data.Owner;
 import tictim.hearthstones.data.TavernPos;
 import tictim.hearthstones.utils.HearthingContext;
@@ -12,15 +12,15 @@ import tictim.hearthstones.utils.TavernType;
 
 import javax.annotation.Nullable;
 
-public interface Tavern extends INameable{
-	World world();
+public interface Tavern extends Nameable{
+	Level world();
 	BlockPos pos();
 
 	TavernType tavernType();
 
 	Owner owner();
 
-	void setName(@Nullable ITextComponent name);
+	void setName(@Nullable Component name);
 
 	boolean canBeUpgraded();
 	ItemStack createUpgradeItem();

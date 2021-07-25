@@ -1,8 +1,8 @@
 package tictim.hearthstones.event;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.event.entity.living.LivingDestroyBlockEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,26 +17,22 @@ public final class TavernEventHandler{
 	@SubscribeEvent
 	public static void blockBreakEvent(LivingDestroyBlockEvent event){
 		LivingEntity entity = event.getEntityLiving();
-		TileEntity te = entity.level.getBlockEntity(event.getPos());
-		if(te instanceof Tavern){
-			Tavern tavern = (Tavern)te;
-			boolean canBreak = entity instanceof PlayerEntity&&canBreak(tavern, (PlayerEntity)entity);
+		if(entity.level.getBlockEntity(event.getPos()) instanceof Tavern tavern){
+			boolean canBreak = entity instanceof Player&&canBreak(tavern, (Player)entity);
 			if(!canBreak) event.setCanceled(true);
 		}
 	}
 
 	@SubscribeEvent
 	public static void breakSpeedEvent(PlayerEvent.BreakSpeed event){
-		PlayerEntity player = event.getPlayer();
-		TileEntity _te = player.level.getBlockEntity(event.getPos());
-		if(_te instanceof Tavern){
-			Tavern tavern = (Tavern)_te;
+		Player player = event.getPlayer();
+		if(player.level.getBlockEntity(event.getPos()) instanceof Tavern tavern){
 			boolean canBreak = canBreak(tavern, player);
 			if(!canBreak) event.setCanceled(true);
 		}
 	}
 
-	private static boolean canBreak(Tavern te, PlayerEntity player){
+	private static boolean canBreak(Tavern te, Player player){
 		return player.isCreative()||te.owner().isOwnerOrOp(player);
 	}
 }
