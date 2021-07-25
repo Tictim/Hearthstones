@@ -15,20 +15,20 @@ public class ItemTagGen extends ItemTagsProvider{
 		super(generatorIn, blockTagProvider, Hearthstones.MODID, existingFileHelper);
 	}
 
-	@Override protected void registerTags(){
+	@Override protected void addTags(){
 		copy(ModTags.Blocks.TAVERNS, ModTags.TAVERNS);
 		copy(ModTags.Blocks.STORAGE_BLOCKS_AQUAMARINE, ModTags.STORAGE_BLOCKS_AQUAMARINE);
 		copy(ModTags.Blocks.ORES_AQUAMARINE, ModTags.ORES_AQUAMARINE);
 
-		getOrCreateBuilder(Tags.Items.DUSTS).addTags(ModTags.DUSTS_AQUAMARINE, ModTags.DUSTS_DEEP_BLUE, ModTags.DUSTS_DIAMOND, ModTags.DUSTS_LAPIS);
-		getOrCreateBuilder(ModTags.DUSTS_AQUAMARINE).add(ModItems.AQUAMARINE_DUST.get());
-		getOrCreateBuilder(ModTags.DUSTS_DEEP_BLUE).add(ModItems.DEEP_BLUE.get());
-		getOrCreateBuilder(ModTags.DUSTS_DIAMOND).add(ModItems.DIAMOND_DUST.get());
-		getOrCreateBuilder(ModTags.DUSTS_LAPIS).add(ModItems.LAPIS_DUST.get());
+		tag(Tags.Items.DUSTS).addTags(ModTags.DUSTS_AQUAMARINE, ModTags.DUSTS_DEEP_BLUE, ModTags.DUSTS_DIAMOND, ModTags.DUSTS_LAPIS);
+		tag(ModTags.DUSTS_AQUAMARINE).add(ModItems.AQUAMARINE_DUST.get());
+		tag(ModTags.DUSTS_DEEP_BLUE).add(ModItems.DEEP_BLUE.get());
+		tag(ModTags.DUSTS_DIAMOND).add(ModItems.DIAMOND_DUST.get());
+		tag(ModTags.DUSTS_LAPIS).add(ModItems.LAPIS_DUST.get());
 
-		getOrCreateBuilder(Tags.Items.GEMS).addTag(ModTags.GEMS_AQUAMARINE);
-		getOrCreateBuilder(ModTags.GEMS_AQUAMARINE).add(ModItems.AQUAMARINE.get());
+		tag(Tags.Items.GEMS).addTag(ModTags.GEMS_AQUAMARINE);
+		tag(ModTags.GEMS_AQUAMARINE).add(ModItems.AQUAMARINE.get());
 
-		getOrCreateBuilder(ModTags.HEARTHSTONE_MATERIAL).add(Items.GRANITE, Items.DIORITE, Items.ANDESITE);
+		tag(ModTags.HEARTHSTONE_MATERIAL).add(Items.GRANITE, Items.DIORITE, Items.ANDESITE);
 	}
 }

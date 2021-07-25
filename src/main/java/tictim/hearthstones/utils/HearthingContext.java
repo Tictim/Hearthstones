@@ -60,11 +60,11 @@ public final class HearthingContext{
 		this.player = player;
 		this.hand = hand;
 		this.memory = PlayerTavernMemory.get(player);
-		this.stack = player.getHeldItem(hand);
+		this.stack = player.getItemInHand(hand);
 		this.hearthstone = ((HearthstoneItem)stack.getItem()).getHearthstone();
 		this.dest = hearthstone.getDestination(this);
-		this.originPos = player.getPositionVec();
-		this.originDim = player.world.getDimensionKey().getLocation();
+		this.originPos = player.position();
+		this.originDim = player.level.dimension().location();
 	}
 
 	public PlayerEntity getPlayer(){
@@ -117,7 +117,7 @@ public final class HearthingContext{
 	}
 
 	public void warp(){
-		if(hasCooldown()) player.sendStatusMessage(new TranslationTextComponent("info.hearthstones.hearthstone.cooldown"), true);
+		if(hasCooldown()) player.displayClientMessage(new TranslationTextComponent("info.hearthstones.hearthstone.cooldown"), true);
 		else{
 			this.te = dest!=null ? getTavernAt(dest.getDimensionType(), dest.getPos()) : null;
 			if(te!=null){
@@ -132,11 +132,11 @@ public final class HearthingContext{
 					applyCooldown();
 					hearthstone.applyDamage(this);
 					return;
-				}else player.sendStatusMessage(new TranslationTextComponent("info.hearthstones.hearthstone.no_permission"), true);
+				}else player.displayClientMessage(new TranslationTextComponent("info.hearthstones.hearthstone.no_permission"), true);
 			}else if(dest!=null){
-				player.sendStatusMessage(hearthstone.invalidDestinationError(), true);
+				player.displayClientMessage(hearthstone.invalidDestinationError(), true);
 				dest.setMissing(true);
-			}else player.sendStatusMessage(hearthstone.noSelectionError(), true);
+			}else player.displayClientMessage(hearthstone.noSelectionError(), true);
 		}
 		memory.sync();
 	}
@@ -145,8 +145,8 @@ public final class HearthingContext{
 	private static Tavern getTavernAt(ResourceLocation dim, BlockPos pos){
 		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 		if(server!=null){
-			World w = ServerLifecycleHooks.getCurrentServer().getWorld(RegistryKey.getOrCreateKey(Registry.WORLD_KEY, dim));
-			TileEntity te = w.getTileEntity(pos);
+			World w = ServerLifecycleHooks.getCurrentServer().getLevel(RegistryKey.create(Registry.DIMENSION_REGISTRY, dim));
+			TileEntity te = w.getBlockEntity(pos);
 			if(te instanceof Tavern) return (Tavern)te;
 		}
 		return null;
@@ -163,33 +163,33 @@ public final class HearthingContext{
 			ServerPlayerEntity player = (ServerPlayerEntity)entity;
 			boolean inSameDimension = dest.isInSameDimension(player);
 			ServerWorld w;
-			if(inSameDimension) w = (ServerWorld)player.world;
+			if(inSameDimension) w = (ServerWorld)player.level;
 			else{
-				w = ServerLifecycleHooks.getCurrentServer().getWorld(RegistryKey.getOrCreateKey(Registry.WORLD_KEY, dest.getDimensionType()));
+				w = ServerLifecycleHooks.getCurrentServer().getLevel(RegistryKey.create(Registry.DIMENSION_REGISTRY, dest.getDimensionType()));
 				if(w==null){
 					Hearthstones.LOGGER.error("World {} doesn't exists.", dest.getDimensionType());
 					return;
 				}
 			}
-			w.getChunkProvider().registerTicket(TicketType.POST_TELEPORT, new ChunkPos(new BlockPos(destPos)), 1, entity.getEntityId());
+			w.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, new ChunkPos(new BlockPos(destPos)), 1, entity.getId());
 			player.stopRiding();
-			if(player.isSleeping()) player.wakeUp();
-			if(inSameDimension) player.connection.setPlayerLocation(destPos.x, destPos.y, destPos.z, player.rotationYaw, player.rotationPitch, Collections.emptySet());
+			if(player.isSleeping()) player.stopSleeping();
+			if(inSameDimension) player.connection.teleport(destPos.x, destPos.y, destPos.z, player.yRot, player.xRot, Collections.emptySet());
 			else{
-				player.teleport(w, destPos.x, destPos.y, destPos.z, player.rotationYaw, player.rotationPitch);
+				player.teleportTo(w, destPos.x, destPos.y, destPos.z, player.yRot, player.xRot);
 			}
 		}else{
-			entity.detach();
+			entity.unRide();
 			if(!dest.isInSameDimension(entity)){
-				ServerWorld w = ServerLifecycleHooks.getCurrentServer().getWorld(RegistryKey.getOrCreateKey(Registry.WORLD_KEY, dest.getDimensionType()));
+				ServerWorld w = ServerLifecycleHooks.getCurrentServer().getLevel(RegistryKey.create(Registry.DIMENSION_REGISTRY, dest.getDimensionType()));
 				Entity e2 = entity.getType().create(w);
 				if(e2!=null){
-					e2.copyDataFromOld(entity);
-					e2.setLocationAndAngles(destPos.x, destPos.y, destPos.z, e2.rotationYaw, e2.rotationPitch);
-					w.addEntity(e2);
+					e2.restoreFrom(entity);
+					e2.moveTo(destPos.x, destPos.y, destPos.z, e2.yRot, e2.xRot);
+					w.addFreshEntity(e2);
 					entity.remove();
 				}else Hearthstones.LOGGER.warn("Failed to move Entity {}", entity);
-			}else entity.setLocationAndAngles(destPos.x, destPos.y, destPos.z, player.rotationYaw, player.rotationPitch);
+			}else entity.moveTo(destPos.x, destPos.y, destPos.z, player.yRot, player.xRot);
 		}
 		if(ModCfg.traceHearthstoneUsage()){
 			log("Moved Entity {} to {}", entity, dest.getTavernPos());
@@ -198,18 +198,18 @@ public final class HearthingContext{
 
 	private void log(String message, Entity entity, TavernPos dest){
 		Hearthstones.LOGGER.debug(message, entity, dest);
-		if(entity.isBeingRidden())
+		if(entity.isVehicle())
 			Hearthstones.LOGGER.debug("Passengers: {}",
 					entity.getPassengers().stream()
 							.map(Entity::toString)
 							.collect(Collectors.joining(", ")));
 		if(entity.isPassenger())
-			Hearthstones.LOGGER.debug("Entity riding: {}", entity.getRidingEntity());
+			Hearthstones.LOGGER.debug("Entity riding: {}", entity.getVehicle());
 	}
 
 	private void playWarpSound(){
-		player.world.playSound(null, player.getPosX(), player.getPosYEye(), player.getPosZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 20, 0.95f+SOUND_RNG.nextFloat()*0.1f);
-		te.world().playSound(null, destPos.x, destPos.y+player.getEyeHeight(), destPos.z, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 20, 0.95f+SOUND_RNG.nextFloat()*0.1f);
+		player.level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 20, 0.95f+SOUND_RNG.nextFloat()*0.1f);
+		te.world().playSound(null, destPos.x, destPos.y+player.getEyeHeight(), destPos.z, SoundEvents.ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 20, 0.95f+SOUND_RNG.nextFloat()*0.1f);
 	}
 
 	private void applyCooldown(){
@@ -220,8 +220,8 @@ public final class HearthingContext{
 		BlockState state = te.world().getBlockState(te.pos());
 		Direction facing = null;
 		if(state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)){
-			facing = state.get(BlockStateProperties.HORIZONTAL_FACING);
-			BlockPos pos2 = te.pos().offset(facing);
+			facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+			BlockPos pos2 = te.pos().relative(facing);
 			if(hasRoomForPlayer(te.world(), pos2)) return pos2;
 		}
 		return calculateSpawnPos(te.world(), te.pos(), facing);
@@ -245,19 +245,19 @@ public final class HearthingContext{
 	private static BlockPos calculateSpawnPos(World world, BlockPos pos, @Nullable Direction defaultFacing){
 		BlockPos.Mutable mpos = new BlockPos.Mutable();
 		for(int i = 0; i<4; i++){
-			Direction current = Direction.byHorizontalIndex(i);
+			Direction current = Direction.from2DDataValue(i);
 			if(defaultFacing!=current){
-				mpos.setPos(pos).move(current);
-				if(hasRoomForPlayer(world, mpos)) return mpos.toImmutable();
+				mpos.set(pos).move(current);
+				if(hasRoomForPlayer(world, mpos)) return mpos.immutable();
 			}
 		}
-		return hasRoomForPlayer(world, mpos.setPos(pos)) ? mpos.toImmutable() : mpos.up();
+		return hasRoomForPlayer(world, mpos.set(pos)) ? mpos.immutable() : mpos.above();
 	}
 
 	private static boolean hasRoomForPlayer(World world, BlockPos pos){
-		return Block.hasEnoughSolidSide(world, pos.down(), Direction.UP)&&
+		return Block.canSupportCenter(world, pos.below(), Direction.UP)&&
 				isNotSolidNorLiquid(world.getBlockState(pos))&&
-				isNotSolidNorLiquid(world.getBlockState(pos.up()));
+				isNotSolidNorLiquid(world.getBlockState(pos.above()));
 	}
 	private static boolean isNotSolidNorLiquid(BlockState blockState){
 		return !blockState.getMaterial().isSolid()&&!blockState.getMaterial().isLiquid();

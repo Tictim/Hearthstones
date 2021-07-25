@@ -28,139 +28,139 @@ public class RecipeGen extends RecipeProvider{
 		super(generatorIn);
 	}
 
-	@Override protected void registerRecipes(Consumer<IFinishedRecipe> consumer){
+	@Override protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer){
 		// Shaped Recipe
-		ShapedRecipeBuilder.shapedRecipe(AQUAMARINE_BLOCK.get())
-				.patternLine("111")
-				.patternLine("111")
-				.patternLine("111")
-				.key('1', ModTags.GEMS_AQUAMARINE)
-				.addCriterion("has_aquamarine", hasItem(ModTags.GEMS_AQUAMARINE))
-				.build(consumer);
+		ShapedRecipeBuilder.shaped(AQUAMARINE_BLOCK.get())
+				.pattern("111")
+				.pattern("111")
+				.pattern("111")
+				.define('1', ModTags.GEMS_AQUAMARINE)
+				.unlockedBy("has_aquamarine", has(ModTags.GEMS_AQUAMARINE))
+				.save(consumer);
 
-		ShapedRecipeBuilder.shapedRecipe(BLUE_TAVERNCLOTH.get())
-				.patternLine("111")
-				.patternLine("121")
-				.patternLine("1 1")
-				.key('1', BLUE_LEATHER.get())
-				.key('2', Tags.Items.GEMS_EMERALD)
-				.addCriterion("has_blue_leather", hasItem(BLUE_LEATHER.get()))
-				.build(consumer);
+		ShapedRecipeBuilder.shaped(BLUE_TAVERNCLOTH.get())
+				.pattern("111")
+				.pattern("121")
+				.pattern("1 1")
+				.define('1', BLUE_LEATHER.get())
+				.define('2', Tags.Items.GEMS_EMERALD)
+				.unlockedBy("has_blue_leather", has(BLUE_LEATHER.get()))
+				.save(consumer);
 
-		ShapedRecipeBuilder.shapedRecipe(COMPANION_HEARTHSTONE.get())
-				.patternLine("111")
-				.patternLine("121")
-				.patternLine("1 1")
-				.key('1', BLUE_LEATHER.get())
-				.key('2', HEARTHSTONE.get())
-				.addCriterion("has_blue_leather", hasItem(BLUE_LEATHER.get()))
-				.build(consumer);
+		ShapedRecipeBuilder.shaped(COMPANION_HEARTHSTONE.get())
+				.pattern("111")
+				.pattern("121")
+				.pattern("1 1")
+				.define('1', BLUE_LEATHER.get())
+				.define('2', HEARTHSTONE.get())
+				.unlockedBy("has_blue_leather", has(BLUE_LEATHER.get()))
+				.save(consumer);
 
-		ShapedRecipeBuilder.shapedRecipe(COMPANION_STONE.get())
-				.patternLine(" 11")
-				.patternLine("111")
-				.patternLine("11 ")
-				.key('1', ModTags.HEARTHSTONE_MATERIAL)
-				.addCriterion("has_blue_leather", hasItem(BLUE_LEATHER.get()))
-				.build(consumer);
+		ShapedRecipeBuilder.shaped(COMPANION_STONE.get())
+				.pattern(" 11")
+				.pattern("111")
+				.pattern("11 ")
+				.define('1', ModTags.HEARTHSTONE_MATERIAL)
+				.unlockedBy("has_blue_leather", has(BLUE_LEATHER.get()))
+				.save(consumer);
 
-		ShapedRecipeBuilder.shapedRecipe(HEARTHING_GEM.get())
-				.patternLine(" 11")
-				.patternLine("111")
-				.patternLine("11 ")
-				.key('1', ModTags.GEMS_AQUAMARINE)
-				.addCriterion("has_aquamarine", hasItem(ModTags.GEMS_AQUAMARINE))
-				.build(consumer);
+		ShapedRecipeBuilder.shaped(HEARTHING_GEM.get())
+				.pattern(" 11")
+				.pattern("111")
+				.pattern("11 ")
+				.define('1', ModTags.GEMS_AQUAMARINE)
+				.unlockedBy("has_aquamarine", has(ModTags.GEMS_AQUAMARINE))
+				.save(consumer);
 
-		ShapedRecipeBuilder.shapedRecipe(MORTAR.get())
-				.patternLine("  3")
-				.patternLine("121")
-				.patternLine("111")
-				.key('1', Tags.Items.STONE)
-				.key('2', Tags.Items.INGOTS_IRON)
-				.key('3', Tags.Items.NUGGETS_IRON)
-				.addCriterion("has_aquamarine", hasItem(AQUAMARINE.get()))
-				.build(consumer);
+		ShapedRecipeBuilder.shaped(MORTAR.get())
+				.pattern("  3")
+				.pattern("121")
+				.pattern("111")
+				.define('1', Tags.Items.STONE)
+				.define('2', Tags.Items.INGOTS_IRON)
+				.define('3', Tags.Items.NUGGETS_IRON)
+				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+				.save(consumer);
 
 		// Shapeless Recipe
-		ShapelessRecipeBuilder.shapelessRecipe(AQUAMARINE.get(), 9)
-				.addIngredient(AQUAMARINE_BLOCK.get())
-				.addCriterion("has_aquamarine_block", hasItem(AQUAMARINE_BLOCK.get()))
-				.build(consumer);
+		ShapelessRecipeBuilder.shapeless(AQUAMARINE.get(), 9)
+				.requires(AQUAMARINE_BLOCK.get())
+				.unlockedBy("has_aquamarine_block", has(AQUAMARINE_BLOCK.get()))
+				.save(consumer);
 
-		ShapelessRecipeBuilder.shapelessRecipe(BLUE_LEATHER.get())
-				.addIngredient(ModTags.DUSTS_DEEP_BLUE)
-				.addIngredient(ModTags.DUSTS_DEEP_BLUE)
-				.addIngredient(ModTags.DUSTS_DEEP_BLUE)
-				.addIngredient(ModTags.DUSTS_DEEP_BLUE)
-				.addIngredient(Tags.Items.LEATHER)
-				.addIngredient(Items.MILK_BUCKET)
-				.addCriterion("has_deep_blue", hasItem(DEEP_BLUE.get()))
-				.build(consumer);
+		ShapelessRecipeBuilder.shapeless(BLUE_LEATHER.get())
+				.requires(ModTags.DUSTS_DEEP_BLUE)
+				.requires(ModTags.DUSTS_DEEP_BLUE)
+				.requires(ModTags.DUSTS_DEEP_BLUE)
+				.requires(ModTags.DUSTS_DEEP_BLUE)
+				.requires(Tags.Items.LEATHER)
+				.requires(Items.MILK_BUCKET)
+				.unlockedBy("has_deep_blue", has(DEEP_BLUE.get()))
+				.save(consumer);
 
-		ShapelessRecipeBuilder.shapelessRecipe(DEEP_BLUE.get(), 3)
-				.addIngredient(ModTags.DUSTS_AQUAMARINE)
-				.addIngredient(ModTags.DUSTS_DIAMOND)
-				.addIngredient(ModTags.DUSTS_LAPIS)
-				.addCriterion("has_aquamarine", hasItem(AQUAMARINE.get()))
-				.build(consumer);
+		ShapelessRecipeBuilder.shapeless(DEEP_BLUE.get(), 3)
+				.requires(ModTags.DUSTS_AQUAMARINE)
+				.requires(ModTags.DUSTS_DIAMOND)
+				.requires(ModTags.DUSTS_LAPIS)
+				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+				.save(consumer);
 
-		ShapelessRecipeBuilder.shapelessRecipe(RED_LEATHER.get())
-				.addIngredient(Tags.Items.DYES_RED)
-				.addIngredient(Tags.Items.DYES_RED)
-				.addIngredient(Tags.Items.DYES_RED)
-				.addIngredient(Tags.Items.LEATHER)
-				.addIngredient(Items.WATER_BUCKET)
-				.addCriterion("has_aquamarine", hasItem(AQUAMARINE.get()))
-				.build(consumer);
+		ShapelessRecipeBuilder.shapeless(RED_LEATHER.get())
+				.requires(Tags.Items.DYES_RED)
+				.requires(Tags.Items.DYES_RED)
+				.requires(Tags.Items.DYES_RED)
+				.requires(Tags.Items.LEATHER)
+				.requires(Items.WATER_BUCKET)
+				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+				.save(consumer);
 
-		ShapelessRecipeBuilder.shapelessRecipe(TAVERN.get())
-				.addIngredient(TAVERNCLOTH.get())
-				.addIngredient(ItemTags.LOGS)
-				.addCriterion("has_taverncloth", hasItem(TAVERNCLOTH.get()))
-				.build(consumer, new ResourceLocation(MODID, "tavern_from_taverncloth"));
+		ShapelessRecipeBuilder.shapeless(TAVERN.get())
+				.requires(TAVERNCLOTH.get())
+				.requires(ItemTags.LOGS)
+				.unlockedBy("has_taverncloth", has(TAVERNCLOTH.get()))
+				.save(consumer, new ResourceLocation(MODID, "tavern_from_taverncloth"));
 
-		addMortarRecipe(Ingredient.fromTag(ModTags.GEMS_AQUAMARINE), AQUAMARINE_DUST.get(), consumer);
-		addMortarRecipe(Ingredient.fromTag(Tags.Items.GEMS_DIAMOND), DIAMOND_DUST.get(), consumer);
-		addMortarRecipe(Ingredient.fromTag(Tags.Items.GEMS_LAPIS), LAPIS_DUST.get(), consumer);
+		addMortarRecipe(Ingredient.of(ModTags.GEMS_AQUAMARINE), AQUAMARINE_DUST.get(), consumer);
+		addMortarRecipe(Ingredient.of(Tags.Items.GEMS_DIAMOND), DIAMOND_DUST.get(), consumer);
+		addMortarRecipe(Ingredient.of(Tags.Items.GEMS_LAPIS), LAPIS_DUST.get(), consumer);
 
 		// Easy Mode
 		EasyModeCondition easyModeCondition = new EasyModeCondition();
 		ConditionalRecipe.builder()
 				.addCondition(easyModeCondition).addRecipe(c ->
-				ShapedRecipeBuilder.shapedRecipe(HEARTHSTONE.get())
-						.patternLine(" 11")
-						.patternLine("121")
-						.patternLine("11 ")
-						.key('1', ModTags.HEARTHSTONE_MATERIAL)
-						.key('2', ModTags.GEMS_AQUAMARINE)
-						.addCriterion("has_aquamarine", hasItem(AQUAMARINE.get()))
-						.build(c))
+				ShapedRecipeBuilder.shaped(HEARTHSTONE.get())
+						.pattern(" 11")
+						.pattern("121")
+						.pattern("11 ")
+						.define('1', ModTags.HEARTHSTONE_MATERIAL)
+						.define('2', ModTags.GEMS_AQUAMARINE)
+						.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+						.save(c))
 				.build(consumer, MODID, "easy_mode/hearthstone");
 
 		ConditionalRecipe.builder()
 				.addCondition(easyModeCondition).addRecipe(c ->
-				ShapedRecipeBuilder.shapedRecipe(TAVERN.get())
-						.patternLine("111")
-						.patternLine("121")
-						.patternLine("131")
-						.key('1', RED_LEATHER.get())
-						.key('2', ModTags.GEMS_AQUAMARINE)
-						.key('3', ItemTags.LOGS)
-						.addCriterion("has_aquamarine", hasItem(AQUAMARINE.get()))
-						.build(c))
+				ShapedRecipeBuilder.shaped(TAVERN.get())
+						.pattern("111")
+						.pattern("121")
+						.pattern("131")
+						.define('1', RED_LEATHER.get())
+						.define('2', ModTags.GEMS_AQUAMARINE)
+						.define('3', ItemTags.LOGS)
+						.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+						.save(c))
 				.build(consumer, MODID, "easy_mode/tavern");
 
 		ConditionalRecipe.builder()
 				.addCondition(easyModeCondition).addRecipe(c ->
-				ShapedRecipeBuilder.shapedRecipe(TAVERNCLOTH.get())
-						.patternLine("111")
-						.patternLine("121")
-						.patternLine("1 1")
-						.key('1', RED_LEATHER.get())
-						.key('2', ModTags.GEMS_AQUAMARINE)
-						.addCriterion("has_aquamarine", hasItem(AQUAMARINE.get()))
-						.build(c))
+				ShapedRecipeBuilder.shaped(TAVERNCLOTH.get())
+						.pattern("111")
+						.pattern("121")
+						.pattern("1 1")
+						.define('1', RED_LEATHER.get())
+						.define('2', ModTags.GEMS_AQUAMARINE)
+						.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+						.save(c))
 				.build(consumer, MODID, "easy_mode/taverncloth");
 
 		// Not Easy Mode
@@ -168,117 +168,128 @@ public class RecipeGen extends RecipeProvider{
 
 		ConditionalRecipe.builder()
 				.addCondition(notEasyModeCondition).addRecipe(c ->
-				ShapedRecipeBuilder.shapedRecipe(HEARTHSTONE.get())
-						.patternLine(" 11")
-						.patternLine("121")
-						.patternLine("11 ")
-						.key('1', ModTags.HEARTHSTONE_MATERIAL)
-						.key('2', ModTags.DUSTS_DEEP_BLUE)
-						.addCriterion("has_aquamarine", hasItem(AQUAMARINE.get()))
-						.build(c))
+				ShapedRecipeBuilder.shaped(HEARTHSTONE.get())
+						.pattern(" 11")
+						.pattern("121")
+						.pattern("11 ")
+						.define('1', ModTags.HEARTHSTONE_MATERIAL)
+						.define('2', ModTags.DUSTS_DEEP_BLUE)
+						.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+						.save(c))
 				.build(consumer, MODID, "not_easy_mode/hearthstone");
 		ConditionalRecipe.builder()
 				.addCondition(notEasyModeCondition).addRecipe(c ->
-				ShapedRecipeBuilder.shapedRecipe(HEARTHING_PLANKS.get())
-						.patternLine(" 11")
-						.patternLine("121")
-						.patternLine("11 ")
-						.key('1', ItemTags.LOGS)
-						.key('2', ModTags.GEMS_AQUAMARINE)
-						.addCriterion("has_aquamarine", hasItem(AQUAMARINE.get()))
-						.build(c))
+				ShapedRecipeBuilder.shaped(HEARTHING_PLANKS.get())
+						.pattern(" 11")
+						.pattern("121")
+						.pattern("11 ")
+						.define('1', ItemTags.LOGS)
+						.define('2', ModTags.GEMS_AQUAMARINE)
+						.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+						.save(c))
 				.build(consumer, MODID, "not_easy_mode/hearthing_planks");
 		ConditionalRecipe.builder()
 				.addCondition(notEasyModeCondition).addRecipe(c ->
-				ShapedRecipeBuilder.shapedRecipe(SHABBY_TAVERN.get())
-						.patternLine("111")
-						.patternLine("121")
-						.patternLine("131")
-						.key('1', TATTERED_LEATHER.get())
-						.key('2', ModTags.GEMS_AQUAMARINE)
-						.key('3', ItemTags.LOGS)
-						.addCriterion("has_aquamarine", hasItem(AQUAMARINE.get()))
-						.build(c))
+				ShapedRecipeBuilder.shaped(HEARTHING_PLANKS.get())
+						.pattern(" 11")
+						.pattern("121")
+						.pattern("11 ")
+						.define('1', ItemTags.LOGS)
+						.define('2', ModTags.GEMS_AQUAMARINE)
+						.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+						.save(c))
+				.build(consumer, MODID, "not_easy_mode/hearthing_planks");
+		ConditionalRecipe.builder()
+				.addCondition(notEasyModeCondition).addRecipe(c ->
+				ShapedRecipeBuilder.shaped(SHABBY_TAVERN.get())
+						.pattern("111")
+						.pattern("121")
+						.pattern("131")
+						.define('1', TATTERED_LEATHER.get())
+						.define('2', ModTags.GEMS_AQUAMARINE)
+						.define('3', ItemTags.LOGS)
+						.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+						.save(c))
 				.build(consumer, MODID, "not_easy_mode/shabby_tavern");
 
 		ConditionalRecipe.builder()
 				.addCondition(notEasyModeCondition).addRecipe(c ->
-				ShapelessRecipeBuilder.shapelessRecipe(SHABBY_TAVERN.get())
-						.addIngredient(TATTERED_TAVERNCLOTH.get())
-						.addIngredient(ItemTags.LOGS)
-						.addCriterion("has_tattered_taverncloth", hasItem(TATTERED_TAVERNCLOTH.get()))
-						.build(c))
+				ShapelessRecipeBuilder.shapeless(SHABBY_TAVERN.get())
+						.requires(TATTERED_TAVERNCLOTH.get())
+						.requires(ItemTags.LOGS)
+						.unlockedBy("has_tattered_taverncloth", has(TATTERED_TAVERNCLOTH.get()))
+						.save(c))
 				.build(consumer, MODID, "not_easy_mode/shabby_tavern_from_taverncloth");
 
 		ConditionalRecipe.builder()
 				.addCondition(notEasyModeCondition).addRecipe(c ->
-				ShapelessRecipeBuilder.shapelessRecipe(TATTERED_LEATHER.get(), 7)
-						.addIngredient(Items.BONE_MEAL)
-						.addIngredient(Items.BONE_MEAL)
-						.addIngredient(Items.BONE_MEAL)
-						.addIngredient(Tags.Items.LEATHER)
-						.addIngredient(Items.WATER_BUCKET)
-						.addCriterion("has_leather", hasItem(Tags.Items.LEATHER))
-						.build(c))
+				ShapelessRecipeBuilder.shapeless(TATTERED_LEATHER.get(), 7)
+						.requires(Items.BONE_MEAL)
+						.requires(Items.BONE_MEAL)
+						.requires(Items.BONE_MEAL)
+						.requires(Tags.Items.LEATHER)
+						.requires(Items.WATER_BUCKET)
+						.unlockedBy("has_leather", has(Tags.Items.LEATHER))
+						.save(c))
 				.build(consumer, MODID, "not_easy_mode/tattered_leather");
 
 		ConditionalRecipe.builder()
 				.addCondition(notEasyModeCondition).addRecipe(c ->
-				ShapelessRecipeBuilder.shapelessRecipe(TATTERED_LEATHER.get())
-						.addIngredient(Items.BONE_MEAL)
-						.addIngredient(Ingredient.fromItems(Items.GRASS, Items.FERN))
-						.addIngredient(Ingredient.fromItems(Items.GRASS, Items.FERN))
-						.addIngredient(Ingredient.fromItems(Items.GRASS, Items.FERN))
-						.addIngredient(Items.WATER_BUCKET)
-						.addCriterion("has_aquamarine", hasItem(AQUAMARINE.get()))
-						.build(c))
+				ShapelessRecipeBuilder.shapeless(TATTERED_LEATHER.get())
+						.requires(Items.BONE_MEAL)
+						.requires(Ingredient.of(Items.GRASS, Items.FERN))
+						.requires(Ingredient.of(Items.GRASS, Items.FERN))
+						.requires(Ingredient.of(Items.GRASS, Items.FERN))
+						.requires(Items.WATER_BUCKET)
+						.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+						.save(c))
 				.build(consumer, MODID, "not_easy_mode/tattered_leather_from_grass");
 
 		ConditionalRecipe.builder()
 				.addCondition(notEasyModeCondition).addRecipe(c ->
-				ShapedRecipeBuilder.shapedRecipe(TATTERED_TAVERNCLOTH.get())
-						.patternLine("111")
-						.patternLine("121")
-						.patternLine("1 1")
-						.key('1', TATTERED_LEATHER.get())
-						.key('2', ModTags.GEMS_AQUAMARINE)
-						.addCriterion("has_aquamarine", hasItem(AQUAMARINE.get()))
-						.build(c))
+				ShapedRecipeBuilder.shaped(TATTERED_TAVERNCLOTH.get())
+						.pattern("111")
+						.pattern("121")
+						.pattern("1 1")
+						.define('1', TATTERED_LEATHER.get())
+						.define('2', ModTags.GEMS_AQUAMARINE)
+						.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+						.save(c))
 				.build(consumer, MODID, "not_easy_mode/tattered_taverncloth");
 
 		ConditionalRecipe.builder()
 				.addCondition(notEasyModeCondition).addRecipe(c ->
-				ShapedRecipeBuilder.shapedRecipe(TAVERN.get())
-						.patternLine("111")
-						.patternLine("121")
-						.patternLine("131")
-						.key('1', RED_LEATHER.get())
-						.key('2', ModTags.STORAGE_BLOCKS_AQUAMARINE)
-						.key('3', ItemTags.LOGS)
-						.addCriterion("has_aquamarine", hasItem(AQUAMARINE.get()))
-						.build(c))
+				ShapedRecipeBuilder.shaped(TAVERN.get())
+						.pattern("111")
+						.pattern("121")
+						.pattern("131")
+						.define('1', RED_LEATHER.get())
+						.define('2', ModTags.STORAGE_BLOCKS_AQUAMARINE)
+						.define('3', ItemTags.LOGS)
+						.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+						.save(c))
 				.build(consumer, MODID, "not_easy_mode/tavern");
 
 		ConditionalRecipe.builder()
 				.addCondition(notEasyModeCondition).addRecipe(c ->
-				ShapedRecipeBuilder.shapedRecipe(TAVERNCLOTH.get())
-						.patternLine("111")
-						.patternLine("121")
-						.patternLine("1 1")
-						.key('1', RED_LEATHER.get())
-						.key('2', ModTags.STORAGE_BLOCKS_AQUAMARINE)
-						.addCriterion("has_aquamarine", hasItem(AQUAMARINE.get()))
-						.build(c))
+				ShapedRecipeBuilder.shaped(TAVERNCLOTH.get())
+						.pattern("111")
+						.pattern("121")
+						.pattern("1 1")
+						.define('1', RED_LEATHER.get())
+						.define('2', ModTags.STORAGE_BLOCKS_AQUAMARINE)
+						.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+						.save(c))
 				.build(consumer, MODID, "not_easy_mode/taverncloth");
 
 		// Furnace Recipe
 		Consumer<IFinishedRecipe> c = result -> consumer.accept(result instanceof CookingRecipeBuilder.Result ? new MultiItemCookingResult((CookingRecipeBuilder.Result)result, 9) : result);
-		CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(AQUAMARINE_ORE.get()), AQUAMARINE.get(), 0.5f, 200)
-				.addCriterion("has_aquamarine_ore", hasItem(AQUAMARINE_ORE.get()))
-				.build(c, new ResourceLocation(MODID, "smelting/aquamarine"));
-		CookingRecipeBuilder.blastingRecipe(Ingredient.fromItems(AQUAMARINE_ORE.get()), AQUAMARINE.get(), 0.5f, 100)
-				.addCriterion("has_aquamarine_ore", hasItem(AQUAMARINE_ORE.get()))
-				.build(c, new ResourceLocation(MODID, "smelting/aquamarine_blasting"));
+		CookingRecipeBuilder.smelting(Ingredient.of(AQUAMARINE_ORE.get()), AQUAMARINE.get(), 0.5f, 200)
+				.unlockedBy("has_aquamarine_ore", has(AQUAMARINE_ORE.get()))
+				.save(c, new ResourceLocation(MODID, "smelting/aquamarine"));
+		CookingRecipeBuilder.blasting(Ingredient.of(AQUAMARINE_ORE.get()), AQUAMARINE.get(), 0.5f, 100)
+				.unlockedBy("has_aquamarine_ore", has(AQUAMARINE_ORE.get()))
+				.save(c, new ResourceLocation(MODID, "smelting/aquamarine_blasting"));
 	}
 
 	private void addMortarRecipe(Ingredient in, IItemProvider out, Consumer<IFinishedRecipe> consumer){
@@ -286,11 +297,11 @@ public class RecipeGen extends RecipeProvider{
 	}
 
 	private void addMortarRecipe(Ingredient in, IItemProvider out, @Nullable String save, Consumer<IFinishedRecipe> consumer){
-		ShapelessRecipeBuilder b = ShapelessRecipeBuilder.shapelessRecipe(out)
-				.addIngredient(MORTAR.get())
-				.addIngredient(in)
-				.addCriterion("has_aquamarine", hasItem(AQUAMARINE.get()));
-		if(save!=null) b.build(consumer, new ResourceLocation(MODID, save));
-		else b.build(consumer);
+		ShapelessRecipeBuilder b = ShapelessRecipeBuilder.shapeless(out)
+				.requires(MORTAR.get())
+				.requires(in)
+				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()));
+		if(save!=null) b.save(consumer, new ResourceLocation(MODID, save));
+		else b.save(consumer);
 	}
 }

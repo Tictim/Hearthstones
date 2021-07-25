@@ -22,29 +22,29 @@ public abstract class BaseTavernUpgradeItem extends Item{
 	}
 
 	@Override public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context){
-		TileEntity te = context.getWorld().getTileEntity(context.getPos());
+		TileEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
 		if(te instanceof Tavern){
 			Tavern tavern = (Tavern)te;
 			if(isValidTarget(tavern)){
-				if(!context.getWorld().isRemote){
-					BlockState stateCache = context.getWorld().getBlockState(context.getPos());
+				if(!context.getLevel().isClientSide){
+					BlockState stateCache = context.getLevel().getBlockState(context.getClickedPos());
 					BlockState state = getStateToReplace(tavern);
 					if(state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)){
-						state = state.with(BlockStateProperties.HORIZONTAL_FACING, stateCache.get(BlockStateProperties.HORIZONTAL_FACING));
+						state = state.setValue(BlockStateProperties.HORIZONTAL_FACING, stateCache.getValue(BlockStateProperties.HORIZONTAL_FACING));
 					}
-					context.getWorld().setBlockState(context.getPos(), state);
-					TileEntity te2 = context.getWorld().getTileEntity(context.getPos());
+					context.getLevel().setBlockAndUpdate(context.getClickedPos(), state);
+					TileEntity te2 = context.getLevel().getBlockEntity(context.getClickedPos());
 					if(te2 instanceof Tavern){
 						Tavern tavern2 = (Tavern)te2;
 						if(tavern.hasCustomName()) tavern2.setName(tavern.getName());
 						tavern2.owner().reset(tavern.owner());
 						if(tavern.tavernType()==TavernType.GLOBAL) GlobalTavernMemory.get().delete(tavern.tavernPos());
-						context.getWorld().notifyBlockUpdate(context.getPos(), state, state, 0);
+						context.getLevel().sendBlockUpdated(context.getClickedPos(), state, state, 0);
 
 						if(context.getPlayer()==null||!context.getPlayer().isCreative()){
 							stack.shrink(1);
 							ItemStack s = tavern.createUpgradeItem();
-							if(!s.isEmpty()) InventoryHelper.spawnItemStack(context.getWorld(), context.getPos().getX()+0.5, context.getPos().getY()+0.5, context.getPos().getZ()+0.5, s);
+							if(!s.isEmpty()) InventoryHelper.dropItemStack(context.getLevel(), context.getClickedPos().getX()+0.5, context.getClickedPos().getY()+0.5, context.getClickedPos().getZ()+0.5, s);
 						}
 						if(context.getPlayer()!=null){
 							PlayerTavernMemory memory = PlayerTavernMemory.get(context.getPlayer());
@@ -52,7 +52,7 @@ public abstract class BaseTavernUpgradeItem extends Item{
 							memory.sync();
 						}
 					}else{
-						Hearthstones.LOGGER.error("TavernUpgradeItem {} replaced BlockState {} at {} to {}, but failed to retrieve Tavern.", getRegistryName(), stateCache, context.getPos(), state);
+						Hearthstones.LOGGER.error("TavernUpgradeItem {} replaced BlockState {} at {} to {}, but failed to retrieve Tavern.", getRegistryName(), stateCache, context.getClickedPos(), state);
 
 						if(context.getPlayer()!=null){
 							PlayerTavernMemory memory = PlayerTavernMemory.get(context.getPlayer());
@@ -60,7 +60,7 @@ public abstract class BaseTavernUpgradeItem extends Item{
 							memory.sync();
 						}
 					}
-					context.getWorld().playSound(null, context.getPos().getX()+0.5, context.getPos().getY()+0.5, context.getPos().getZ()+0.5, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.BLOCKS, 0.8f, 1);
+					context.getLevel().playSound(null, context.getClickedPos().getX()+0.5, context.getClickedPos().getY()+0.5, context.getClickedPos().getZ()+0.5, SoundEvents.ARMOR_EQUIP_LEATHER, SoundCategory.BLOCKS, 0.8f, 1);
 					return ActionResultType.SUCCESS;
 				}
 			}

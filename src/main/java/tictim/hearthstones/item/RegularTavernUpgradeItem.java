@@ -19,10 +19,10 @@ public class RegularTavernUpgradeItem extends BaseTavernUpgradeItem{
 	}
 
 	@Override protected BlockState getStateToReplace(Tavern tavern){
-		return ModBlocks.TAVERN.get().getDefaultState();
+		return ModBlocks.TAVERN.get().defaultBlockState();
 	}
 
-	@Override public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	@Override public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent(ModCfg.easyMode() ? "info.hearthstones.taverncloth.tooltip.easyMode" : "info.hearthstones.taverncloth.tooltip"));
 	}
 }

@@ -14,7 +14,7 @@ public interface Hearthstone{
 		ctx.warpEntity(ctx.getPlayer());
 	}
 	default void applyDamage(HearthingContext ctx){
-		ctx.getStack().damageItem(1, ctx.getPlayer(), player -> player.sendBreakAnimation(EquipmentSlotType.MAINHAND));
+		ctx.getStack().hurtAndBreak(1, ctx.getPlayer(), player -> player.broadcastBreakEvent(EquipmentSlotType.MAINHAND));
 	}
 
 	@Nullable TavernRecord getDestination(HearthingContext ctx);

@@ -48,28 +48,28 @@ public abstract class BaseHearthstoneItem extends Item implements HearthstoneIte
 	@Override public boolean isEnchantable(ItemStack stack){
 		return true;
 	}
-	@Override public int getItemEnchantability(){
+	@Override public int getEnchantmentValue(){
 		return 5;
 	}
 
-	@Override public UseAction getUseAction(ItemStack stack){
+	@Override public UseAction getUseAnimation(ItemStack stack){
 		return UseAction.BOW;
 	}
 	@Override public int getUseDuration(ItemStack stack){
-		int lv = EnchantmentHelper.getEnchantmentLevel(ModEnchantments.QUICKCAST.get(), stack);
+		int lv = EnchantmentHelper.getItemEnchantmentLevel(ModEnchantments.QUICKCAST.get(), stack);
 		return 120-21*lv;
 	}
 
-	@Override public boolean isDamageable(){
+	@Override public boolean canBeDepleted(){
 		return hearthstone.getMaxDamage()>0;
 	}
 	@Override public boolean isDamaged(ItemStack stack){
-		return getMaxDamage(stack)>0&&stack.getDamage()>0;
+		return getMaxDamage(stack)>0&&stack.getDamageValue()>0;
 	}
 
 	@Override
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean isSelected){
-		if(!world.isRemote&&entity instanceof PlayerEntity){
+		if(!world.isClientSide&&entity instanceof PlayerEntity){
 			PlayerEntity player = (PlayerEntity)entity;
 			PlayerTavernMemory memory = PlayerTavernMemory.get(player);
 
@@ -85,29 +85,29 @@ public abstract class BaseHearthstoneItem extends Item implements HearthstoneIte
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand){
-		if(!world.isRemote){
+	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand){
+		if(!world.isClientSide){
 			HearthingContext ctx = new HearthingContext(player, hand);
-			if(!ctx.hasCooldown()) player.setActiveHand(hand);
-			else player.getCooldownTracker().setCooldown(ctx.getStack().getItem(), 20);
+			if(!ctx.hasCooldown()) player.startUsingItem(hand);
+			else player.getCooldowns().addCooldown(ctx.getStack().getItem(), 20);
 		}
-		return new ActionResult<>(ActionResultType.CONSUME, player.getHeldItem(hand));
+		return new ActionResult<>(ActionResultType.CONSUME, player.getItemInHand(hand));
 	}
 
 	@Override
 	public void onUsingTick(ItemStack stack, LivingEntity entity, int count){
 		int i = Item.random.nextInt();
-		if(!entity.world.isRemote){
-			if(i%42==0) entity.world.playSound(null,
-					entity.getPosX(),
-					entity.getPosY()+entity.getEyeHeight(),
-					entity.getPosZ(),
-					SoundEvents.BLOCK_PORTAL_AMBIENT,
+		if(!entity.level.isClientSide){
+			if(i%42==0) entity.level.playSound(null,
+					entity.getX(),
+					entity.getY()+entity.getEyeHeight(),
+					entity.getZ(),
+					SoundEvents.PORTAL_AMBIENT,
 					SoundCategory.PLAYERS,
 					0.3f,
-					entity.getRNG().nextFloat()*0.4f+0.8f);
+					entity.getRandom().nextFloat()*0.4f+0.8f);
 		}else{
-			int amount = (int)(entity.getItemInUseMaxCount()*0.05);
+			int amount = (int)(entity.getTicksUsingItem()*0.05);
 			if(amount>0&&i%3==0) renderParticles(entity, amount);
 		}
 	}
@@ -117,11 +117,11 @@ public abstract class BaseHearthstoneItem extends Item implements HearthstoneIte
 	}
 
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World world, LivingEntity entity){
-		if(!world.isRemote&&entity instanceof PlayerEntity){
-			HearthingContext ctx = new HearthingContext((PlayerEntity)entity, entity.getActiveHand());
+	public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity entity){
+		if(!world.isClientSide&&entity instanceof PlayerEntity){
+			HearthingContext ctx = new HearthingContext((PlayerEntity)entity, entity.getUsedItemHand());
 			ctx.warp();
-			ctx.getPlayer().getCooldownTracker().setCooldown(stack.getItem(), 20);
+			ctx.getPlayer().getCooldowns().addCooldown(stack.getItem(), 20);
 		}
 		return stack;
 	}
@@ -132,14 +132,14 @@ public abstract class BaseHearthstoneItem extends Item implements HearthstoneIte
 		private static final Random RNG = new Random();
 
 		public static void renderParticles(LivingEntity entity, int amount){
-			ParticleManager particleManager = Minecraft.getInstance().particles;
+			ParticleManager particleManager = Minecraft.getInstance().particleEngine;
 
 			for(int i = 0; i<amount; i++){
 				double sy = rand(1.5, 0.75);
-				Particle p = particleManager.addParticle(ParticleTypes.WITCH,
-						rand(entity.getPosX(), 0.375),
-						rand(entity.getPosY()+1, 0.75),
-						rand(entity.getPosZ(), 0.375),
+				Particle p = particleManager.createParticle(ParticleTypes.WITCH,
+						rand(entity.getX(), 0.375),
+						rand(entity.getY()+1, 0.75),
+						rand(entity.getZ(), 0.375),
 						0,
 						sy,
 						0);
@@ -150,7 +150,7 @@ public abstract class BaseHearthstoneItem extends Item implements HearthstoneIte
 					float b = (0xfc)/255f;
 					float chroma = 0.75F+RNG.nextFloat()*0.25F;
 					p.setColor(r*chroma, g*chroma, b*chroma);
-					p.multiplyVelocity((float)sy);
+					p.setPower((float)sy);
 				}
 			}
 		}

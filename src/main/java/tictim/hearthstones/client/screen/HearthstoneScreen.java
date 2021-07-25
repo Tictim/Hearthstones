@@ -51,7 +51,7 @@ public class HearthstoneScreen extends AbstractScreen{
 	public boolean flagResetButtons = false;
 
 	public HearthstoneScreen(PlayerTavernMemory cap){
-		super(NarratorChatListener.EMPTY);
+		super(NarratorChatListener.NO_TITLE);
 		this.memory = cap;
 	}
 
@@ -68,7 +68,7 @@ public class HearthstoneScreen extends AbstractScreen{
 	public void resetTavernButtons(){
 		this.buttons.removeIf(b -> b instanceof TavernButton||b instanceof TavernButton.PropertyButton);
 		this.children.removeIf(b -> b instanceof TavernButton||b instanceof TavernButton.PropertyButton);
-		RegistryKey<World> dim = minecraft.player.world.getDimensionKey();
+		RegistryKey<World> dim = minecraft.player.level.dimension();
 		TreeSet<TavernRecord> set = new TreeSet<>((e1, e2) -> {
 			int i;
 			// home
@@ -77,9 +77,9 @@ public class HearthstoneScreen extends AbstractScreen{
 			if(i!=0) return i;
 			ResourceLocation d1 = e1.getDimensionType();
 			ResourceLocation d2 = e2.getDimensionType();
-			if(d1==d2&&dim.getLocation().equals(d1)){// #3(Optional) distance
-				double s1 = minecraft.player.getDistanceSq(e1.getPos().getX()+0.5, e1.getPos().getY()+0.5, e1.getPos().getZ()+0.5);
-				double s2 = minecraft.player.getDistanceSq(e2.getPos().getX()+0.5, e2.getPos().getY()+0.5, e2.getPos().getZ()+0.5);
+			if(d1==d2&&dim.location().equals(d1)){// #3(Optional) distance
+				double s1 = minecraft.player.distanceToSqr(e1.getPos().getX()+0.5, e1.getPos().getY()+0.5, e1.getPos().getZ()+0.5);
+				double s2 = minecraft.player.distanceToSqr(e2.getPos().getX()+0.5, e2.getPos().getY()+0.5, e2.getPos().getZ()+0.5);
 				i = Double.compare(s1, s2);
 				if(i!=0) return i;
 			}
@@ -107,10 +107,10 @@ public class HearthstoneScreen extends AbstractScreen{
 
 		int mouseY2 = mouseY+yOffset;
 		this.renderBackground(matrixStack);
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(0, -yOffset, 0);
 		super.render(matrixStack, mouseX, mouseY2, partialTicks);
-		matrixStack.pop();
+		matrixStack.popPose();
 		super.drawTooltip(matrixStack, mouseX, mouseY);
 		this.yOffsetFloat = MathHelper.lerp(0.4, yOffsetFloat, this.yOffsetDest = MathHelper.clamp(yOffsetDest, 0, Math.max(0, heightCache-width/2)));
 		this.yOffset = (int)Math.round(yOffsetFloat);
@@ -118,7 +118,7 @@ public class HearthstoneScreen extends AbstractScreen{
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY){
-		if(this.buttons.isEmpty()) drawCenteredString(matrixStack, font, I18n.format("info.hearthstones.screen.empty"), this.xSize/2, this.ySize/2-5, 0xFFFFFF);
+		if(this.buttons.isEmpty()) drawCenteredString(matrixStack, font, I18n.get("info.hearthstones.screen.empty"), this.xSize/2, this.ySize/2-5, 0xFFFFFF);
 		/*else{
 			String s1 = String.format("yOffset: %d (%s)", yOffset, ItemStack.DECIMALFORMAT.format(yOffsetFloat));
 			String s2 = String.format("yOffsetDest: %s ", yOffsetDest);
@@ -153,9 +153,9 @@ public class HearthstoneScreen extends AbstractScreen{
 	@Override
 	public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_){
 		if(super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_)) return true;
-		InputMappings.Input mouseKey = InputMappings.getInputByCode(p_keyPressed_1_, p_keyPressed_2_);
-		if(p_keyPressed_1_==256||this.minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)){
-			onClose();
+		InputMappings.Input mouseKey = InputMappings.getKey(p_keyPressed_1_, p_keyPressed_2_);
+		if(p_keyPressed_1_==256||this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey)){
+			removed();
 			return true;
 		}else return false;
 	}
@@ -190,7 +190,7 @@ public class HearthstoneScreen extends AbstractScreen{
 		@Override
 		public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
 			if(this.visible){
-				matrixStack.push();
+				matrixStack.pushPose();
 				//noinspection deprecation
 				RenderSystem.color4f(1, 1, 1, 1);
 				RenderSystem.enableBlend();
@@ -199,13 +199,13 @@ public class HearthstoneScreen extends AbstractScreen{
 				TavernRenderHelper.renderTavernUIBase(matrixStack, tavern.getTavernType(), memory.getSelectedTavern()==tavern);
 				matrixStack.translate(6*2, 1*2, 0);
 				TavernRenderHelper.renderAccess(matrixStack, tavern.getOwner().getAccessModifier());
-				matrixStack.pop();
+				matrixStack.popPose();
 
-				font.drawStringWithShadow(matrixStack, sign.nameAndDistance(), x+25*2, y+9*2-1, 0xFFFFFF);
+				font.drawShadow(matrixStack, sign.nameAndDistance(), x+25*2, y+9*2-1, 0xFFFFFF);
 				String ownerText = sign.owner();
-				int ownerWidth = font.getStringWidth(ownerText);
-				font.drawStringWithShadow(matrixStack, sign.owner(), x+25*2, y+14*2-1, 0xFFFFFF);
-				font.drawString(matrixStack, sign.position(), x+25*2+ownerWidth+font.getStringWidth(" "), y+14*2-1, 0xFFFFFF);
+				int ownerWidth = font.width(ownerText);
+				font.drawShadow(matrixStack, sign.owner(), x+25*2, y+14*2-1, 0xFFFFFF);
+				font.draw(matrixStack, sign.position(), x+25*2+ownerWidth+font.width(" "), y+14*2-1, 0xFFFFFF);
 			}
 		}
 
@@ -213,7 +213,7 @@ public class HearthstoneScreen extends AbstractScreen{
 		@Override
 		public boolean mouseClicked(double mouseX, double mouseY, int button){
 			if(this.active&&this.visible&&this.isValidClickButton(button)&&this.clicked(mouseX, mouseY)){
-				this.playDownSound(Minecraft.getInstance().getSoundHandler());
+				this.playDownSound(Minecraft.getInstance().getSoundManager());
 				execute(button==0 ? TavernMemoryOperation.SELECT : TavernMemoryOperation.DELETE);
 				return true;
 			}
@@ -271,7 +271,7 @@ public class HearthstoneScreen extends AbstractScreen{
 
 			@Override
 			public void renderButton(MatrixStack matrixStack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_){
-				minecraft.getTextureManager().bindTexture(HearthstoneScreen.ICONS);
+				minecraft.getTextureManager().bind(HearthstoneScreen.ICONS);
 				blit(matrixStack, this.x, this.y, 7*2*property.ordinal(), 0, 7*2, 7*2);
 			}
 
@@ -289,9 +289,9 @@ public class HearthstoneScreen extends AbstractScreen{
 		SHABBY(button -> button.tavern.getTavernType()==TavernType.SHABBY),
 		TOO_FAR(button -> {
 			PlayerEntity player = Minecraft.getInstance().player;
-			return (player.getHeldItem(Hand.MAIN_HAND).getItem()==ModItems.HEARTHING_GEM.get()||player.getHeldItem(Hand.OFF_HAND).getItem()==ModItems.HEARTHING_GEM.get())&&
-					(!button.tavern.getDimensionType().equals(player.world.getDimensionKey().getLocation())||
-							Math.sqrt(player.getDistanceSq(button.tavern.getPos().getX(), button.tavern.getPos().getY(), button.tavern.getPos().getZ()))>ModCfg.hearthingGem.travelDistanceThreshold());
+			return (player.getItemInHand(Hand.MAIN_HAND).getItem()==ModItems.HEARTHING_GEM.get()||player.getItemInHand(Hand.OFF_HAND).getItem()==ModItems.HEARTHING_GEM.get())&&
+					(!button.tavern.getDimensionType().equals(player.level.dimension().location())||
+							Math.sqrt(player.distanceToSqr(button.tavern.getPos().getX(), button.tavern.getPos().getY(), button.tavern.getPos().getZ()))>ModCfg.hearthingGem.travelDistanceThreshold());
 		});
 
 		private final Predicate<TavernButton> matches;

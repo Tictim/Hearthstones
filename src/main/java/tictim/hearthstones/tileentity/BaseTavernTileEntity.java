@@ -31,10 +31,10 @@ public abstract class BaseTavernTileEntity extends TileEntity implements Tavern{
 	}
 
 	@Override public World world(){
-		return Objects.requireNonNull(getWorld());
+		return Objects.requireNonNull(getLevel());
 	}
 	@Override public BlockPos pos(){
-		return getPos();
+		return getBlockPos();
 	}
 
 	@Override public ITextComponent getName(){
@@ -55,29 +55,29 @@ public abstract class BaseTavernTileEntity extends TileEntity implements Tavern{
 	}
 
 	@Override public SUpdateTileEntityPacket getUpdatePacket(){
-		return new SUpdateTileEntityPacket(this.pos, 0, this.getUpdateTag());
+		return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
 	}
 	@Override public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt){
-		read(pkt.getNbtCompound());
+		read(pkt.getTag());
 	}
 	@Override public CompoundNBT getUpdateTag(){
-		return write(new CompoundNBT());
+		return save(new CompoundNBT());
 	}
 
-	@Override public void read(BlockState state, CompoundNBT nbt){
-		super.read(state, nbt);
+	@Override public void load(BlockState state, CompoundNBT nbt){
+		super.load(state, nbt);
 		read(nbt);
 	}
 
 	private void read(CompoundNBT nbt){
-		this.name = nbt.contains("name", NBT.TAG_STRING) ? ITextComponent.Serializer.getComponentFromJson(nbt.getString("name")) : null;
+		this.name = nbt.contains("name", NBT.TAG_STRING) ? ITextComponent.Serializer.fromJson(nbt.getString("name")) : null;
 		if(nbt.contains("owner", NBT.TAG_COMPOUND)) this.owner.deserializeNBT(nbt.getCompound("owner"));
 		else this.owner.reset();
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt){
-		nbt = super.write(nbt);
+	public CompoundNBT save(CompoundNBT nbt){
+		nbt = super.save(nbt);
 		if(this.name!=null) nbt.putString("name", ITextComponent.Serializer.toJson(this.name));
 		if(owner.hasOwner()) nbt.put("owner", this.owner.serializeNBT());
 		return nbt;

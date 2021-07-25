@@ -74,14 +74,14 @@ public class Hearthstones{
 		Registry.register(
 				WorldGenRegistries.CONFIGURED_FEATURE,
 				new ResourceLocation(MODID, "aquamarine"),
-				Feature.ORE.withConfiguration(
+				Feature.ORE.configured(
 						new OreFeatureConfig(
-								OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD,
-								ModBlocks.AQUAMARINE_ORE.get().getDefaultState(),
+								OreFeatureConfig.FillerBlockType.NATURAL_STONE,
+								ModBlocks.AQUAMARINE_ORE.get().defaultBlockState(),
 								5))
-						.withPlacement(Placement.RANGE.configure(new TopSolidRangeConfig(0, 0, 50))
-								.square() // TODO what does this shit do
-								.func_242731_b(12)));
+						.decorated(Placement.RANGE.configured(new TopSolidRangeConfig(0, 0, 50))
+								.squared() // TODO what does this shit do
+								.count(12)));
 
 		CapabilityManager.INSTANCE.register(PlayerTavernMemory.class, new Capability.IStorage<PlayerTavernMemory>(){
 			@Nullable @Override public INBT writeNBT(Capability<PlayerTavernMemory> capability, PlayerTavernMemory instance, Direction side){
@@ -120,10 +120,10 @@ public class Hearthstones{
 				}else return 0;
 			};
 
-			ItemModelsProperties.registerProperty(ModItems.HEARTHSTONE.get(), key, itemPropertyGetter);
-			ItemModelsProperties.registerProperty(ModItems.HEARTHING_PLANKS.get(), key, itemPropertyGetter);
-			ItemModelsProperties.registerProperty(ModItems.HEARTHING_GEM.get(), key, itemPropertyGetter);
-			ItemModelsProperties.registerProperty(ModItems.COMPANION_HEARTHSTONE.get(), key, itemPropertyGetter);
+			ItemModelsProperties.register(ModItems.HEARTHSTONE.get(), key, itemPropertyGetter);
+			ItemModelsProperties.register(ModItems.HEARTHING_PLANKS.get(), key, itemPropertyGetter);
+			ItemModelsProperties.register(ModItems.HEARTHING_GEM.get(), key, itemPropertyGetter);
+			ItemModelsProperties.register(ModItems.COMPANION_HEARTHSTONE.get(), key, itemPropertyGetter);
 		}
 	}
 
@@ -138,9 +138,9 @@ public class Hearthstones{
 		public static void loadBiome(BiomeLoadingEvent event){
 			if(event.getCategory()==Biome.Category.NETHER||event.getCategory()==Biome.Category.THEEND) return;
 
-			ConfiguredFeature<?, ?> aquamarine = WorldGenRegistries.CONFIGURED_FEATURE.getOrDefault(new ResourceLocation(MODID, "aquamarine"));
+			ConfiguredFeature<?, ?> aquamarine = WorldGenRegistries.CONFIGURED_FEATURE.get(new ResourceLocation(MODID, "aquamarine"));
 			if(aquamarine!=null){
-				event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, aquamarine);
+				event.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, aquamarine);
 			}
 		}
 	}

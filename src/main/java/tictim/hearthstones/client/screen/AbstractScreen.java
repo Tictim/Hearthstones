@@ -48,7 +48,7 @@ public abstract class AbstractScreen extends Screen{
 		RenderSystem.disableDepthTest();
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(guiLeft, guiTop, 0);
 		//noinspection deprecation
 		RenderSystem.color4f(1, 1, 1, 1);
@@ -62,7 +62,7 @@ public abstract class AbstractScreen extends Screen{
 
 		this.drawGuiContainerForegroundLayer(matrixStack, mouseX, mouseY);
 
-		matrixStack.pop();
+		matrixStack.popPose();
 		drawTooltip(matrixStack, mouseX, mouseY);
 		RenderSystem.enableDepthTest();
 	}

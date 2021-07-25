@@ -34,86 +34,86 @@ public final class ModItems{
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 
 	public static final ItemGroup TAB = new ItemGroup("hearthstones"){
-		@Override public ItemStack createIcon(){
+		@Override public ItemStack makeIcon(){
 			return new ItemStack(ModItems.HEARTHSTONE.get());
 		}
-	}.setRelevantEnchantmentTypes(ModEnchantments.HEARTHSTONE);
+	}.setEnchantmentCategories(ModEnchantments.HEARTHSTONE);
 
 	public static final RegistryObject<Item> HEARTHSTONE = ITEMS.register("hearthstone",
-			() -> new RegularHearthstoneItem(new Item.Properties().maxStackSize(1).rarity(Rarity.RARE).group(TAB))
+			() -> new RegularHearthstoneItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).tab(TAB))
 	);
 	public static final RegistryObject<Item> HEARTHING_PLANKS = ITEMS.register("hearthing_planks",
-			() -> new HearthingPlanksItem(new Item.Properties().maxStackSize(1).group(TAB))
+			() -> new HearthingPlanksItem(new Item.Properties().stacksTo(1).tab(TAB))
 	);
 	public static final RegistryObject<Item> HEARTHING_GEM = ITEMS.register("hearthing_gem",
-			() -> new HearthingGemItem(new Item.Properties().maxStackSize(1).rarity(Rarity.UNCOMMON).group(TAB))
+			() -> new HearthingGemItem(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).tab(TAB))
 	);
 	public static final RegistryObject<Item> COMPANION_HEARTHSTONE = ITEMS.register("companion_hearthstone",
-			() -> new CompanionHearthstoneItem(new Item.Properties().maxStackSize(1).rarity(Rarity.EPIC).group(TAB))
+			() -> new CompanionHearthstoneItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).tab(TAB))
 	);
 	public static final RegistryObject<Item> COMPANION_STONE = ITEMS.register("companion_stone",
-			() -> new Item(new Item.Properties().maxStackSize(1).group(TAB)){
-				@Override public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+			() -> new Item(new Item.Properties().stacksTo(1).tab(TAB)){
+				@Override public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 					tooltip.add(new TranslationTextComponent("info.hearthstones.companion_stone.tooltip"));
 				}
 			}
 	);
 	public static final RegistryObject<Item> MORTAR = ITEMS.register("mortar",
-			() -> new MortarItem(new Item.Properties().maxDamage(155).group(TAB).setNoRepair())
+			() -> new MortarItem(new Item.Properties().durability(155).tab(TAB).setNoRepair())
 	);
 
 	public static final RegistryObject<Item> TATTERED_TAVERNCLOTH = ITEMS.register("tattered_taverncloth",
-			() -> new ShabbyTavernUpgradeItem(new Item.Properties().group(TAB))
+			() -> new ShabbyTavernUpgradeItem(new Item.Properties().tab(TAB))
 	);
 	public static final RegistryObject<Item> TAVERNCLOTH = ITEMS.register("taverncloth",
-			() -> new RegularTavernUpgradeItem(new Item.Properties().group(TAB))
+			() -> new RegularTavernUpgradeItem(new Item.Properties().tab(TAB))
 	);
 	public static final RegistryObject<Item> BLUE_TAVERNCLOTH = ITEMS.register("blue_taverncloth",
-			() -> new GuidTavernUpgradeItem(new Item.Properties().rarity(Rarity.UNCOMMON).group(TAB))
+			() -> new GuidTavernUpgradeItem(new Item.Properties().rarity(Rarity.UNCOMMON).tab(TAB))
 	);
 
 	public static final RegistryObject<Item> AQUAMARINE = ITEMS.register("aquamarine",
-			() -> new Item(new Item.Properties().group(TAB))
+			() -> new Item(new Item.Properties().tab(TAB))
 	);
 	public static final RegistryObject<Item> RED_LEATHER = ITEMS.register("red_leather",
-			() -> new Item(new Item.Properties().group(TAB))
+			() -> new Item(new Item.Properties().tab(TAB))
 	);
 	public static final RegistryObject<Item> TATTERED_LEATHER = ITEMS.register("tattered_leather",
-			() -> new Item(new Item.Properties().group(TAB)){
-				@Override public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
-					if(this.isInGroup(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
+			() -> new Item(new Item.Properties().tab(TAB)){
+				@Override public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+					if(this.allowdedIn(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
 				}
 			}
 	);
 	public static final RegistryObject<Item> BLUE_LEATHER = ITEMS.register("blue_leather",
-			() -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON).group(TAB))
+			() -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON).tab(TAB))
 	);
 	public static final RegistryObject<Item> DEEP_BLUE = ITEMS.register("deep_blue",
-			() -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON).group(TAB))
+			() -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON).tab(TAB))
 	);
 	public static final RegistryObject<Item> AQUAMARINE_DUST = ITEMS.register("aquamarine_dust",
-			() -> new Item(new Item.Properties().group(TAB))
+			() -> new Item(new Item.Properties().tab(TAB))
 	);
 	public static final RegistryObject<Item> DIAMOND_DUST = ITEMS.register("diamond_dust",
-			() -> new Item(new Item.Properties().group(TAB))
+			() -> new Item(new Item.Properties().tab(TAB))
 	);
 	public static final RegistryObject<Item> LAPIS_DUST = ITEMS.register("lapis_dust",
-			() -> new Item(new Item.Properties().group(TAB))
+			() -> new Item(new Item.Properties().tab(TAB))
 	);
 
 	public static final RegistryObject<Item> AQUAMARINE_ORE = ITEMS.register("aquamarine_ore",
-			() -> new BlockItem(ModBlocks.AQUAMARINE_ORE.get(), new Item.Properties().group(TAB))
+			() -> new BlockItem(ModBlocks.AQUAMARINE_ORE.get(), new Item.Properties().tab(TAB))
 	);
 	public static final RegistryObject<Item> AQUAMARINE_BLOCK = ITEMS.register("aquamarine_block",
-			() -> new BlockItem(ModBlocks.AQUAMARINE_BLOCK.get(), new Item.Properties().group(TAB))
+			() -> new BlockItem(ModBlocks.AQUAMARINE_BLOCK.get(), new Item.Properties().tab(TAB))
 	);
 	public static final RegistryObject<Item> TAVERN = ITEMS.register("tavern",
-			() -> new BlockItem(ModBlocks.TAVERN.get(), new Item.Properties().group(TAB))
+			() -> new BlockItem(ModBlocks.TAVERN.get(), new Item.Properties().tab(TAB))
 	);
 	public static final RegistryObject<Item> SHABBY_TAVERN = ITEMS.register("shabby_tavern",
-			() -> new BlockItem(ModBlocks.SHABBY_TAVERN.get(), new Item.Properties().group(TAB))
+			() -> new BlockItem(ModBlocks.SHABBY_TAVERN.get(), new Item.Properties().tab(TAB))
 	);
 	public static final RegistryObject<Item> GLOBAL_TAVERN = ITEMS.register("global_tavern",
-			() -> new BlockItem(ModBlocks.GLOBAL_TAVERN.get(), new Item.Properties().rarity(Rarity.UNCOMMON).group(TAB))
+			() -> new BlockItem(ModBlocks.GLOBAL_TAVERN.get(), new Item.Properties().rarity(Rarity.UNCOMMON).tab(TAB))
 	);
 }

@@ -19,7 +19,7 @@ public final class HearthstonesJeiPlugin implements IModPlugin{
 	}
 	*/
 	private static void setIngredients(IIngredients ingredients){
-		ingredients.setInputIngredients(Arrays.asList(Ingredient.fromItems(Items.OAK_LOG), Ingredient.fromTag(ModTags.HEARTHSTONE_MATERIAL)));
+		ingredients.setInputIngredients(Arrays.asList(Ingredient.of(Items.OAK_LOG), Ingredient.of(ModTags.HEARTHSTONE_MATERIAL)));
 	}
 	/*
 	@Override

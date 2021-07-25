@@ -15,19 +15,19 @@ import java.util.Objects;
 public class ClientProxy extends ServerProxy{
 	@Override
 	public boolean isOp(PlayerEntity player){
-		return player.getServer()==null ? player.hasPermissionLevel(1) : super.isOp(player);
+		return player.getServer()==null ? player.hasPermissions(1) : super.isOp(player);
 	}
 
 	@Override
 	public void openHearthstoneGui(World world, PlayerEntity player){
 		if(player.getServer()!=null){
 			if(player instanceof ServerPlayerEntity) super.openHearthstoneGui(world, player);
-		}else Minecraft.getInstance().displayGuiScreen(new HearthstoneScreen(PlayerTavernMemory.get(player)));
+		}else Minecraft.getInstance().setScreen(new HearthstoneScreen(PlayerTavernMemory.get(player)));
 	}
 
 	@Override
 	public GlobalTavernMemory getGlobalTavernMemory(){
 		if(ServerLifecycleHooks.getCurrentServer()!=null) return super.getGlobalTavernMemory();
-		return Objects.requireNonNull(Minecraft.getInstance().world).getCapability(TavernMemory.GLOBAL).orElseThrow(() -> new RuntimeException("Unable to access global tavern memory"));
+		return Objects.requireNonNull(Minecraft.getInstance().level).getCapability(TavernMemory.GLOBAL).orElseThrow(() -> new RuntimeException("Unable to access global tavern memory"));
 	}
 }

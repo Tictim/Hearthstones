@@ -19,16 +19,16 @@ public class HearthingPlanksItem extends BaseHearthstoneItem{
 		super(properties, new HearthingPlanksHearthstone());
 	}
 
-	@Override public boolean getIsRepairable(ItemStack toRepair, ItemStack repair){
+	@Override public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair){
 		return ItemTags.PLANKS.contains(repair.getItem());
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
-		if(this.isInGroup(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+		if(this.allowdedIn(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
 	}
 
-	@Override public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	@Override public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("info.hearthstones.hearthing_planks.tooltip.0"));
 		tooltip.add(new TranslationTextComponent("info.hearthstones.hearthing_planks.tooltip.1"));
 	}

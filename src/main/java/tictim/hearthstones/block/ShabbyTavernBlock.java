@@ -25,7 +25,7 @@ public class ShabbyTavernBlock extends BaseTavernBlock{
 		tooltip.add(new TranslationTextComponent("info.hearthstones.tavern.shabby.tooltip"));
 	}
 
-	@Override public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
+	@Override public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
 		if(!ModCfg.easyMode()) items.add(new ItemStack(this));
 	}
 }

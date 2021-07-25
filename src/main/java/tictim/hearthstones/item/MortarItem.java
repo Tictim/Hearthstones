@@ -17,15 +17,15 @@ public class MortarItem extends Item{
 	@Override
 	public ItemStack getContainerItem(ItemStack stack){
 		ItemStack copy = stack.copy();
-		if(copy.attemptDamageItem(1, Item.random, null)){
+		if(copy.hurt(1, Item.random, null)){
 			copy.shrink(1);
-			copy.setDamage(0);
+			copy.setDamageValue(0);
 		}
 		return copy;
 	}
 
 	@Override
-	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair){
+	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair){
 		return Tags.Items.INGOTS_IRON.contains(repair.getItem());
 	}
 }

@@ -18,10 +18,10 @@ public class GuidTavernUpgradeItem extends BaseTavernUpgradeItem{
 	}
 
 	@Override protected BlockState getStateToReplace(Tavern tavern){
-		return ModBlocks.GLOBAL_TAVERN.get().getDefaultState();
+		return ModBlocks.GLOBAL_TAVERN.get().defaultBlockState();
 	}
 
-	@Override public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	@Override public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("info.hearthstones.blue_taverncloth.tooltip"));
 	}
 }

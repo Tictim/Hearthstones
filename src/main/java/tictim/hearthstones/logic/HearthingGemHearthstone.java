@@ -14,11 +14,11 @@ public class HearthingGemHearthstone extends GuiHearthstone{
 	public void applyDamage(HearthingContext ctx){
 		if(!ctx.getPlayer().isCreative()){
 			if(ctx.getConvertedDistance()>ModCfg.hearthingGem.travelDistanceThreshold()){
-				ctx.getPlayer().sendBreakAnimation(ctx.getHand());
+				ctx.getPlayer().broadcastBreakEvent(ctx.getHand());
 				ctx.getStack().shrink(1);
-				ctx.getPlayer().addStat(Stats.ITEM_BROKEN.get(ctx.getStack().getItem()));
-				ctx.getStack().setDamage(0);
-			}else ctx.getStack().damageItem(1, ctx.getPlayer(), player -> player.sendBreakAnimation(EquipmentSlotType.MAINHAND));
+				ctx.getPlayer().awardStat(Stats.ITEM_BROKEN.get(ctx.getStack().getItem()));
+				ctx.getStack().setDamageValue(0);
+			}else ctx.getStack().hurtAndBreak(1, ctx.getPlayer(), player -> player.broadcastBreakEvent(EquipmentSlotType.MAINHAND));
 		}
 	}
 }

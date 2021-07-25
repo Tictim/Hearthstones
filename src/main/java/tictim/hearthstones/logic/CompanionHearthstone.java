@@ -34,13 +34,13 @@ public class CompanionHearthstone extends GuiHearthstone{
 	public static Set<Entity> getWarpTargets(HearthingContext ctx){
 		Set<Entity> set = new HashSet<>();
 		addRidingEntities(ctx.getPlayer(), set);
-		for(LivingEntity e : ctx.getPlayer().world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(ctx.getOriginPos(), ctx.getOriginPos()).grow(8))){
+		for(LivingEntity e : ctx.getPlayer().level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(ctx.getOriginPos(), ctx.getOriginPos()).inflate(8))){
 			if(!set.contains(e)&&e.isAlive()&&(
 					(e instanceof MobEntity&&((MobEntity)e).getLeashHolder()==ctx.getPlayer())||
 							(e instanceof TameableEntity&&((TameableEntity)e).getOwner()==ctx.getPlayer())||
-							(e instanceof AbstractHorseEntity&&((AbstractHorseEntity)e).isTame()&&ctx.getPlayer().getUniqueID().equals(((AbstractHorseEntity)e).getOwnerUniqueId()))||
-							(!ctx.getPlayer().isSneaking()&&e instanceof PlayerEntity&&!e.isSleeping()&&(e.getHeldItemMainhand().getItem()==ModItems.COMPANION_STONE.get()
-									||e.getHeldItemOffhand().getItem()==ModItems.COMPANION_STONE.get()))))
+							(e instanceof AbstractHorseEntity&&((AbstractHorseEntity)e).isTamed()&&ctx.getPlayer().getUUID().equals(((AbstractHorseEntity)e).getOwnerUUID()))||
+							(!ctx.getPlayer().isShiftKeyDown()&&e instanceof PlayerEntity&&!e.isSleeping()&&(e.getMainHandItem().getItem()==ModItems.COMPANION_STONE.get()
+									||e.getOffhandItem().getItem()==ModItems.COMPANION_STONE.get()))))
 				addRidingEntities(e, set);
 		}
 		set.remove(ctx.getPlayer());
@@ -48,7 +48,7 @@ public class CompanionHearthstone extends GuiHearthstone{
 	}
 
 	private static void addRidingEntities(Entity e, Set<Entity> set){
-		addPassengers(e.getLowestRidingEntity(), set);
+		addPassengers(e.getRootVehicle(), set);
 	}
 	private static void addPassengers(Entity root, Set<Entity> set){
 		if(set.add(root)){

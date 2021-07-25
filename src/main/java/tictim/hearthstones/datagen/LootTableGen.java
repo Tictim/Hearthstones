@@ -6,7 +6,6 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.LootTableProvider;
 import net.minecraft.data.loot.BlockLootTables;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.Items;
 import net.minecraft.loot.ConstantRange;
 import net.minecraft.loot.ItemLootEntry;
 import net.minecraft.loot.LootParameterSet;
@@ -46,14 +45,14 @@ public class LootTableGen extends LootTableProvider{
 
 	public static class BlockTables extends BlockLootTables{
 		@Override protected void addTables(){
-			registerLootTable(ModBlocks.AQUAMARINE_ORE.get(),
-					b -> droppingWithSilkTouch(b,
-							withExplosionDecay(b,
-									ItemLootEntry.builder(ModItems.AQUAMARINE.get())
-											.acceptFunction(SetCount.builder(RandomValueRange.of(1, 2)))
-											.acceptFunction(ApplyBonus.oreDrops(Enchantments.FORTUNE)))));
+			add(ModBlocks.AQUAMARINE_ORE.get(),
+					b -> createSilkTouchDispatchTable(b,
+							applyExplosionDecay(b,
+									ItemLootEntry.lootTableItem(ModItems.AQUAMARINE.get())
+											.apply(SetCount.setCount(RandomValueRange.between(1, 2)))
+											.apply(ApplyBonus.addOreBonusCount(Enchantments.BLOCK_FORTUNE)))));
 
-			registerDropSelfLootTable(ModBlocks.AQUAMARINE_BLOCK.get());
+			dropSelf(ModBlocks.AQUAMARINE_BLOCK.get());
 
 			registerTavernLootTable(ModBlocks.TAVERN.get());
 			registerTavernLootTable(ModBlocks.SHABBY_TAVERN.get());
@@ -62,14 +61,14 @@ public class LootTableGen extends LootTableProvider{
 
 		// ew
 		private void registerTavernLootTable(Block block){
-			registerLootTable(block, LootTable.builder().addLootPool(
-					withSurvivesExplosion(block,
-							LootPool.builder()
-									.rolls(ConstantRange.of(1))
-									.addEntry(ItemLootEntry.builder(block)
-											.acceptFunction(CopyName.builder(CopyName.Source.BLOCK_ENTITY))
-											.acceptFunction(CopyNbt.builder(CopyNbt.Source.BLOCK_ENTITY)
-													.replaceOperation("owner", "BlockEntityTag.owner"))))));
+			add(block, LootTable.lootTable().withPool(
+					applyExplosionCondition(block,
+							LootPool.lootPool()
+									.setRolls(ConstantRange.exactly(1))
+									.add(ItemLootEntry.lootTableItem(block)
+											.apply(CopyName.copyName(CopyName.Source.BLOCK_ENTITY))
+											.apply(CopyNbt.copyData(CopyNbt.Source.BLOCK_ENTITY)
+													.copy("owner", "BlockEntityTag.owner"))))));
 		}
 
 		@Override protected Iterable<Block> getKnownBlocks(){

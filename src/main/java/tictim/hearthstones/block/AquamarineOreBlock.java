@@ -13,11 +13,11 @@ import java.util.Random;
 
 public class AquamarineOreBlock extends Block{
 	public AquamarineOreBlock(){
-		super(Properties.create(Material.ROCK).hardnessAndResistance(3, 5).harvestTool(ToolType.PICKAXE).harvestLevel(1));
+		super(Properties.of(Material.STONE).strength(3, 5).harvestTool(ToolType.PICKAXE).harvestLevel(1));
 	}
 
 	@Override
 	public int getExpDrop(BlockState state, IWorldReader world, BlockPos pos, int fortune, int silktouch){
-		return MathHelper.nextInt(world instanceof World ? ((World)world).rand : new Random(), 3, 7);
+		return MathHelper.nextInt(world instanceof World ? ((World)world).random : new Random(), 3, 7);
 	}
 }

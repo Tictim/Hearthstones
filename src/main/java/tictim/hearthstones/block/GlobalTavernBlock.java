@@ -23,8 +23,8 @@ public class GlobalTavernBlock extends BaseTavernBlock{
 		return new GlobalTavernTileEntity();
 	}
 
-	@Override public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-		super.addInformation(stack, worldIn, tooltip, flagIn);
+	@Override public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 		tooltip.add(new TranslationTextComponent("info.hearthstones.tavern.global.tooltip.1"));
 	}
 
@@ -34,10 +34,10 @@ public class GlobalTavernBlock extends BaseTavernBlock{
 	}
 
 	@Override
-	public void onBlockHarvested(World world, BlockPos pos, BlockState state, PlayerEntity player){
-		super.onBlockHarvested(world, pos, state, player);
-		if(!world.isRemote){
-			TileEntity te = world.getTileEntity(pos);
+	public void playerWillDestroy(World world, BlockPos pos, BlockState state, PlayerEntity player){
+		super.playerWillDestroy(world, pos, state, player);
+		if(!world.isClientSide){
+			TileEntity te = world.getBlockEntity(pos);
 			if(te instanceof GlobalTavernTileEntity){
 				GlobalTavernMemory.get().delete(new TavernPos(te));
 			}

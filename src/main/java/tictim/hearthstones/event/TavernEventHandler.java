@@ -17,7 +17,7 @@ public final class TavernEventHandler{
 	@SubscribeEvent
 	public static void blockBreakEvent(LivingDestroyBlockEvent event){
 		LivingEntity entity = event.getEntityLiving();
-		TileEntity te = entity.world.getTileEntity(event.getPos());
+		TileEntity te = entity.level.getBlockEntity(event.getPos());
 		if(te instanceof Tavern){
 			Tavern tavern = (Tavern)te;
 			boolean canBreak = entity instanceof PlayerEntity&&canBreak(tavern, (PlayerEntity)entity);
@@ -28,7 +28,7 @@ public final class TavernEventHandler{
 	@SubscribeEvent
 	public static void breakSpeedEvent(PlayerEvent.BreakSpeed event){
 		PlayerEntity player = event.getPlayer();
-		TileEntity _te = player.world.getTileEntity(event.getPos());
+		TileEntity _te = player.level.getBlockEntity(event.getPos());
 		if(_te instanceof Tavern){
 			Tavern tavern = (Tavern)_te;
 			boolean canBreak = canBreak(tavern, player);

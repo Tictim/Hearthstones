@@ -36,7 +36,7 @@ public final class Owner implements INBTSerializable<CompoundNBT>, Comparable<Ow
 	}
 
 	public boolean isOwner(PlayerEntity player){
-		return ownerId==null||ownerId.equals(PlayerEntity.getUUID(player.getGameProfile()));
+		return ownerId==null||ownerId.equals(PlayerEntity.createPlayerUUID(player.getGameProfile()));
 	}
 	public boolean isOwnerOrOp(PlayerEntity player){
 		return isOwner(player)||Hearthstones.PROXY.isOp(player);
@@ -44,8 +44,8 @@ public final class Owner implements INBTSerializable<CompoundNBT>, Comparable<Ow
 
 	public boolean isSameTeam(PlayerEntity player){
 		if(ownerId==null) return false;
-		Team t1 = player.world.getScoreboard().getPlayersTeam(ownerName), t2 = player.getTeam();
-		return t1!=null&&t1.isSameTeam(t2);
+		Team t1 = player.level.getScoreboard().getPlayersTeam(ownerName), t2 = player.getTeam();
+		return t1!=null&&t1.isAlliedTo(t2);
 	}
 
 	public boolean hasOwner(){
@@ -60,7 +60,7 @@ public final class Owner implements INBTSerializable<CompoundNBT>, Comparable<Ow
 		return this.ownerId;
 	}
 	public void setOwner(@Nullable PlayerEntity player){
-		setOwner(player==null ? null : PlayerEntity.getUUID(player.getGameProfile()), player==null ? "" : player.getGameProfile().getName());
+		setOwner(player==null ? null : PlayerEntity.createPlayerUUID(player.getGameProfile()), player==null ? "" : player.getGameProfile().getName());
 	}
 	public void setOwner(@Nullable UUID owner, @Nullable String name){
 		if(this.ownerId==null&&owner!=null) access = AccessModifier.PRIVATE;
@@ -95,7 +95,7 @@ public final class Owner implements INBTSerializable<CompoundNBT>, Comparable<Ow
 	public CompoundNBT serializeNBT(){
 		CompoundNBT nbt = new CompoundNBT();
 		if(this.ownerId!=null){
-			nbt.putUniqueId("owner", this.ownerId);
+			nbt.putUUID("owner", this.ownerId);
 			nbt.putString("ownerName", this.ownerName);
 		}
 		nbt.putByte("access", (byte)access.ordinal());
@@ -104,8 +104,8 @@ public final class Owner implements INBTSerializable<CompoundNBT>, Comparable<Ow
 
 	@Override
 	public void deserializeNBT(CompoundNBT nbt){
-		if(nbt.hasUniqueId("owner")){
-			this.ownerId = nbt.getUniqueId("owner");
+		if(nbt.hasUUID("owner")){
+			this.ownerId = nbt.getUUID("owner");
 			this.ownerName = nbt.getString("ownerName");
 		}else{
 			this.ownerId = null;

@@ -17,16 +17,16 @@ public class MultiItemCookingResult implements IFinishedRecipe{
 		this.count = count;
 	}
 
-	@Override public void serialize(JsonObject json){
-		resultDelegate.serialize(json);
+	@Override public void serializeRecipeData(JsonObject json){
+		resultDelegate.serializeRecipeData(json);
 		JsonObject o = new JsonObject();
 		o.add("item", json.get("result"));
 		o.addProperty("count", count);
 		json.add("result", o);
 	}
 
-	@Override public IRecipeSerializer<?> getSerializer(){return resultDelegate.getSerializer();}
-	@Override public ResourceLocation getID(){return resultDelegate.getID();}
-	@Override @Nullable public JsonObject getAdvancementJson(){return resultDelegate.getAdvancementJson();}
-	@Override @Nullable public ResourceLocation getAdvancementID(){return resultDelegate.getAdvancementID();}
+	@Override public IRecipeSerializer<?> getType(){return resultDelegate.getType();}
+	@Override public ResourceLocation getId(){return resultDelegate.getId();}
+	@Override @Nullable public JsonObject serializeAdvancement(){return resultDelegate.serializeAdvancement();}
+	@Override @Nullable public ResourceLocation getAdvancementId(){return resultDelegate.getAdvancementId();}
 }

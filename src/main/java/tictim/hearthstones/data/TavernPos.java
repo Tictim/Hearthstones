@@ -13,22 +13,22 @@ import net.minecraft.world.World;
 import java.util.Objects;
 
 public final class TavernPos{
-	public static final TavernPos OVERWORLD_ORIGIN = new TavernPos(Dimension.OVERWORLD.getLocation(), 0, 0, 0);
+	public static final TavernPos OVERWORLD_ORIGIN = new TavernPos(Dimension.OVERWORLD.location(), 0, 0, 0);
 
 	public final ResourceLocation dim;
 	public final BlockPos pos;
 
 	public TavernPos(World world, int x, int y, int z){
-		this(world.getDimensionKey().getLocation(), x, y, z);
+		this(world.dimension().location(), x, y, z);
 	}
 	public TavernPos(ResourceLocation dim, int x, int y, int z){
 		this(dim, new BlockPos(x, y, z));
 	}
 	public TavernPos(World world, BlockPos pos){
-		this(world.getDimensionKey().getLocation(), pos);
+		this(world.dimension().location(), pos);
 	}
 	public TavernPos(TileEntity tileEntity){
-		this(Objects.requireNonNull(tileEntity.getWorld()), tileEntity.getPos());
+		this(Objects.requireNonNull(tileEntity.getLevel()), tileEntity.getBlockPos());
 	}
 	public TavernPos(CompoundNBT nbt){
 		this(new ResourceLocation(nbt.getString("dim")), NBTUtil.readBlockPos(nbt.getCompound("pos")));
@@ -39,18 +39,18 @@ public final class TavernPos{
 
 	public TavernPos(ResourceLocation dim, BlockPos pos){
 		this.dim = Objects.requireNonNull(dim);
-		this.pos = pos.toImmutable();
+		this.pos = pos.immutable();
 	}
 
 	public boolean isSameTile(TileEntity te){
-		return Objects.requireNonNull(te.getWorld()).getDimensionKey().getLocation()==dim&&pos.equals(te.getPos());
+		return Objects.requireNonNull(te.getLevel()).dimension().location()==dim&&pos.equals(te.getBlockPos());
 	}
 
 	public boolean isSameDimension(World world){
-		return isSameDimension(world.getDimensionKey());
+		return isSameDimension(world.dimension());
 	}
 	public boolean isSameDimension(RegistryKey<World> registryKey){
-		return isSameDimension(registryKey.getLocation());
+		return isSameDimension(registryKey.location());
 	}
 	public boolean isSameDimension(ResourceLocation dim){
 		return this.dim.equals(dim);

@@ -60,12 +60,12 @@ public final class ModNet{
 					Hearthstones.LOGGER.error("Sender doesn't exists.");
 					return;
 				}
-				World w = Objects.requireNonNull(player.getServer()).getWorld(RegistryKey.getOrCreateKey(Registry.WORLD_KEY, packet.pos.dim));
+				World w = Objects.requireNonNull(player.getServer()).getLevel(RegistryKey.create(Registry.DIMENSION_REGISTRY, packet.pos.dim));
 				if(w==null){
 					Hearthstones.LOGGER.error("Dimension {} is not loaded yet.", packet.pos.dim);
 					return;
 				}
-				TileEntity te = w.getTileEntity(packet.pos.pos);
+				TileEntity te = w.getBlockEntity(packet.pos.pos);
 				if(!(te instanceof Tavern)){
 					Hearthstones.LOGGER.error("There's no tavern block in {}.", packet.pos);
 					return;
@@ -79,16 +79,16 @@ public final class ModNet{
 				tavern.setName(packet.name);
 				if(o.hasOwner()&&o.isOwnerOrOp(player)) o.setAccessModifier(packet.access);
 				BlockState s = w.getBlockState(packet.pos.pos);
-				w.notifyBlockUpdate(tavern.pos(), s, s, 2);
+				w.sendBlockUpdated(tavern.pos(), s, s, 2);
 				PlayerTavernMemory.get(player).add(tavern);
 			});
 			context.setPacketHandled(true);
 		});
 
 		ModNet.CHANNEL.registerMessage(1, SyncTavernMemory.class, (packet, buffer) -> {
-			buffer.writeCompoundTag(packet.player);
-			buffer.writeCompoundTag(packet.global);
-		}, buffer -> new SyncTavernMemory(Objects.requireNonNull(buffer.readCompoundTag()), Objects.requireNonNull(buffer.readCompoundTag())), (packet, contextSupplier) -> {
+			buffer.writeNbt(packet.player);
+			buffer.writeNbt(packet.global);
+		}, buffer -> new SyncTavernMemory(Objects.requireNonNull(buffer.readNbt()), Objects.requireNonNull(buffer.readNbt())), (packet, contextSupplier) -> {
 			NetworkEvent.Context context = contextSupplier.get();
 			if(context.getDirection().getOriginationSide()==LogicalSide.SERVER) context.enqueueWork(() -> handleSyncTavernMemory(packet));
 			context.setPacketHandled(true);
@@ -146,14 +146,14 @@ public final class ModNet{
 			buffer.writeByte(packet.type.id);
 			writeOptionalName(buffer, packet.name);
 			buffer.writeByte(packet.access.ordinal());
-			buffer.writeCompoundTag(packet.owner.serializeNBT());
+			buffer.writeNbt(packet.owner.serializeNBT());
 			buffer.writeBoolean(packet.isHome);
 		}, buffer -> new OpenTavernScreen(
 				new TavernPos(buffer),
 				TavernType.of(buffer.readByte()),
 				readOptionalName(buffer),
 				Accessibility.fromMeta(buffer.readUnsignedByte()),
-				new Owner(Objects.requireNonNull(buffer.readCompoundTag())),
+				new Owner(Objects.requireNonNull(buffer.readNbt())),
 				buffer.readBoolean()
 		), (packet, contextSupplier) -> {
 			NetworkEvent.Context context = contextSupplier.get();
@@ -165,12 +165,12 @@ public final class ModNet{
 
 	private static void writeOptionalName(PacketBuffer buffer, @Nullable ITextComponent name){
 		buffer.writeBoolean(name!=null);
-		if(name!=null) buffer.writeString(ITextComponent.Serializer.toJson(name));
+		if(name!=null) buffer.writeUtf(ITextComponent.Serializer.toJson(name));
 	}
 
 	@Nullable
 	private static ITextComponent readOptionalName(PacketBuffer buffer){
-		return buffer.readBoolean() ? ITextComponent.Serializer.getComponentFromJson(buffer.readString(32767)) : null;
+		return buffer.readBoolean() ? ITextComponent.Serializer.fromJson(buffer.readUtf(32767)) : null;
 	}
 
 	@SuppressWarnings("unused")
@@ -183,8 +183,8 @@ public final class ModNet{
 				PlayerTavernMemory.get(p).deserializeNBT(packet.player);
 				GlobalTavernMemory.get().deserializeNBT(packet.global);
 				//Hearthstones.LOGGER.debug("Synced Tavern Memory.");
-				if(Minecraft.getInstance().currentScreen instanceof HearthstoneScreen){
-					HearthstoneScreen screen = (HearthstoneScreen)Minecraft.getInstance().currentScreen;
+				if(Minecraft.getInstance().screen instanceof HearthstoneScreen){
+					HearthstoneScreen screen = (HearthstoneScreen)Minecraft.getInstance().screen;
 					screen.flagResetButtons = true;
 					//Hearthstones.LOGGER.debug("Updated Screen.");
 				}
@@ -192,7 +192,7 @@ public final class ModNet{
 		}
 
 		public static void handleOpenTavernScreen(OpenTavernScreen packet){
-			if(packet.pos!=null) Minecraft.getInstance().displayGuiScreen(new TavernScreen(packet.pos, packet.type, packet.name, packet.access, packet.owner, packet.isHome));
+			if(packet.pos!=null) Minecraft.getInstance().setScreen(new TavernScreen(packet.pos, packet.type, packet.name, packet.access, packet.owner, packet.isHome));
 		}
 	}
 }

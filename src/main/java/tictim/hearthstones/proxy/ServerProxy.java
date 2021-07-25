@@ -18,8 +18,8 @@ public class ServerProxy implements IProxy{
 	public boolean isOp(PlayerEntity player){
 		MinecraftServer server = player.getServer();
 		if(server==null) return false;
-		OpEntry e = server.getPlayerList().getOppedPlayers().getEntry(player.getGameProfile());
-		return e!=null&&e.getPermissionLevel()>=0;
+		OpEntry e = server.getPlayerList().getOps().get(player.getGameProfile());
+		return e!=null&&e.getLevel()>=0;
 	}
 
 	@Override
@@ -30,6 +30,6 @@ public class ServerProxy implements IProxy{
 	@Override
 	public GlobalTavernMemory getGlobalTavernMemory(){
 		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-		return server.func_241755_D_().getCapability(TavernMemory.GLOBAL).orElseThrow(() -> new RuntimeException("Unable to access global tavern memory"));
+		return server.overworld().getCapability(TavernMemory.GLOBAL).orElseThrow(() -> new RuntimeException("Unable to access global tavern memory"));
 	}
 }

@@ -15,10 +15,10 @@ public class GuiHearthstoneItem extends BaseHearthstoneItem{
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand){
-		if(player.isSneaking()){
+	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand){
+		if(player.isShiftKeyDown()){
 			Hearthstones.PROXY.openHearthstoneGui(world, player);
-			return new ActionResult<>(ActionResultType.CONSUME, player.getHeldItem(hand));
-		}else return super.onItemRightClick(world, player, hand);
+			return new ActionResult<>(ActionResultType.CONSUME, player.getItemInHand(hand));
+		}else return super.use(world, player, hand);
 	}
 }

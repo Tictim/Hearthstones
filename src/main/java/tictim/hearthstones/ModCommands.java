@@ -30,34 +30,34 @@ public final class ModCommands{
 	public static void init(CommandDispatcher<CommandSource> dispatcher){
 		// TODO Suggest position(maybe need to create TavernPosArgument?)
 		dispatcher.register(literal("tavernMemory")
-				.requires(cs -> cs.hasPermissionLevel(4))
+				.requires(cs -> cs.hasPermission(4))
 				.then(literal("add")
 						.then(argument("player", EntityArgument.player())
-								.then(argument("dimension", DimensionArgument.getDimension())
+								.then(argument("dimension", DimensionArgument.dimension())
 										.then(argument("position", BlockPosArgument.blockPos())
-												.executes(ctx -> addTavernMemory(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), DimensionArgument.getDimensionArgument(ctx, "dimension"), BlockPosArgument.getBlockPos(ctx, "position")))
+												.executes(ctx -> addTavernMemory(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), DimensionArgument.getDimension(ctx, "dimension"), BlockPosArgument.getOrLoadBlockPos(ctx, "position")))
 										)
 								)
 						)
 				).then(literal("remove")
 						.then(argument("player", EntityArgument.player())
-								.then(argument("dimension", DimensionArgument.getDimension())
+								.then(argument("dimension", DimensionArgument.dimension())
 										.then(argument("position", BlockPosArgument.blockPos())
-												.executes(ctx -> removeTavernMemory(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), DimensionArgument.getDimensionArgument(ctx, "dimension"), BlockPosArgument.getBlockPos(ctx, "position")))
+												.executes(ctx -> removeTavernMemory(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), DimensionArgument.getDimension(ctx, "dimension"), BlockPosArgument.getOrLoadBlockPos(ctx, "position")))
 										)
 								)
 						)
 				).then(literal("global")
 						.then(literal("add")
-								.then(argument("dimension", DimensionArgument.getDimension())
+								.then(argument("dimension", DimensionArgument.dimension())
 										.then(argument("position", BlockPosArgument.blockPos())
-												.executes(ctx -> addGlobalTavernMemory(ctx.getSource(), DimensionArgument.getDimensionArgument(ctx, "dimension"), BlockPosArgument.getBlockPos(ctx, "position")))
+												.executes(ctx -> addGlobalTavernMemory(ctx.getSource(), DimensionArgument.getDimension(ctx, "dimension"), BlockPosArgument.getOrLoadBlockPos(ctx, "position")))
 										)
 								)
 						).then(literal("remove")
-								.then(argument("dimension", DimensionArgument.getDimension())
+								.then(argument("dimension", DimensionArgument.dimension())
 										.then(argument("position", BlockPosArgument.blockPos())
-												.executes(ctx -> removeGlobalTavernMemory(ctx.getSource(), DimensionArgument.getDimensionArgument(ctx, "dimension"), BlockPosArgument.getBlockPos(ctx, "position")))
+												.executes(ctx -> removeGlobalTavernMemory(ctx.getSource(), DimensionArgument.getDimension(ctx, "dimension"), BlockPosArgument.getOrLoadBlockPos(ctx, "position")))
 										)
 								)
 						).executes(ctx -> listTavernMemory(ctx.getSource(), GlobalTavernMemory.get()))
@@ -68,17 +68,17 @@ public final class ModCommands{
 	}
 
 	private static int addTavernMemory(CommandSource sender, PlayerEntity player, ServerWorld world, BlockPos pos){
-		if(!ServerWorld.isValid(pos)) sender.sendErrorMessage(new TranslationTextComponent("command.tavern_memory.add.out_of_world", new TavernPos(world, pos)));
-		else if(!world.isAreaLoaded(pos, 0)) sender.sendErrorMessage(new TranslationTextComponent("command.tavern_memory.add.unloaded", new TavernPos(world, pos)));
+		if(!ServerWorld.isInWorldBounds(pos)) sender.sendFailure(new TranslationTextComponent("command.tavern_memory.add.out_of_world", new TavernPos(world, pos)));
+		else if(!world.isAreaLoaded(pos, 0)) sender.sendFailure(new TranslationTextComponent("command.tavern_memory.add.unloaded", new TavernPos(world, pos)));
 		else{
-			TileEntity te = world.getTileEntity(pos);
+			TileEntity te = world.getBlockEntity(pos);
 			if(te instanceof Tavern){
 				PlayerTavernMemory m = PlayerTavernMemory.get(player);
 				m.add((Tavern)te);
 				m.sync();
-				sender.sendFeedback(new TranslationTextComponent("command.tavern_memory.add.success", new TavernPos(world, pos), player.getDisplayName()), true);
+				sender.sendSuccess(new TranslationTextComponent("command.tavern_memory.add.success", new TavernPos(world, pos), player.getDisplayName()), true);
 				return SINGLE_SUCCESS;
-			}else sender.sendErrorMessage(new TranslationTextComponent("command.tavern_memory.add.no_tavern", new TavernPos(world, pos)));
+			}else sender.sendFailure(new TranslationTextComponent("command.tavern_memory.add.no_tavern", new TavernPos(world, pos)));
 		}
 		return 0;
 	}
@@ -87,37 +87,37 @@ public final class ModCommands{
 		PlayerTavernMemory m = PlayerTavernMemory.get(player);
 		if(m.delete(dim, pos)!=null){
 			m.sync();
-			sender.sendFeedback(new TranslationTextComponent("command.tavern_memory.remove.success", new TavernPos(dim, pos), player.getDisplayName()), true);
+			sender.sendSuccess(new TranslationTextComponent("command.tavern_memory.remove.success", new TavernPos(dim, pos), player.getDisplayName()), true);
 			return SINGLE_SUCCESS;
 		}else{
-			sender.sendErrorMessage(new TranslationTextComponent("command.tavern_memory.remove.no_memory", new TavernPos(dim, pos)));
+			sender.sendFailure(new TranslationTextComponent("command.tavern_memory.remove.no_memory", new TavernPos(dim, pos)));
 			return 0;
 		}
 	}
 
 	private static int addGlobalTavernMemory(CommandSource sender, ServerWorld world, BlockPos pos){
-		if(!ServerWorld.isValid(pos)) sender.sendErrorMessage(new TranslationTextComponent("command.tavern_memory.add.out_of_world", new TavernPos(world, pos)));
-		else if(!world.isAreaLoaded(pos, 0)) sender.sendErrorMessage(new TranslationTextComponent("command.tavern_memory.add.unloaded", new TavernPos(world, pos)));
+		if(!ServerWorld.isInWorldBounds(pos)) sender.sendFailure(new TranslationTextComponent("command.tavern_memory.add.out_of_world", new TavernPos(world, pos)));
+		else if(!world.isAreaLoaded(pos, 0)) sender.sendFailure(new TranslationTextComponent("command.tavern_memory.add.unloaded", new TavernPos(world, pos)));
 		else{
-			TileEntity te = world.getTileEntity(pos);
+			TileEntity te = world.getBlockEntity(pos);
 			if(te instanceof Tavern){
 				Tavern teTavern = (Tavern)te;
 				if(teTavern.tavernType()==TavernType.GLOBAL){
 					GlobalTavernMemory.get().add(teTavern);
-					sender.sendFeedback(new TranslationTextComponent("command.tavern_memory.add.success.global", new TavernPos(world, pos)), true);
+					sender.sendSuccess(new TranslationTextComponent("command.tavern_memory.add.success.global", new TavernPos(world, pos)), true);
 					return SINGLE_SUCCESS;
-				}else sender.sendFeedback(new TranslationTextComponent("command.tavern_memory.add.not_global", new TavernPos(world, pos)), true);
-			}else sender.sendErrorMessage(new TranslationTextComponent("command.tavern_memory.add.no_tavern", new TavernPos(world, pos)));
+				}else sender.sendSuccess(new TranslationTextComponent("command.tavern_memory.add.not_global", new TavernPos(world, pos)), true);
+			}else sender.sendFailure(new TranslationTextComponent("command.tavern_memory.add.no_tavern", new TavernPos(world, pos)));
 		}
 		return 0;
 	}
 
 	private static int removeGlobalTavernMemory(CommandSource sender, ServerWorld world, BlockPos pos){
 		if(GlobalTavernMemory.get().delete(world, pos)!=null){
-			sender.sendFeedback(new TranslationTextComponent("command.tavern_memory.remove.success.global", new TavernPos(world, pos)), true);
+			sender.sendSuccess(new TranslationTextComponent("command.tavern_memory.remove.success.global", new TavernPos(world, pos)), true);
 			return SINGLE_SUCCESS;
 		}else{
-			sender.sendErrorMessage(new TranslationTextComponent("command.tavern_memory.remove.no_memory", new TavernPos(world, pos)));
+			sender.sendFailure(new TranslationTextComponent("command.tavern_memory.remove.no_memory", new TavernPos(world, pos)));
 			return 0;
 		}
 	}
@@ -125,19 +125,19 @@ public final class ModCommands{
 	private static int listTavernMemory(CommandSource sender, TavernMemory tavernMemory){
 		switch(tavernMemory.memories().size()){
 			case 0:
-				sender.sendFeedback(new TranslationTextComponent("command.tavern_memory.tavern.no_entry"), false);
+				sender.sendSuccess(new TranslationTextComponent("command.tavern_memory.tavern.no_entry"), false);
 				return 0;
 			case 1:
-				sender.sendFeedback(new TranslationTextComponent("command.tavern_memory.tavern.entry"), false);
+				sender.sendSuccess(new TranslationTextComponent("command.tavern_memory.tavern.entry"), false);
 				break;
 			default:
-				sender.sendFeedback(new TranslationTextComponent("command.tavern_memory.tavern.entries", tavernMemory.memories().size()), false);
+				sender.sendSuccess(new TranslationTextComponent("command.tavern_memory.tavern.entries", tavernMemory.memories().size()), false);
 		}
 		for(TavernRecord memory : tavernMemory.memories()){
 			ITextComponent access = new StringTextComponent(memory.getOwner().getAccessModifier().name());
 			ITextComponent type = new StringTextComponent(memory.getTavernType().name.toUpperCase());
 
-			sender.sendFeedback(new TranslationTextComponent(memory.isMissing() ? "command.tavern_memory.tavern.missing" : "command.tavern_memory.tavern",
+			sender.sendSuccess(new TranslationTextComponent(memory.isMissing() ? "command.tavern_memory.tavern.missing" : "command.tavern_memory.tavern",
 					memory.getName()!=null ? memory.getName() : new TranslationTextComponent("info.hearthstones.tavern.noName"),
 					access,
 					type,

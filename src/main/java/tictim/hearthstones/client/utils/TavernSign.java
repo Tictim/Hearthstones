@@ -33,7 +33,7 @@ public abstract class TavernSign{
 		StringBuilder stb = new StringBuilder();
 		if(isMissing()) stb.append(RED);
 		ITextComponent name = getTavernName();
-		if(name==null) stb.append(I18n.format("info.hearthstones.tavern.noName"));
+		if(name==null) stb.append(I18n.get("info.hearthstones.tavern.noName"));
 		else stb.append(BOLD).append(name.getString());
 		return stb.toString();
 	}
@@ -43,11 +43,11 @@ public abstract class TavernSign{
 	public String distance(){
 		TavernPos pos = getTavernPos();
 		PlayerEntity p = Minecraft.getInstance().player;
-		if(!pos.isSameDimension(p.world)) return I18n.format("info.hearthstones.tavern.another_dim");
-		double dist = Math.sqrt(p.getDistanceSq(pos.pos.getX()+0.5, pos.pos.getY()+0.5, pos.pos.getZ()+0.5));
-		if(dist>=FAR_AWAY) return I18n.format("info.hearthstones.tavern.far_away");
-		else if(dist<=NEARBY) return I18n.format("info.hearthstones.tavern.nearby");
-		else return I18n.format("info.hearthstones.tavern.n_meter_away", DoubleMath.roundToInt(dist, RoundingMode.HALF_UP));
+		if(!pos.isSameDimension(p.level)) return I18n.get("info.hearthstones.tavern.another_dim");
+		double dist = Math.sqrt(p.distanceToSqr(pos.pos.getX()+0.5, pos.pos.getY()+0.5, pos.pos.getZ()+0.5));
+		if(dist>=FAR_AWAY) return I18n.get("info.hearthstones.tavern.far_away");
+		else if(dist<=NEARBY) return I18n.get("info.hearthstones.tavern.nearby");
+		else return I18n.get("info.hearthstones.tavern.n_meter_away", DoubleMath.roundToInt(dist, RoundingMode.HALF_UP));
 	}
 	public String position(){
 		return DARK_GRAY.toString()+getTavernPos();
@@ -63,7 +63,7 @@ public abstract class TavernSign{
 	protected abstract boolean isMissing();
 
 	public static String formatOwner(Owner o){
-		return o.hasOwner() ? GREEN+I18n.format("info.hearthstones.tavern.ownedBy", o.getOwnerName()) : RED+I18n.format("info.hearthstones.tavern.noOwner");
+		return o.hasOwner() ? GREEN+I18n.get("info.hearthstones.tavern.ownedBy", o.getOwnerName()) : RED+I18n.get("info.hearthstones.tavern.noOwner");
 	}
 
 	private static final class TavernTileSign extends TavernSign{

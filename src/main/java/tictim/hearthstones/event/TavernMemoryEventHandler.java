@@ -25,7 +25,7 @@ public final class TavernMemoryEventHandler{
 	@SubscribeEvent
 	public static void attachWorldCapabilities(AttachCapabilitiesEvent<World> event){
 		World w = event.getObject();
-		if(w.isRemote||w.getDimensionKey().equals(World.OVERWORLD)) event.addCapability(KEY_GLOBAL, new GlobalTavernMemory());
+		if(w.isClientSide||w.dimension().equals(World.OVERWORLD)) event.addCapability(KEY_GLOBAL, new GlobalTavernMemory());
 	}
 
 	@SubscribeEvent
@@ -48,7 +48,7 @@ public final class TavernMemoryEventHandler{
 
 	@SubscribeEvent
 	public static void playerTick(TickEvent.PlayerTickEvent event){
-		if(!event.player.world.isRemote&&event.player.world.getGameTime()%20==0&&event.player.isAlive()){
+		if(!event.player.level.isClientSide&&event.player.level.getGameTime()%20==0&&event.player.isAlive()){
 			PlayerTavernMemory memory = PlayerTavernMemory.get(event.player);
 			if(memory.getCooldown()>0) memory.setCooldown(memory.getCooldown()-1);
 		}

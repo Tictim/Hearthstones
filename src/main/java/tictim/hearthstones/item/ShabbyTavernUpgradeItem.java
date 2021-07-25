@@ -21,14 +21,14 @@ public class ShabbyTavernUpgradeItem extends BaseTavernUpgradeItem{
 	}
 
 	@Override protected BlockState getStateToReplace(Tavern tavern){
-		return ModBlocks.SHABBY_TAVERN.get().getDefaultState();
+		return ModBlocks.SHABBY_TAVERN.get().defaultBlockState();
 	}
 
-	@Override public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items){
-		if(this.isInGroup(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
+	@Override public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
+		if(this.allowdedIn(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
 	}
 
-	@Override public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+	@Override public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
 		tooltip.add(new TranslationTextComponent("info.hearthstones.tattered_taverncloth.tooltip"));
 	}
 }

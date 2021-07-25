@@ -33,25 +33,25 @@ public final class TavernRenderHelper{
 			default:
 				throw new IllegalArgumentException(access.name());
 		}
-		Minecraft.getInstance().getTextureManager().bindTexture(tex);
+		Minecraft.getInstance().getTextureManager().bind(tex);
 
 		final float uScale = 1f/16;
 		final float vScale = 1f/16;
 
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder wr = tessellator.getBuffer();
-		Matrix4f matrix = matrixStack.getLast().getMatrix();
+		BufferBuilder wr = tessellator.getBuilder();
+		Matrix4f matrix = matrixStack.last().pose();
 
 		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		wr.pos(matrix, 0, 32, 0).tex(0*uScale, ((16)*vScale)).endVertex();
-		wr.pos(matrix, 32, 32, 0).tex((16)*uScale, ((16)*vScale)).endVertex();
-		wr.pos(matrix, 32, 0, 0).tex((16)*uScale, (0*vScale)).endVertex();
-		wr.pos(matrix, 0, 0, 0).tex(0*uScale, (0*vScale)).endVertex();
-		tessellator.draw();
+		wr.vertex(matrix, 0, 32, 0).uv(0*uScale, ((16)*vScale)).endVertex();
+		wr.vertex(matrix, 32, 32, 0).uv((16)*uScale, ((16)*vScale)).endVertex();
+		wr.vertex(matrix, 32, 0, 0).uv((16)*uScale, (0*vScale)).endVertex();
+		wr.vertex(matrix, 0, 0, 0).uv(0*uScale, (0*vScale)).endVertex();
+		tessellator.end();
 	}
 
 	public static void renderTavernUIBase(MatrixStack matrixStack, TavernType type, boolean selected){
-		Minecraft.getInstance().getTextureManager().bindTexture(type.tavernUITexture);
+		Minecraft.getInstance().getTextureManager().bind(type.tavernUITexture);
 
 		final float uScale = 1f/256;
 		final float vScale = 1f/256;
@@ -59,14 +59,14 @@ public final class TavernRenderHelper{
 		float v = selected ? 20 : 0;
 
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder wr = tessellator.getBuffer();
-		Matrix4f matrix = matrixStack.getLast().getMatrix();
+		BufferBuilder wr = tessellator.getBuilder();
+		Matrix4f matrix = matrixStack.last().pose();
 
 		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		wr.pos(matrix, 0, 20*2, 0).tex(0*uScale, (v+20)*vScale).endVertex();
-		wr.pos(matrix, 179*2, 20*2, 0).tex((179)*uScale, (v+20)*vScale).endVertex();
-		wr.pos(matrix, 179*2, 0, 0).tex((179)*uScale, v*vScale).endVertex();
-		wr.pos(matrix, 0, 0, 0).tex(0*uScale, v*vScale).endVertex();
-		tessellator.draw();
+		wr.vertex(matrix, 0, 20*2, 0).uv(0*uScale, (v+20)*vScale).endVertex();
+		wr.vertex(matrix, 179*2, 20*2, 0).uv((179)*uScale, (v+20)*vScale).endVertex();
+		wr.vertex(matrix, 179*2, 0, 0).uv((179)*uScale, v*vScale).endVertex();
+		wr.vertex(matrix, 0, 0, 0).uv(0*uScale, v*vScale).endVertex();
+		tessellator.end();
 	}
 }

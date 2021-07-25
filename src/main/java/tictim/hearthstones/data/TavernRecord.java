@@ -71,7 +71,7 @@ public final class TavernRecord implements INBTSerializable<CompoundNBT>, Compar
 	}
 
 	public boolean isInSameDimension(Entity entity){
-		return entity.world.getDimensionKey().getLocation().equals(pos.dim);
+		return entity.level.dimension().location().equals(pos.dim);
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public final class TavernRecord implements INBTSerializable<CompoundNBT>, Compar
 	@Override
 	public void deserializeNBT(CompoundNBT nbt){
 		this.pos = new TavernPos(nbt.getCompound("pos"));
-		if(nbt.contains("name", NBT.TAG_STRING)) this.name = ITextComponent.Serializer.getComponentFromJson(nbt.getString("name"));
+		if(nbt.contains("name", NBT.TAG_STRING)) this.name = ITextComponent.Serializer.fromJson(nbt.getString("name"));
 		this.owner = new Owner(nbt.getCompound("owner"));
 		this.missing = nbt.getBoolean("missing");
 		this.tavernType = TavernType.of(nbt.getByte("type"));
@@ -135,7 +135,7 @@ public final class TavernRecord implements INBTSerializable<CompoundNBT>, Compar
 		// name
 		if((getName()==null)!=(o.getName()==null)) return getName()==null ? -1 : 1;
 		else if(getName()!=null){
-			i = getName().getUnformattedComponentText().compareTo(o.getName().getUnformattedComponentText());
+			i = getName().getContents().compareTo(o.getName().getContents());
 			if(i!=0) return i;
 		}
 		// owner

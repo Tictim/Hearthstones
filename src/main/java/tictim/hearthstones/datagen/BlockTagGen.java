@@ -15,11 +15,11 @@ public class BlockTagGen extends BlockTagsProvider{
 		super(generatorIn, Hearthstones.MODID, existingFileHelper);
 	}
 
-	@Override protected void registerTags(){
-		getOrCreateBuilder(STORAGE_BLOCKS).addTag(STORAGE_BLOCKS_AQUAMARINE);
-		getOrCreateBuilder(STORAGE_BLOCKS_AQUAMARINE).add(ModBlocks.AQUAMARINE_BLOCK.get());
-		getOrCreateBuilder(ORES).addTag(ORES_AQUAMARINE);
-		getOrCreateBuilder(ORES_AQUAMARINE).add(ModBlocks.AQUAMARINE_ORE.get());
-		getOrCreateBuilder(TAVERNS).add(ModBlocks.TAVERN.get(), ModBlocks.SHABBY_TAVERN.get(), ModBlocks.GLOBAL_TAVERN.get());
+	@Override protected void addTags(){
+		tag(STORAGE_BLOCKS).addTag(STORAGE_BLOCKS_AQUAMARINE);
+		tag(STORAGE_BLOCKS_AQUAMARINE).add(ModBlocks.AQUAMARINE_BLOCK.get());
+		tag(ORES).addTag(ORES_AQUAMARINE);
+		tag(ORES_AQUAMARINE).add(ModBlocks.AQUAMARINE_ORE.get());
+		tag(TAVERNS).add(ModBlocks.TAVERN.get(), ModBlocks.SHABBY_TAVERN.get(), ModBlocks.GLOBAL_TAVERN.get());
 	}
 }
