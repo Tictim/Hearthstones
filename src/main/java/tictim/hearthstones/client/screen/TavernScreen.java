@@ -15,8 +15,7 @@ import net.minecraft.util.StringUtil;
 import net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.glfw.GLFW;
-import tictim.hearthstones.client.render.TavernRenderHelper;
-import tictim.hearthstones.client.utils.TavernSign;
+import tictim.hearthstones.client.TavernRenderHelper;
 import tictim.hearthstones.data.Owner;
 import tictim.hearthstones.data.TavernPos;
 import tictim.hearthstones.net.ModNet;
@@ -24,6 +23,7 @@ import tictim.hearthstones.net.TavernMemoryOperation;
 import tictim.hearthstones.net.UpdateTavern;
 import tictim.hearthstones.utils.AccessModifier;
 import tictim.hearthstones.utils.Accessibility;
+import tictim.hearthstones.utils.TavernTextFormat;
 import tictim.hearthstones.utils.TavernType;
 
 import javax.annotation.Nullable;
@@ -103,7 +103,7 @@ public class TavernScreen extends AbstractScreen{
 	@Override
 	protected void renderLabels(PoseStack pose, int mouseX, int mouseY){
 		if(!nameField.isFocused()&&StringUtil.isNullOrEmpty(nameField.getValue())) drawString(pose, font, NO_NAME.getString(), 24*2, 7*2+1, 0xFFFFFF);
-		drawString(pose, font, TavernSign.formatOwner(owner), 24*2, 13*2-1, 0xFFFFFF);
+		drawString(pose, font, TavernTextFormat.formatOwner(owner), 24*2, 13*2-1, 0xFFFFFF);
 	}
 
 	@Override
@@ -116,8 +116,8 @@ public class TavernScreen extends AbstractScreen{
 	}
 
 	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int p_keyPressed_3_){
-		if(super.keyPressed(keyCode, scanCode, p_keyPressed_3_)) return true;
+	public boolean keyPressed(int keyCode, int scanCode, int modifier){
+		if(super.keyPressed(keyCode, scanCode, modifier)) return true;
 		InputConstants.Key input = InputConstants.getKey(keyCode, scanCode);
 		//noinspection ConstantConditions
 		if(this.nameField.isFocused() ?
@@ -205,12 +205,12 @@ public class TavernScreen extends AbstractScreen{
 		}
 
 		@Override
-		public void onRelease(double p_onRelease_1_, double p_onRelease_3_){
+		public void onRelease(double mouseX, double mouseY){
 			isPressed = false;
 		}
 
 		@Override
-		public void onClick(double p_onClick_1_, double p_onClick_3_){
+		public void onClick(double mouseX, double mouseY){
 			setHome = !setHome;
 		}
 

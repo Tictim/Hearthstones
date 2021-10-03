@@ -1,4 +1,4 @@
-package tictim.hearthstones.client.render;
+package tictim.hearthstones.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;

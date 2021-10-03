@@ -57,7 +57,7 @@ public final class ModNet{
 			context.enqueueWork(() -> {
 				ServerPlayer player = context.getSender();
 				if(player==null){
-					Hearthstones.LOGGER.error("Sender doesn't exists.");
+					Hearthstones.LOGGER.error("Sender doesn't exist.");
 					return;
 				}
 				Level w = Objects.requireNonNull(player.getServer()).getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, packet.pos.dim));
@@ -105,7 +105,7 @@ public final class ModNet{
 			context.enqueueWork(() -> {
 				ServerPlayer player = context.getSender();
 				if(player==null){
-					Hearthstones.LOGGER.error("Sender doesn't exists.");
+					Hearthstones.LOGGER.error("Sender doesn't exist.");
 					return;
 				}
 				PlayerTavernMemory memory = PlayerTavernMemory.get(player);
@@ -128,7 +128,7 @@ public final class ModNet{
 			if(context.getDirection()!=NetworkDirection.PLAY_TO_SERVER) return;
 			ServerPlayer player = context.getSender();
 			if(player==null){
-				Hearthstones.LOGGER.error("Sender doesn't exists.");
+				Hearthstones.LOGGER.error("Sender doesn't exist.");
 				return;
 			}
 			ModNet.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SyncTavernMemory(PlayerTavernMemory.get(player), GlobalTavernMemory.get(), player));
@@ -181,7 +181,7 @@ public final class ModNet{
 					screen.flagResetButtons = true;
 					//Hearthstones.LOGGER.debug("Updated Screen.");
 				}
-			}else Hearthstones.LOGGER.error("Player does not exists.");
+			}else Hearthstones.LOGGER.error("Player does not exist.");
 		}
 
 		public static void handleOpenTavernScreen(OpenTavernScreen packet){

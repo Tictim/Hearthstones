@@ -19,8 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fmlclient.gui.GuiUtils;
 import tictim.hearthstones.Hearthstones;
-import tictim.hearthstones.client.render.TavernRenderHelper;
-import tictim.hearthstones.client.utils.TavernSign;
+import tictim.hearthstones.client.TavernRenderHelper;
 import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.contents.ModItems;
 import tictim.hearthstones.data.GlobalTavernMemory;
@@ -29,6 +28,7 @@ import tictim.hearthstones.data.TavernPos;
 import tictim.hearthstones.data.TavernRecord;
 import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.net.TavernMemoryOperation;
+import tictim.hearthstones.utils.TavernTextFormat;
 import tictim.hearthstones.utils.TavernType;
 
 import java.util.Arrays;
@@ -166,14 +166,12 @@ public class HearthstoneScreen extends AbstractScreen{
 		public static final int HEIGHT = BASE_HEIGHT*2;
 
 		private final TavernRecord tavern;
-		private final TavernSign sign;
 		private final boolean isFromGlobal;
 		private final Map<TavernProperty, PropertyButton> properties = new HashMap<>();
 
 		private TavernButton(int x, int y, TavernRecord tavern, boolean isFromGlobal){
 			super(x, y, WIDTH, HEIGHT, TextComponent.EMPTY, button -> {});
 			this.tavern = tavern;
-			this.sign = TavernSign.of(tavern);
 			this.isFromGlobal = isFromGlobal;
 		}
 
@@ -194,11 +192,11 @@ public class HearthstoneScreen extends AbstractScreen{
 				TavernRenderHelper.renderAccess(matrixStack, tavern.getOwner().getAccessModifier());
 				matrixStack.popPose();
 
-				font.drawShadow(matrixStack, sign.nameAndDistance(), x+25*2, y+9*2-1, 0xFFFFFF);
-				String ownerText = sign.owner();
+				font.drawShadow(matrixStack, TavernTextFormat.nameAndDistance(tavern, minecraft.player), x+25*2, y+9*2-1, 0xFFFFFF);
+				Component ownerText = TavernTextFormat.owner(tavern);
 				int ownerWidth = font.width(ownerText);
-				font.drawShadow(matrixStack, sign.owner(), x+25*2, y+14*2-1, 0xFFFFFF);
-				font.draw(matrixStack, sign.position(), x+25*2+ownerWidth+font.width(" "), y+14*2-1, 0xFFFFFF);
+				font.drawShadow(matrixStack, ownerText, x+25*2, y+14*2-1, 0xFFFFFF);
+				font.draw(matrixStack, TavernTextFormat.position(tavern), x+25*2+ownerWidth+font.width(" "), y+14*2-1, 0xFFFFFF);
 			}
 		}
 

@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import tictim.hearthstones.data.GlobalTavernMemory;
 import tictim.hearthstones.data.TavernPos;
-import tictim.hearthstones.tileentity.GlobalTavernBlockEntity;
+import tictim.hearthstones.blockentity.GlobalTavernBlockEntity;
 
 import javax.annotation.Nullable;
 import java.util.List;

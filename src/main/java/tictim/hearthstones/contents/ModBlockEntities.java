@@ -4,9 +4,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import tictim.hearthstones.tileentity.GlobalTavernBlockEntity;
-import tictim.hearthstones.tileentity.NormalTavernBlockEntity;
-import tictim.hearthstones.tileentity.ShabbyTavernBlockEntity;
+import tictim.hearthstones.blockentity.GlobalTavernBlockEntity;
+import tictim.hearthstones.blockentity.NormalTavernBlockEntity;
+import tictim.hearthstones.blockentity.ShabbyTavernBlockEntity;
 
 import static tictim.hearthstones.Hearthstones.MODID;
 

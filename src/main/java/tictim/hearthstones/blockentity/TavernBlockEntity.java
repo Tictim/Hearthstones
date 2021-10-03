@@ -1,4 +1,4 @@
-package tictim.hearthstones.tileentity;
+package tictim.hearthstones.blockentity;
 
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;

@@ -18,7 +18,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
@@ -46,7 +45,7 @@ import tictim.hearthstones.data.TavernPos;
 import tictim.hearthstones.logic.Tavern;
 import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.net.OpenTavernScreen;
-import tictim.hearthstones.tileentity.TavernBlockEntity;
+import tictim.hearthstones.blockentity.TavernBlockEntity;
 import tictim.hearthstones.utils.AccessModifier;
 
 import javax.annotation.Nullable;

@@ -11,7 +11,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import tictim.hearthstones.config.ModCfg;
-import tictim.hearthstones.tileentity.ShabbyTavernBlockEntity;
+import tictim.hearthstones.blockentity.ShabbyTavernBlockEntity;
 
 import javax.annotation.Nullable;
 import java.util.List;

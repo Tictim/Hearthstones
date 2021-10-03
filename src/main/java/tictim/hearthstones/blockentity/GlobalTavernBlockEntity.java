@@ -1,4 +1,4 @@
-package tictim.hearthstones.tileentity;
+package tictim.hearthstones.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
