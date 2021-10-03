@@ -1,4 +1,4 @@
-package tictim.hearthstones.item;
+package tictim.hearthstones.contents.item;
 
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.TooltipFlag;
@@ -11,8 +11,6 @@ import tictim.hearthstones.logic.Tavern;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class GuidTavernUpgradeItem extends BaseTavernUpgradeItem{
 	public GuidTavernUpgradeItem(Properties properties){

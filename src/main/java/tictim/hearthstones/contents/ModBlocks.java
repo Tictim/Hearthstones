@@ -6,10 +6,10 @@ import net.minecraft.world.level.material.Material;
 import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import tictim.hearthstones.block.AquamarineOreBlock;
-import tictim.hearthstones.block.GlobalTavernBlock;
-import tictim.hearthstones.block.NormalTavernBlock;
-import tictim.hearthstones.block.ShabbyTavernBlock;
+import tictim.hearthstones.contents.block.AquamarineOreBlock;
+import tictim.hearthstones.contents.block.GlobalTavernBlock;
+import tictim.hearthstones.contents.block.NormalTavernBlock;
+import tictim.hearthstones.contents.block.ShabbyTavernBlock;
 
 import static tictim.hearthstones.Hearthstones.MODID;
 

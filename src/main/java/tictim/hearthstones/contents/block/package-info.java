@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package tictim.hearthstones.block;
+package tictim.hearthstones.contents.block;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

@@ -1,9 +1,7 @@
-package tictim.hearthstones.item;
+package tictim.hearthstones.contents.item;
 
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -15,20 +13,16 @@ import tictim.hearthstones.logic.Tavern;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ShabbyTavernUpgradeItem extends BaseTavernUpgradeItem{
-	public ShabbyTavernUpgradeItem(Properties properties){
+public class RegularTavernUpgradeItem extends BaseTavernUpgradeItem{
+	public RegularTavernUpgradeItem(Properties properties){
 		super(properties);
 	}
 
 	@Override protected BlockState getStateToReplace(Tavern tavern){
-		return ModBlocks.SHABBY_TAVERN.get().defaultBlockState();
-	}
-
-	@Override public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(this.allowdedIn(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
+		return ModBlocks.TAVERN.get().defaultBlockState();
 	}
 
 	@Override public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("info.hearthstones.tattered_taverncloth.tooltip"));
+		tooltip.add(new TranslatableComponent(ModCfg.easyMode() ? "info.hearthstones.taverncloth.tooltip.easyMode" : "info.hearthstones.taverncloth.tooltip"));
 	}
 }

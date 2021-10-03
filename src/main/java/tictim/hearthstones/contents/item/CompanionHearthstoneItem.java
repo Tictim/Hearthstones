@@ -1,4 +1,4 @@
-package tictim.hearthstones.item;
+package tictim.hearthstones.contents.item;
 
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.ItemStack;
@@ -10,8 +10,6 @@ import tictim.hearthstones.logic.CompanionHearthstone;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class CompanionHearthstoneItem extends GuiHearthstoneItem{
 	public CompanionHearthstoneItem(Properties properties){

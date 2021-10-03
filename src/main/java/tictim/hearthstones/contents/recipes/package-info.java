@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package tictim.hearthstones.recipes;
+package tictim.hearthstones.contents.recipes;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

@@ -1,4 +1,4 @@
-package tictim.hearthstones.block;
+package tictim.hearthstones.contents.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -11,7 +11,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import tictim.hearthstones.config.ModCfg;
-import tictim.hearthstones.blockentity.ShabbyTavernBlockEntity;
+import tictim.hearthstones.contents.blockentity.ShabbyTavernBlockEntity;
 
 import javax.annotation.Nullable;
 import java.util.List;

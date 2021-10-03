@@ -1,4 +1,4 @@
-package tictim.hearthstones.item;
+package tictim.hearthstones.contents.item;
 
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.CreativeModeTab;
@@ -13,8 +13,6 @@ import tictim.hearthstones.logic.HearthingPlanksHearthstone;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class HearthingPlanksItem extends BaseHearthstoneItem{
 	public HearthingPlanksItem(Properties properties){

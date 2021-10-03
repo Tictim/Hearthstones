@@ -6,7 +6,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tictim.hearthstones.Hearthstones;
-import tictim.hearthstones.recipes.EasyModeCondition;
+import tictim.hearthstones.contents.recipes.EasyModeCondition;
 
 @Mod.EventBusSubscriber(modid = Hearthstones.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRecipes{

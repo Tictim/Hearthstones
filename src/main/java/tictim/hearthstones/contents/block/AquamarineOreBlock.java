@@ -1,4 +1,4 @@
-package tictim.hearthstones.block;
+package tictim.hearthstones.contents.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;

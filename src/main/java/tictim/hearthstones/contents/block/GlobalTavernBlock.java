@@ -1,4 +1,4 @@
-package tictim.hearthstones.block;
+package tictim.hearthstones.contents.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import tictim.hearthstones.data.GlobalTavernMemory;
 import tictim.hearthstones.data.TavernPos;
-import tictim.hearthstones.blockentity.GlobalTavernBlockEntity;
+import tictim.hearthstones.contents.blockentity.GlobalTavernBlockEntity;
 
 import javax.annotation.Nullable;
 import java.util.List;

@@ -1,4 +1,4 @@
-package tictim.hearthstones.block;
+package tictim.hearthstones.contents.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -45,7 +45,7 @@ import tictim.hearthstones.data.TavernPos;
 import tictim.hearthstones.logic.Tavern;
 import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.net.OpenTavernScreen;
-import tictim.hearthstones.blockentity.TavernBlockEntity;
+import tictim.hearthstones.contents.blockentity.TavernBlockEntity;
 import tictim.hearthstones.utils.AccessModifier;
 
 import javax.annotation.Nullable;

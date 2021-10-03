@@ -1,4 +1,4 @@
-package tictim.hearthstones.item;
+package tictim.hearthstones.contents.item;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;

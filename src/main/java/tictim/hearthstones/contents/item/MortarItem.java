@@ -1,4 +1,4 @@
-package tictim.hearthstones.item;
+package tictim.hearthstones.contents.item;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

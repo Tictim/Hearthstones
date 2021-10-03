@@ -15,7 +15,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
 import tictim.hearthstones.contents.ModTags;
-import tictim.hearthstones.recipes.EasyModeCondition;
+import tictim.hearthstones.contents.recipes.EasyModeCondition;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;

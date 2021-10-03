@@ -1,4 +1,4 @@
-package tictim.hearthstones.recipes;
+package tictim.hearthstones.contents.recipes;
 
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
