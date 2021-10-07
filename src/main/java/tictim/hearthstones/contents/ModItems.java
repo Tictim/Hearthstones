@@ -14,14 +14,14 @@ import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import tictim.hearthstones.config.ModCfg;
-import tictim.hearthstones.contents.item.CompanionHearthstoneItem;
-import tictim.hearthstones.contents.item.GuidTavernUpgradeItem;
-import tictim.hearthstones.contents.item.HearthingGemItem;
-import tictim.hearthstones.contents.item.HearthingPlanksItem;
+import tictim.hearthstones.contents.item.hearthstone.CompanionHearthstoneItem;
+import tictim.hearthstones.contents.item.tavernupgrade.GuildTavernUpgradeItem;
+import tictim.hearthstones.contents.item.hearthstone.HearthingGemItem;
+import tictim.hearthstones.contents.item.hearthstone.HearthingPlanksItem;
 import tictim.hearthstones.contents.item.MortarItem;
-import tictim.hearthstones.contents.item.RegularHearthstoneItem;
-import tictim.hearthstones.contents.item.RegularTavernUpgradeItem;
-import tictim.hearthstones.contents.item.ShabbyTavernUpgradeItem;
+import tictim.hearthstones.contents.item.hearthstone.NormalHearthstoneItem;
+import tictim.hearthstones.contents.item.tavernupgrade.RegularTavernUpgradeItem;
+import tictim.hearthstones.contents.item.tavernupgrade.ShabbyTavernUpgradeItem;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -40,7 +40,7 @@ public final class ModItems{
 	}.setEnchantmentCategories(ModEnchantments.HEARTHSTONE);
 
 	public static final RegistryObject<Item> HEARTHSTONE = REGISTER.register("hearthstone",
-			() -> new RegularHearthstoneItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).tab(TAB))
+			() -> new NormalHearthstoneItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).tab(TAB))
 	);
 	public static final RegistryObject<Item> HEARTHING_PLANKS = REGISTER.register("hearthing_planks",
 			() -> new HearthingPlanksItem(new Item.Properties().stacksTo(1).tab(TAB))
@@ -69,7 +69,7 @@ public final class ModItems{
 			() -> new RegularTavernUpgradeItem(new Item.Properties().tab(TAB))
 	);
 	public static final RegistryObject<Item> BLUE_TAVERNCLOTH = REGISTER.register("blue_taverncloth",
-			() -> new GuidTavernUpgradeItem(new Item.Properties().rarity(Rarity.UNCOMMON).tab(TAB))
+			() -> new GuildTavernUpgradeItem(new Item.Properties().rarity(Rarity.UNCOMMON).tab(TAB))
 	);
 
 	public static final RegistryObject<Item> AQUAMARINE = REGISTER.register("aquamarine",

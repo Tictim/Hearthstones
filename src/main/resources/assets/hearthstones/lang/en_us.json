@@ -43,7 +43,6 @@
 	"info.hearthstones.tavern.noOwner": "No Owner",
 	"info.hearthstones.tavern.ownedBy": "Owned By %s",
 	"info.hearthstones.tavern.owner": "Owned by §a%s (%s)",
-	"info.hearthstones.tavern.owner.no_id": "Owned by §a%s",
 	"info.hearthstones.tavern.n_meter_away": "§a%dm away",
 	"info.hearthstones.tavern.another_dim": "§cAnother dimension",
 	"info.hearthstones.tavern.far_away": "§aFar away",

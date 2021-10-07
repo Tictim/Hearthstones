@@ -16,13 +16,13 @@ import tictim.hearthstones.contents.blockentity.ShabbyTavernBlockEntity;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ShabbyTavernBlock extends BaseTavernBlock{
+public class ShabbyTavernBlock extends TavernBlock{
 	@Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
 		return new ShabbyTavernBlockEntity(pos, state);
 	}
 
-	@Override protected void addTipInformation(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		super.addTipInformation(stack, worldIn, tooltip, flagIn);
+	@Override protected void addTipInformation(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag){
+		super.addTipInformation(stack, level, tooltip, flag);
 		tooltip.add(new TranslatableComponent("info.hearthstones.tavern.shabby.tooltip"));
 	}
 

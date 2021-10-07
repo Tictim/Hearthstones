@@ -8,19 +8,22 @@ import net.minecraftforge.fml.config.ModConfig;
 public final class ModCfg{
 	private ModCfg(){}
 
-	public static final HearthstoneConfig hearthstone;
-	public static final HearthstoneConfig hearthingPlanks;
-	public static final HearthingGemConfig hearthingGem;
-	public static final HearthstoneConfig companionHearthstone;
+	private static HearthstoneConfig hearthstone;
+	private static HearthstoneConfig hearthingPlanks;
+	private static HearthingGemConfig hearthingGem;
+	private static HearthstoneConfig companionHearthstone;
 
-	private static final BooleanValue easyMode;
+	private static BooleanValue easyMode;
 
-	private static final BooleanValue traceHearthstoneUsage;
-	private static final BooleanValue traceTavernUpdate;
+	private static BooleanValue traceHearthstoneUsage;
+	private static BooleanValue traceTavernMemorySync;
+	private static BooleanValue traceTavernUpdate;
 
-	private static final ForgeConfigSpec spec;
+	private static boolean initCalled = false;
+	public static void init(){
+		if(initCalled) throw new IllegalStateException("ModCfg#init() called twice");
+		else initCalled = true;
 
-	static{
 		ForgeConfigSpec.Builder b = new ForgeConfigSpec.Builder();
 		hearthstone = new HearthstoneConfig(b, "hearthstone", "Hearthstone", 0, 75);
 		hearthingPlanks = new HearthstoneConfig(b, "hearthingPlanks", "Hearthing Planks", 30, 75);
@@ -32,15 +35,10 @@ public final class ModCfg{
 				.define("easyMode", false);
 
 		traceHearthstoneUsage = b.define("traceHearthstoneUsage", false);
+		traceTavernMemorySync = b.define("traceTavernMemorySync", false);
 		traceTavernUpdate = b.define("traceTavernUpdate", false);
 
-		spec = b.build();
-	}
-
-	private static boolean initCalled = false;
-	public static void init(){
-		if(initCalled) throw new IllegalStateException("ModCfg#init() called twice");
-		else initCalled = true;
+		ForgeConfigSpec spec = b.build();
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, spec, "hearthstones.toml");
 	}
@@ -51,7 +49,23 @@ public final class ModCfg{
 	public static boolean traceHearthstoneUsage(){
 		return traceHearthstoneUsage.get();
 	}
+	public static boolean traceTavernMemorySync(){
+		return traceTavernMemorySync.get();
+	}
 	public static boolean traceTavernUpdate(){
 		return traceTavernUpdate.get();
+	}
+
+	public static HearthstoneConfig hearthstone(){
+		return hearthstone;
+	}
+	public static HearthstoneConfig hearthingPlanks(){
+		return hearthingPlanks;
+	}
+	public static HearthingGemConfig hearthingGem(){
+		return hearthingGem;
+	}
+	public static HearthstoneConfig companionHearthstone(){
+		return companionHearthstone;
 	}
 }

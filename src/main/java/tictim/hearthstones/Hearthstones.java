@@ -21,7 +21,6 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -30,20 +29,17 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import tictim.hearthstones.capability.TavernMemory;
 import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.contents.ModBlockEntities;
 import tictim.hearthstones.contents.ModBlocks;
 import tictim.hearthstones.contents.ModEnchantments;
 import tictim.hearthstones.contents.ModItems;
-import tictim.hearthstones.data.PlayerTavernMemory;
 import tictim.hearthstones.datagen.BlockTagGen;
 import tictim.hearthstones.datagen.ItemTagGen;
 import tictim.hearthstones.datagen.LootTableGen;
 import tictim.hearthstones.datagen.RecipeGen;
 import tictim.hearthstones.net.ModNet;
-import tictim.hearthstones.proxy.ClientProxy;
-import tictim.hearthstones.proxy.IProxy;
-import tictim.hearthstones.proxy.ServerProxy;
 
 @Mod(Hearthstones.MODID)
 @Mod.EventBusSubscriber(modid = Hearthstones.MODID, bus = Bus.MOD)
@@ -51,11 +47,10 @@ public class Hearthstones{
 	public static final String MODID = "hearthstones";
 	public static final Logger LOGGER = LogManager.getLogger("Hearthstones");
 
-	public static final IProxy PROXY = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
-
 	public Hearthstones(){
 		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		ModCfg.init();
+		ModNet.init();
 
 		ModBlocks.REGISTER.register(eventBus);
 		ModItems.REGISTER.register(eventBus);
@@ -76,13 +71,12 @@ public class Hearthstones{
 							.rangeUniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(50))
 							.squared()
 							.count(12));
-			ModNet.init();
 		});
 	}
 
 	@SubscribeEvent
 	public static void registerCapabilities(RegisterCapabilitiesEvent event){
-		event.register(PlayerTavernMemory.class);
+		event.register(TavernMemory.class);
 	}
 
 	@SubscribeEvent
@@ -97,14 +91,13 @@ public class Hearthstones{
 		}
 	}
 
-
 	@Mod.EventBusSubscriber(modid = MODID, bus = Bus.MOD, value = Dist.CLIENT)
 	public static final class Client{
 		@SubscribeEvent
 		public static void clientSetup(FMLClientSetupEvent event){
 			event.enqueueWork(() -> {
 				ResourceLocation key = new ResourceLocation("has_cooldown");
-				//noinspection deprecation
+				@SuppressWarnings("deprecation")
 				ItemPropertyFunction itemPropertyGetter = (s, w, e, wtf) -> { // TODO wtf
 					if(e instanceof Player){
 						CompoundTag tag = s.getTag();

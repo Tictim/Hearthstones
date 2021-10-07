@@ -3,43 +3,46 @@ package tictim.hearthstones.contents.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import tictim.hearthstones.data.GlobalTavernMemory;
-import tictim.hearthstones.data.TavernPos;
+import tictim.hearthstones.capability.CapabilityTavernMemory;
 import tictim.hearthstones.contents.blockentity.GlobalTavernBlockEntity;
+import tictim.hearthstones.tavern.TavernPos;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class GlobalTavernBlock extends BaseTavernBlock{
+public class GlobalTavernBlock extends TavernBlock{
 	@Nullable @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
 		return new GlobalTavernBlockEntity(pos, state);
 	}
 
-	@Override public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		super.appendHoverText(stack, worldIn, tooltip, flagIn);
+	@Override public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flagIn){
+		super.appendHoverText(stack, level, tooltip, flagIn);
 		tooltip.add(new TranslatableComponent("info.hearthstones.tavern.global.tooltip.1"));
 	}
 
-	@Override protected void addTipInformation(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		super.addTipInformation(stack, worldIn, tooltip, flagIn);
+	@Override protected void addTipInformation(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag){
+		super.addTipInformation(stack, level, tooltip, flag);
 		tooltip.add(new TranslatableComponent("info.hearthstones.tavern.global.tooltip.0"));
 	}
 
-	@Override
-	public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player){
-		super.playerWillDestroy(world, pos, state, player);
-		if(!world.isClientSide){
-			BlockEntity te = world.getBlockEntity(pos);
-			if(te instanceof GlobalTavernBlockEntity){
-				GlobalTavernMemory.get().delete(new TavernPos(te));
-			}
+	@Override public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack){
+		super.setPlacedBy(level, pos, state, placer, stack);
+		if(!level.isClientSide&&level.getBlockEntity(pos) instanceof GlobalTavernBlockEntity tavern)
+			CapabilityTavernMemory.expectServerGlobal().addOrUpdate(tavern);
+	}
+
+	@SuppressWarnings("deprecation") @Override public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moving){
+		if((!state.is(newState.getBlock())||!newState.hasBlockEntity())){
+			if(level.getBlockEntity(pos) instanceof GlobalTavernBlockEntity globalTavern)
+				CapabilityTavernMemory.expectServerGlobal().delete(new TavernPos(globalTavern));
 		}
+		super.onRemove(state, level, pos, newState, moving);
 	}
 }

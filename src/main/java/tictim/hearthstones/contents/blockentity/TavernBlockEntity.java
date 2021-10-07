@@ -1,36 +1,92 @@
 package tictim.hearthstones.contents.blockentity;
 
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.world.level.Level;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Containers;
+import net.minecraft.world.Nameable;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.Constants.NBT;
-import tictim.hearthstones.data.Owner;
-import tictim.hearthstones.logic.Tavern;
-import tictim.hearthstones.utils.TavernType;
+import tictim.hearthstones.Hearthstones;
+import tictim.hearthstones.hearthstone.WarpContext;
+import tictim.hearthstones.tavern.AccessModifier;
+import tictim.hearthstones.tavern.Owner;
+import tictim.hearthstones.tavern.Tavern;
+import tictim.hearthstones.tavern.TavernPos;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public abstract class TavernBlockEntity extends BlockEntity implements Tavern{
-	private final Owner owner = new Owner();
-	private Component name;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-	protected TavernBlockEntity(BlockEntityType<?> type, BlockPos pos ,BlockState state){
+public abstract class TavernBlockEntity extends BlockEntity implements Tavern, Nameable{
+	private Owner owner = Owner.NO_OWNER;
+	private Component name;
+	private AccessModifier access = AccessModifier.PUBLIC;
+
+	public TavernBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state){
 		super(type, pos, state);
 	}
 
-	@Override public Level world(){
-		return Objects.requireNonNull(getLevel());
+	public boolean upgrade(BlockState newState, boolean dropUpgradeItem){
+		if(level==null) return false;
+		BlockState state = getBlockState();
+		BlockPos pos = getBlockPos();
+		if(state.hasProperty(HORIZONTAL_FACING)&&newState.hasProperty(HORIZONTAL_FACING)){
+			newState = newState.setValue(HORIZONTAL_FACING, state.getValue(HORIZONTAL_FACING));
+		}
+		level.setBlockAndUpdate(pos, newState);
+		if(level.getBlockEntity(pos) instanceof TavernBlockEntity another){
+			copyAttributes(another);
+			level.sendBlockUpdated(pos, state, state, 0);
+
+			if(dropUpgradeItem){
+				ItemStack s = getUpgradeItem();
+				if(!s.isEmpty()) Containers.dropItemStack(level, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, s);
+			}
+		}else Hearthstones.LOGGER.error("Updated tavern at {} from {} to {}, but failed to retrieve Tavern.", pos, state, newState);
+		return true;
 	}
-	@Override public BlockPos pos(){
+
+	protected void copyAttributes(TavernBlockEntity another){
+		if(this.hasCustomName()) another.setName(this.getName());
+		another.setOwner(this.owner());
+		another.setAccess(this.access());
+	}
+
+	protected abstract ItemStack getUpgradeItem();
+
+	@Override public TavernPos pos(){
+		return new TavernPos(Objects.requireNonNull(getLevel()), getBlockPos());
+	}
+	@Override public BlockPos blockPos(){
 		return getBlockPos();
+	}
+
+	@Override public Owner owner(){
+		return this.owner;
+	}
+	public void setOwner(Owner owner){
+		this.owner = owner;
+	}
+	@Override public AccessModifier access(){
+		return access;
+	}
+	public void setAccess(AccessModifier access){
+		this.access = access;
+	}
+
+	@Nullable @Override public Component name(){
+		return getCustomName();
+	}
+	@Override public boolean isMissing(){
+		return false;
 	}
 
 	@Override public Component getName(){
@@ -43,11 +99,8 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern{
 		this.name = name;
 	}
 
-	public Owner owner(){
-		return this.owner;
-	}
-	public TavernType tavernType(){
-		return TavernType.NORMAL;
+	public boolean canTeleportTo(WarpContext context){
+		return hasAccessPermission(context.getPlayer());
 	}
 
 	@Override public ClientboundBlockEntityDataPacket getUpdatePacket(){
@@ -67,28 +120,30 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern{
 
 	private void read(CompoundTag nbt){
 		this.name = nbt.contains("name", NBT.TAG_STRING) ? Component.Serializer.fromJson(nbt.getString("name")) : null;
-		if(nbt.contains("owner", NBT.TAG_COMPOUND)) this.owner.deserializeNBT(nbt.getCompound("owner"));
-		else this.owner.reset();
+		this.owner = Owner.read(nbt.getCompound("owner"));
+		this.access = AccessModifier.of(nbt.getByte("access"));
 	}
 
 	@Override
 	public CompoundTag save(CompoundTag nbt){
 		nbt = super.save(nbt);
-		if(this.name!=null) nbt.putString("name", Component.Serializer.toJson(this.name));
-		if(owner.hasOwner()) nbt.put("owner", this.owner.serializeNBT());
+		if(name!=null) nbt.putString("name", Component.Serializer.toJson(this.name));
+		if(owner.hasOwner()) nbt.put("owner", this.owner.write());
+		if(access.ordinal()!=0) nbt.putByte("access", (byte)access.ordinal());
 		return nbt;
 	}
 
 	public CompoundTag writeNBTForStack(){
 		CompoundTag nbt = new CompoundTag();
-		if(owner.hasOwner()) nbt.put("owner", this.owner.serializeNBT());
+		if(owner.hasOwner()) nbt.put("owner", this.owner.write());
 		return nbt;
 	}
 
 	@Override public String toString(){
-		return "BaseTavernTileEntity{"+
+		return "TavernBlockEntity{"+
 				"owner="+owner+
-				", name="+(name!=null ? name : null)+
+				", name="+name+
+				", access="+access+
 				'}';
 	}
 }

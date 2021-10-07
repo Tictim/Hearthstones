@@ -2,13 +2,12 @@ package tictim.hearthstones.event;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.event.entity.living.LivingDestroyBlockEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tictim.hearthstones.Hearthstones;
-import tictim.hearthstones.logic.Tavern;
+import tictim.hearthstones.tavern.Tavern;
 
 @Mod.EventBusSubscriber(modid = Hearthstones.MODID)
 public final class TavernEventHandler{

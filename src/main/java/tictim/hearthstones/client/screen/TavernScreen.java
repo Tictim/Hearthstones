@@ -15,16 +15,16 @@ import net.minecraft.util.StringUtil;
 import net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.glfw.GLFW;
-import tictim.hearthstones.client.TavernRenderHelper;
-import tictim.hearthstones.data.Owner;
-import tictim.hearthstones.data.TavernPos;
+import tictim.hearthstones.client.Rendering;
+import tictim.hearthstones.tavern.Owner;
+import tictim.hearthstones.tavern.TavernPos;
 import tictim.hearthstones.net.ModNet;
-import tictim.hearthstones.net.TavernMemoryOperation;
-import tictim.hearthstones.net.UpdateTavern;
-import tictim.hearthstones.utils.AccessModifier;
-import tictim.hearthstones.utils.Accessibility;
-import tictim.hearthstones.utils.TavernTextFormat;
-import tictim.hearthstones.utils.TavernType;
+import tictim.hearthstones.net.TavernMemoryOperationMsg;
+import tictim.hearthstones.net.UpdateTavernMsg;
+import tictim.hearthstones.tavern.AccessModifier;
+import tictim.hearthstones.tavern.Accessibility;
+import tictim.hearthstones.tavern.TavernTextFormat;
+import tictim.hearthstones.tavern.TavernType;
 
 import javax.annotation.Nullable;
 
@@ -44,26 +44,27 @@ public class TavernScreen extends AbstractScreen{
 
 	private final TavernPos pos;
 	private final TavernType type;
-	private final Accessibility access;
+	private final Accessibility accessibility;
 	private final Owner owner;
+	private AccessModifier accessModifier;
 	private final boolean isHome;
 
 	private final String originalName;
-	private final AccessModifier originalAccessModifier;
+	private final AccessModifier originalAccess;
 
 	private EditBox nameField;
 	private boolean setHome;
 
-	public TavernScreen(TavernPos pos, TavernType type, @Nullable Component name, Accessibility access, Owner owner, boolean isHome){
+	public TavernScreen(TavernPos pos, TavernType type, @Nullable Component name, Accessibility accessibility, Owner owner, AccessModifier accessModifier, boolean isHome){
 		super(name!=null ? name : new TranslatableComponent("info.hearthstones.tavern.noName"));
 		this.pos = pos;
 		this.type = type;
-		this.access = access;
+		this.accessibility = accessibility;
 		this.owner = owner;
 		this.isHome = isHome;
 
 		this.originalName = name!=null ? name.getContents() : "";
-		this.originalAccessModifier = owner.getAccessModifier();
+		this.originalAccess = this.accessModifier = accessModifier;
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class TavernScreen extends AbstractScreen{
 		nameField.setMaxLength(100);
 		nameField.setBordered(false);
 		nameField.setTextColorUneditable(0xe0e0e0); // To match with enabled text color
-		nameField.setEditable(access.isModifiable());
+		nameField.setEditable(accessibility.isModifiable());
 		addRenderableWidget(new AccessibilityButton(getLeft()+5*2, getTop()));
 		addRenderableWidget(new SetHomeButton(getLeft()+166*2, getTop()+8*2));
 	}
@@ -96,7 +97,7 @@ public class TavernScreen extends AbstractScreen{
 	protected void renderBg(PoseStack pose, float partialTicks, int mouseX, int mouseY){
 		pose.pushPose();
 		pose.translate(6, 6, 0);
-		TavernRenderHelper.renderTavernUIBase(pose, type, false);
+		Rendering.renderTavernUIBase(pose, type, false);
 		pose.popPose();
 	}
 
@@ -128,17 +129,16 @@ public class TavernScreen extends AbstractScreen{
 		}else return false;
 	}
 
-	@Override
-	public void removed(){
+	@Override public void removed(){
 		//noinspection ConstantConditions
 		this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
-		if(access.isModifiable()){
+		if(accessibility.isModifiable()){
 			String name = this.nameField.getValue();
-			if(!originalName.equals(name)||originalAccessModifier!=owner.getAccessModifier()){
-				ModNet.CHANNEL.sendToServer(new UpdateTavern(pos, name.isEmpty() ? null : new TextComponent(name), owner.getAccessModifier()));
+			if(!originalName.equals(name)||originalAccess!=accessModifier){
+				ModNet.CHANNEL.sendToServer(new UpdateTavernMsg(pos, name.isEmpty() ? null : new TextComponent(name), accessModifier));
 			}
 		}
-		if(setHome) ModNet.CHANNEL.sendToServer(new TavernMemoryOperation(pos, TavernMemoryOperation.SET_HOME));
+		if(setHome) ModNet.CHANNEL.sendToServer(new TavernMemoryOperationMsg(pos, TavernMemoryOperationMsg.SET_HOME));
 		super.removed();
 	}
 
@@ -155,28 +155,27 @@ public class TavernScreen extends AbstractScreen{
 				RenderSystem.setShaderColor(1, 1, 1, 1);
 				RenderSystem.enableBlend();
 				RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-				TavernRenderHelper.renderAccess(matrixStack, owner.getAccessModifier());
+				Rendering.renderTavernAccess(matrixStack, accessModifier);
 				matrixStack.popPose();
 			}
 		}
 
 		@Override
 		protected boolean isValidClickButton(int button){
-			return super.isValidClickButton(button)&&access.isAccessibilityModifiable();
+			return super.isValidClickButton(button)&&accessibility.isAccessibilityModifiable();
 		}
 
 		@Override
 		public void onClick(double mouseX, double mouseY){
-			if(access.isAccessibilityModifiable()){
-				AccessModifier am = owner.getAccessModifier();
+			if(accessibility.isAccessibilityModifiable()){
 				AccessModifier[] values = AccessModifier.values();
-				owner.setAccessModifier(values[(am.ordinal()+1)%values.length]);
+				accessModifier = (values[(accessModifier.ordinal()+1)%values.length]);
 			}
 		}
 
 		@Override
 		public void renderToolTip(PoseStack matrixStack, int mouseX, int mouseY){
-			if(isHovered()) renderTooltip(matrixStack, owner.getAccessModifier().toTextComponent(), mouseX, mouseY);
+			if(isHovered()) renderTooltip(matrixStack, accessModifier.text(), mouseX, mouseY);
 		}
 	}
 
@@ -219,7 +218,7 @@ public class TavernScreen extends AbstractScreen{
 		}
 
 		private int getTextureX(){
-			return this.active ? !isHome&&access.isAccessibilityModifiable()&&this.isHovered() ? isPressed ? 14*2 : 7*2 : 0 : 14*2;
+			return this.active ? !isHome&&accessibility.isAccessibilityModifiable()&&this.isHovered() ? isPressed ? 14*2 : 7*2 : 0 : 14*2;
 		}
 
 		@Override

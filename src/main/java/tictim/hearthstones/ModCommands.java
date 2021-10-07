@@ -12,13 +12,12 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import tictim.hearthstones.data.GlobalTavernMemory;
-import tictim.hearthstones.data.PlayerTavernMemory;
-import tictim.hearthstones.data.TavernMemory;
-import tictim.hearthstones.data.TavernPos;
-import tictim.hearthstones.data.TavernRecord;
-import tictim.hearthstones.logic.Tavern;
-import tictim.hearthstones.utils.TavernType;
+import tictim.hearthstones.capability.PlayerTavernMemory;
+import tictim.hearthstones.capability.TavernMemory;
+import tictim.hearthstones.tavern.Tavern;
+import tictim.hearthstones.tavern.TavernPos;
+import tictim.hearthstones.tavern.TavernRecord;
+import tictim.hearthstones.tavern.TavernType;
 
 import static com.mojang.brigadier.Command.SINGLE_SUCCESS;
 import static net.minecraft.commands.Commands.argument;
@@ -60,9 +59,9 @@ public final class ModCommands{
 												.executes(ctx -> removeGlobalTavernMemory(ctx.getSource(), DimensionArgument.getDimension(ctx, "dimension"), BlockPosArgument.getSpawnablePos(ctx, "position")))
 										)
 								)
-						).executes(ctx -> listTavernMemory(ctx.getSource(), GlobalTavernMemory.get()))
+						).executes(ctx -> listTavernMemory(ctx.getSource(), TavernMemory.expectServerGlobal()))
 				).then(argument("player", EntityArgument.player())
-						.executes(ctx -> listTavernMemory(ctx.getSource(), PlayerTavernMemory.get(EntityArgument.getPlayer(ctx, "player"))))
+						.executes(ctx -> listTavernMemory(ctx.getSource(), TavernMemory.expectFromPlayer(EntityArgument.getPlayer(ctx, "player"))))
 				)
 		);
 	}
@@ -73,8 +72,8 @@ public final class ModCommands{
 		else{
 			BlockEntity te = world.getBlockEntity(pos);
 			if(te instanceof Tavern){
-				PlayerTavernMemory m = PlayerTavernMemory.get(player);
-				m.add((Tavern)te);
+				PlayerTavernMemory m = TavernMemory.expectFromPlayer(player);
+				m.addOrUpdate((Tavern)te);
 				m.sync();
 				sender.sendSuccess(new TranslatableComponent("command.tavern_memory.add.success", new TavernPos(world, pos), player.getDisplayName()), true);
 				return SINGLE_SUCCESS;
@@ -84,7 +83,7 @@ public final class ModCommands{
 	}
 
 	private static int removeTavernMemory(CommandSourceStack sender, Player player, ServerLevel dim, BlockPos pos){
-		PlayerTavernMemory m = PlayerTavernMemory.get(player);
+		PlayerTavernMemory m = TavernMemory.expectFromPlayer(player);
 		if(m.delete(dim, pos)!=null){
 			m.sync();
 			sender.sendSuccess(new TranslatableComponent("command.tavern_memory.remove.success", new TavernPos(dim, pos), player.getDisplayName()), true);
@@ -99,8 +98,8 @@ public final class ModCommands{
 		if(!world.isInWorldBounds(pos)) sender.sendFailure(new TranslatableComponent("command.tavern_memory.add.out_of_world", new TavernPos(world, pos)));
 		else if(!world.isAreaLoaded(pos, 0)) sender.sendFailure(new TranslatableComponent("command.tavern_memory.add.unloaded", new TavernPos(world, pos)));
 		else if(world.getBlockEntity(pos) instanceof Tavern tavern){
-			if(tavern.tavernType()==TavernType.GLOBAL){
-				GlobalTavernMemory.get().add(tavern);
+			if(tavern.type()==TavernType.GLOBAL){
+				TavernMemory.expectServerGlobal().addOrUpdate(tavern);
 				sender.sendSuccess(new TranslatableComponent("command.tavern_memory.add.success.global", new TavernPos(world, pos)), true);
 				return SINGLE_SUCCESS;
 			}else sender.sendSuccess(new TranslatableComponent("command.tavern_memory.add.not_global", new TavernPos(world, pos)), true);
@@ -109,7 +108,7 @@ public final class ModCommands{
 	}
 
 	private static int removeGlobalTavernMemory(CommandSourceStack sender, ServerLevel world, BlockPos pos){
-		if(GlobalTavernMemory.get().delete(world, pos)!=null){
+		if(TavernMemory.expectServerGlobal().delete(world, pos)!=null){
 			sender.sendSuccess(new TranslatableComponent("command.tavern_memory.remove.success.global", new TavernPos(world, pos)), true);
 			return SINGLE_SUCCESS;
 		}else{
@@ -119,25 +118,25 @@ public final class ModCommands{
 	}
 
 	private static int listTavernMemory(CommandSourceStack sender, TavernMemory tavernMemory){
-		switch(tavernMemory.memories().size()){
+		switch(tavernMemory.taverns().values().size()){
 			case 0 -> {
 				sender.sendSuccess(new TranslatableComponent("command.tavern_memory.tavern.no_entry"), false);
 				return 0;
 			}
 			case 1 -> sender.sendSuccess(new TranslatableComponent("command.tavern_memory.tavern.entry"), false);
-			default -> sender.sendSuccess(new TranslatableComponent("command.tavern_memory.tavern.entries", tavernMemory.memories().size()), false);
+			default -> sender.sendSuccess(new TranslatableComponent("command.tavern_memory.tavern.entries", tavernMemory.taverns().size()), false);
 		}
-		for(TavernRecord memory : tavernMemory.memories()){
-			Component access = new TextComponent(memory.getOwner().getAccessModifier().name());
-			Component type = new TextComponent(memory.getTavernType().name.toUpperCase());
+		for(TavernRecord memory : tavernMemory.taverns().values()){
+			Component access = new TextComponent(memory.access().name());
+			Component type = new TextComponent(memory.type().name.toUpperCase());
 
 			sender.sendSuccess(new TranslatableComponent(memory.isMissing() ? "command.tavern_memory.tavern.missing" : "command.tavern_memory.tavern",
-					memory.getName()!=null ? memory.getName() : new TranslatableComponent("info.hearthstones.tavern.noName"),
+					memory.name()!=null ? memory.name() : new TranslatableComponent("info.hearthstones.tavern.noName"),
 					access,
 					type,
-					memory.getOwner(),
-					memory.getTavernPos()), false);
+					memory.owner(),
+					memory.pos()), false);
 		}
-		return tavernMemory.memories().size();
+		return tavernMemory.taverns().values().size();
 	}
 }
