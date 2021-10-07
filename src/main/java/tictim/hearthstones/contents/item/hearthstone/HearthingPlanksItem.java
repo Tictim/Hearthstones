@@ -28,7 +28,7 @@ public class HearthingPlanksItem extends HearthstoneItem{
 		if(this.allowdedIn(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
 	}
 
-	@Override public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+	@Override public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(new TranslatableComponent("info.hearthstones.hearthing_planks.tooltip.0"));
 		tooltip.add(new TranslatableComponent("info.hearthstones.hearthing_planks.tooltip.1"));
 	}

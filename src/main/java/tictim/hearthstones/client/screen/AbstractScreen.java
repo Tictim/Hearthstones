@@ -11,8 +11,8 @@ public abstract class AbstractScreen extends Screen{
 	private int leftPos;
 	private int topPos;
 
-	protected AbstractScreen(Component titleIn){
-		super(titleIn);
+	protected AbstractScreen(Component title){
+		super(title);
 	}
 
 	public int getLeft(){

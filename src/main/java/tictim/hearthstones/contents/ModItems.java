@@ -53,7 +53,7 @@ public final class ModItems{
 	);
 	public static final RegistryObject<Item> COMPANION_STONE = REGISTER.register("companion_stone",
 			() -> new Item(new Item.Properties().stacksTo(1).tab(TAB)){
-				@Override public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+				@Override public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag){
 					tooltip.add(new TranslatableComponent("info.hearthstones.companion_stone.tooltip"));
 				}
 			}

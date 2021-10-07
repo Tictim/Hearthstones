@@ -24,23 +24,26 @@ public final class ModCfg{
 		if(initCalled) throw new IllegalStateException("ModCfg#init() called twice");
 		else initCalled = true;
 
-		ForgeConfigSpec.Builder b = new ForgeConfigSpec.Builder();
-		hearthstone = new HearthstoneConfig(b, "hearthstone", "Hearthstone", 0, 75);
-		hearthingPlanks = new HearthstoneConfig(b, "hearthingPlanks", "Hearthing Planks", 30, 75);
-		hearthingGem = new HearthingGemConfig(b, "hearthingGem", "Hearthing Gem", 0, 150);
-		companionHearthstone = new HearthstoneConfig(b, "companionHearthstone", "Companion Hearthstone", 0, 225);
+		ForgeConfigSpec.Builder server = new ForgeConfigSpec.Builder();
 
-		easyMode = b.comment("Removes the recipe of Shabby Tavern/Hearthing Planks, and reverts the recipe of Tavern/Hearthstone to much cheaper version.")
+		hearthstone = new HearthstoneConfig(server, "hearthstone", "Hearthstone", 0, 75);
+		hearthingPlanks = new HearthstoneConfig(server, "hearthingPlanks", "Hearthing Planks", 30, 75);
+		hearthingGem = new HearthingGemConfig(server, "hearthingGem", "Hearthing Gem", 0, 150);
+		companionHearthstone = new HearthstoneConfig(server, "companionHearthstone", "Companion Hearthstone", 0, 225);
+
+		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, server.build());
+
+		ForgeConfigSpec.Builder common = new ForgeConfigSpec.Builder();
+
+		easyMode = common.comment("Removes the recipe of Shabby Tavern/Hearthing Planks, and reverts the recipe of Tavern/Hearthstone to much cheaper version. Requires world restart.")
 				.worldRestart()
 				.define("easyMode", false);
 
-		traceHearthstoneUsage = b.define("traceHearthstoneUsage", false);
-		traceTavernMemorySync = b.define("traceTavernMemorySync", false);
-		traceTavernUpdate = b.define("traceTavernUpdate", false);
+		traceHearthstoneUsage = common.define("traceHearthstoneUsage", false);
+		traceTavernMemorySync = common.define("traceTavernMemorySync", false);
+		traceTavernUpdate = common.define("traceTavernUpdate", false);
 
-		ForgeConfigSpec spec = b.build();
-
-		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, spec, "hearthstones.toml");
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, common.build());
 	}
 
 	public static boolean easyMode(){

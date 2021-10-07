@@ -22,7 +22,7 @@ public class HearthingGemItem extends ScreenBasedHearthstoneItem{
 		return ModTags.GEMS_AQUAMARINE.contains(repair.getItem());
 	}
 
-	@Override public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+	@Override public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag){
 		tooltip.add(new TranslatableComponent("info.hearthstones.hearthstone.tooltip"));
 		tooltip.add(new TranslatableComponent("info.hearthstones.hearthing_gem.tooltip"));
 	}
