@@ -14,12 +14,12 @@ import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import tictim.hearthstones.config.ModCfg;
+import tictim.hearthstones.contents.item.MortarItem;
 import tictim.hearthstones.contents.item.hearthstone.CompanionHearthstoneItem;
-import tictim.hearthstones.contents.item.tavernupgrade.GuildTavernUpgradeItem;
 import tictim.hearthstones.contents.item.hearthstone.HearthingGemItem;
 import tictim.hearthstones.contents.item.hearthstone.HearthingPlanksItem;
-import tictim.hearthstones.contents.item.MortarItem;
 import tictim.hearthstones.contents.item.hearthstone.NormalHearthstoneItem;
+import tictim.hearthstones.contents.item.tavernupgrade.GuildTavernUpgradeItem;
 import tictim.hearthstones.contents.item.tavernupgrade.RegularTavernUpgradeItem;
 import tictim.hearthstones.contents.item.tavernupgrade.ShabbyTavernUpgradeItem;
 

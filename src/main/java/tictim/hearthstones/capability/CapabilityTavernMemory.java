@@ -2,14 +2,9 @@ package tictim.hearthstones.capability;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import tictim.hearthstones.Hearthstones;
-import tictim.hearthstones.tavern.TavernRecord;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

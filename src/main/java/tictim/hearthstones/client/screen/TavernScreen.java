@@ -16,13 +16,13 @@ import net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.glfw.GLFW;
 import tictim.hearthstones.client.Rendering;
-import tictim.hearthstones.tavern.Owner;
-import tictim.hearthstones.tavern.TavernPos;
 import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.net.TavernMemoryOperationMsg;
 import tictim.hearthstones.net.UpdateTavernMsg;
 import tictim.hearthstones.tavern.AccessModifier;
 import tictim.hearthstones.tavern.Accessibility;
+import tictim.hearthstones.tavern.Owner;
+import tictim.hearthstones.tavern.TavernPos;
 import tictim.hearthstones.tavern.TavernTextFormat;
 import tictim.hearthstones.tavern.TavernType;
 

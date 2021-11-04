@@ -1,8 +1,8 @@
 package tictim.hearthstones.tavern;
 
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectArrayMap;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import tictim.hearthstones.contents.ModItems;
 
 import java.util.Objects;

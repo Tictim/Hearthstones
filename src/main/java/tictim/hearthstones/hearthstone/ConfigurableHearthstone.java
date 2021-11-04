@@ -1,7 +1,6 @@
 package tictim.hearthstones.hearthstone;
 
 import tictim.hearthstones.config.HearthstoneConfig;
-import tictim.hearthstones.hearthstone.Hearthstone;
 
 public abstract class ConfigurableHearthstone implements Hearthstone{
 	protected final HearthstoneConfig config;

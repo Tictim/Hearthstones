@@ -4,7 +4,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.Team;
-import tictim.hearthstones.Hearthstones;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
