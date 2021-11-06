@@ -3,9 +3,9 @@ package tictim.hearthstones.contents.blockentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import tictim.hearthstones.capability.TavernMemory;
 import tictim.hearthstones.contents.ModBlockEntities;
 import tictim.hearthstones.contents.ModItems;
+import tictim.hearthstones.tavern.TavernMemories;
 import tictim.hearthstones.tavern.TavernType;
 
 public class GlobalTavernBlockEntity extends TavernBlockEntity{
@@ -21,6 +21,6 @@ public class GlobalTavernBlockEntity extends TavernBlockEntity{
 	}
 
 	@Override public void onLoad(){
-		TavernMemory.expectServerGlobal().addOrUpdate(this);
+		TavernMemories.global().addOrUpdate(this);
 	}
 }

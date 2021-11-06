@@ -10,8 +10,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import tictim.hearthstones.capability.CapabilityTavernMemory;
 import tictim.hearthstones.contents.blockentity.GlobalTavernBlockEntity;
+import tictim.hearthstones.tavern.TavernMemories;
 import tictim.hearthstones.tavern.TavernPos;
 
 import javax.annotation.Nullable;
@@ -35,13 +35,13 @@ public class GlobalTavernBlock extends TavernBlock{
 	@Override public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack){
 		super.setPlacedBy(level, pos, state, placer, stack);
 		if(!level.isClientSide&&level.getBlockEntity(pos) instanceof GlobalTavernBlockEntity tavern)
-			CapabilityTavernMemory.expectServerGlobal().addOrUpdate(tavern);
+			TavernMemories.global().addOrUpdate(tavern);
 	}
 
 	@SuppressWarnings("deprecation") @Override public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moving){
 		if((!state.is(newState.getBlock())||!newState.hasBlockEntity())){
 			if(level.getBlockEntity(pos) instanceof GlobalTavernBlockEntity globalTavern)
-				CapabilityTavernMemory.expectServerGlobal().delete(new TavernPos(globalTavern));
+				TavernMemories.global().delete(new TavernPos(globalTavern));
 		}
 		super.onRemove(state, level, pos, newState, moving);
 	}

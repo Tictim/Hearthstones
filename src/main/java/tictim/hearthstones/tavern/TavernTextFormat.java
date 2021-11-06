@@ -59,7 +59,7 @@ public final class TavernTextFormat{
 	public static Component formatDistance(TavernPos pos, Entity entity){
 		if(!pos.isSameDimension(entity.level))
 			return new TranslatableComponent("info.hearthstones.tavern.another_dim");
-		double dist = Math.sqrt(entity.distanceToSqr(pos.pos.getX()+0.5, pos.pos.getY()+0.5, pos.pos.getZ()+0.5));
+		double dist = Math.sqrt(entity.distanceToSqr(pos.pos().getX()+0.5, pos.pos().getY()+0.5, pos.pos().getZ()+0.5));
 		if(dist>=FAR_AWAY) return new TranslatableComponent("info.hearthstones.tavern.far_away");
 		else if(dist<=NEARBY) return new TranslatableComponent("info.hearthstones.tavern.nearby");
 		else return new TranslatableComponent("info.hearthstones.tavern.n_meter_away", DoubleMath.roundToInt(dist, RoundingMode.HALF_UP));

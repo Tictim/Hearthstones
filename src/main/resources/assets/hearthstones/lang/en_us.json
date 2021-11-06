@@ -92,9 +92,10 @@
 	"command.tavern_memory.remove.success": "Removed Tavern memory %s from %s.",
 	"command.tavern_memory.remove.success.global": "Removed Tavern memory %s from Global Tavern Memory.",
 	"command.tavern_memory.remove.no_memory": "Tavern memory with Tavern at %s doesn't exist.",
-	"command.tavern_memory.tavern.entry": "1 entry",
-	"command.tavern_memory.tavern.entries": "%s entries",
-	"command.tavern_memory.tavern.no_entry": "No entry",
-	"command.tavern_memory.tavern": "%s  :  %s %s\n  %s  %s",
-	"command.tavern_memory.tavern.missing": "%s (Missing)  :  %s %s\n  %s  %s"
+	"command.tavern_memory.global.entry": "Global Tavern Memory: 1 entry",
+	"command.tavern_memory.global.entries": "Global Tavern Memory: %s entries",
+	"command.tavern_memory.global.no_entry": "Global Tavern Memory: No entry",
+	"command.tavern_memory.player.entry": "%s(%s)'s Tavern Memory: 1 entry",
+	"command.tavern_memory.player.entries": "%s(%s)'s Tavern Memory: %s entries",
+	"command.tavern_memory.player.no_entry": "%s(%s)'s Tavern Memory: No entry"
 }

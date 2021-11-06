@@ -8,16 +8,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.dimension.LevelStem;
 
 import java.util.Objects;
 
-public final class TavernPos{
-	public static final TavernPos OVERWORLD_ORIGIN = new TavernPos(LevelStem.OVERWORLD.location(), 0, 0, 0);
-
-	public final ResourceLocation dim;
-	public final BlockPos pos;
-
+public record TavernPos(ResourceLocation dim, BlockPos pos){
 	public TavernPos(Level world, int x, int y, int z){
 		this(world.dimension().location(), x, y, z);
 	}
@@ -32,9 +26,6 @@ public final class TavernPos{
 	}
 	public TavernPos(CompoundTag nbt){
 		this(new ResourceLocation(nbt.getString("dim")), NbtUtils.readBlockPos(nbt.getCompound("pos")));
-	}
-	public TavernPos(FriendlyByteBuf buffer){
-		this(buffer.readResourceLocation(), buffer.readBlockPos());
 	}
 
 	public TavernPos(ResourceLocation dim, BlockPos pos){
@@ -64,19 +55,11 @@ public final class TavernPos{
 		buffer.writeBlockPos(pos);
 	}
 
-	@Override
-	public boolean equals(Object o){
-		if(this==o) return true;
-		if(o==null||getClass()!=o.getClass()) return false;
-		TavernPos tavernPos = (TavernPos)o;
-		return dim.equals(tavernPos.dim)&&pos.equals(tavernPos.pos);
-	}
-	@Override
-	public int hashCode(){
-		return Objects.hash(dim, pos);
-	}
-	@Override
-	public String toString(){
+	@Override public String toString(){
 		return String.format("[%s, %d %d %d]", dim, pos.getX(), pos.getY(), pos.getZ());
+	}
+
+	public static TavernPos read(FriendlyByteBuf buf){
+		return new TavernPos(buf.readResourceLocation(), buf.readBlockPos());
 	}
 }

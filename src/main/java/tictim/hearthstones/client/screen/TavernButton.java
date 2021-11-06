@@ -65,7 +65,7 @@ final class TavernButton extends Button{
 		RenderSystem.enableBlend();
 		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		pose.translate(x, y, 0);
-		Rendering.renderTavernUIBase(pose, tavern.type(), screen.memory.getSelectedTavern()==tavern);
+		Rendering.renderTavernUIBase(pose, tavern.type(), tavern.pos().equals(screen.playerMemory.getSelectedPos()));
 		pose.translate(6*2, 2, 0);
 		Rendering.renderTavernAccess(pose, tavern.access());
 		pose.popPose();
@@ -90,10 +90,11 @@ final class TavernButton extends Button{
 			this.playDownSound(Minecraft.getInstance().getSoundManager());
 			if(button==0){
 				ModNet.CHANNEL.sendToServer(new TavernMemoryOperationMsg(tavern.pos(), TavernMemoryOperationMsg.SELECT));
-				screen.memory.select(tavern.pos());
+				screen.playerMemory.select(tavern.pos());
 			}else if(!isFromGlobal){
 				ModNet.CHANNEL.sendToServer(new TavernMemoryOperationMsg(tavern.pos(), TavernMemoryOperationMsg.DELETE));
-				screen.memory.delete(tavern.pos());
+				screen.playerMemory.delete(tavern.pos());
+				screen.refreshTavernButtons();
 			}
 			return true;
 		}

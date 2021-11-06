@@ -2,6 +2,7 @@ package tictim.hearthstones.tavern;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.util.Constants.NBT;
 
@@ -29,7 +30,7 @@ public record TavernRecord(@Override TavernPos pos,
 	}
 
 	@Override public BlockPos blockPos(){
-		return pos.pos;
+		return pos.pos();
 	}
 
 	@Override public TavernRecord toRecord(){
@@ -39,11 +40,31 @@ public record TavernRecord(@Override TavernPos pos,
 	public CompoundTag write(){
 		CompoundTag nbt = new CompoundTag();
 		nbt.put("pos", pos.write());
-		if(type!=TavernType.NORMAL) nbt.putByte("type", type.id);
-		if(owner.hasOwner()) nbt.put("owner", owner.write());
-		if(access.ordinal()!=0) nbt.putByte("access", (byte)access.ordinal());
 		if(name!=null) nbt.putString("name", Component.Serializer.toJson(name));
+		if(owner.hasOwner()) nbt.put("owner", owner.write());
+		if(type!=TavernType.NORMAL) nbt.putByte("type", type.id);
+		if(access.ordinal()!=0) nbt.putByte("access", (byte)access.ordinal());
 		if(isMissing) nbt.putBoolean("missing", true);
 		return nbt;
+	}
+
+	public void write(FriendlyByteBuf buf){
+		pos.write(buf);
+		if(name!=null) buf.writeComponent(name);
+		owner.write(buf);
+		buf.writeVarInt(type.id);
+		buf.writeByte(access.ordinal());
+		buf.writeBoolean(name!=null);
+		buf.writeBoolean(isMissing);
+	}
+
+	public static TavernRecord read(FriendlyByteBuf buf){
+		return new TavernRecord(
+				TavernPos.read(buf),
+				buf.readBoolean() ? buf.readComponent() : null,
+				Owner.read(buf),
+				TavernType.of(buf.readByte()),
+				AccessModifier.of(buf.readUnsignedByte()),
+				buf.readBoolean());
 	}
 }

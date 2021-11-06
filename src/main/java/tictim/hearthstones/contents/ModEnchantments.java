@@ -5,8 +5,8 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import tictim.hearthstones.contents.enchantment.EnchantQuickcast;
 import tictim.hearthstones.contents.item.hearthstone.HearthstoneItem;
-import tictim.hearthstones.enchantment.EnchantQuickcast;
 
 import static tictim.hearthstones.Hearthstones.MODID;
 

@@ -2,7 +2,6 @@ package tictim.hearthstones.client.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceKey;
@@ -10,45 +9,46 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import tictim.hearthstones.Hearthstones;
-import tictim.hearthstones.capability.PlayerTavernMemory;
-import tictim.hearthstones.capability.TavernMemory;
+import tictim.hearthstones.net.OpenHearthstoneScreenMsg;
+import tictim.hearthstones.tavern.PlayerTavernMemory;
 import tictim.hearthstones.tavern.Tavern;
+import tictim.hearthstones.tavern.TavernMemory;
 import tictim.hearthstones.tavern.TavernRecord;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 public class HearthstoneScreen extends AbstractScreen{
 	public static final ResourceLocation ICONS = new ResourceLocation(Hearthstones.MODID, "textures/screen/icons.png");
 
-	public final PlayerTavernMemory memory;
-	public final boolean hearthingGem;
+	public PlayerTavernMemory playerMemory;
+	public TavernMemory globalMemory;
+	public boolean hearthingGem;
 
 	private int yOffset = 0;
 	private double yOffsetFloat = 0;
 	private double yOffsetDest = 0;
 	private int screenY;
 
-	private boolean updateButtons = false;
+	private boolean initialized;
 
 	private final Comparator<TavernRecord> tavernComparator;
 	private final List<TavernButton> tavernButtons = new ArrayList<>();
 
-	public HearthstoneScreen(boolean hearthingGem){
+	public HearthstoneScreen(){
 		super(NarratorChatListener.NO_TITLE);
-		this.memory = TavernMemory.expectFromPlayer(Objects.requireNonNull(Minecraft.getInstance().player));
-		this.hearthingGem = hearthingGem;
+		this.playerMemory = new PlayerTavernMemory();
+		this.globalMemory = new TavernMemory();
 
 		this.tavernComparator = (o1, o2) -> {
 			int i;
 			// home
-			Tavern homeTavern = memory.getHomeTavern();
+			Tavern homeTavern = this.playerMemory.getHomeTavern();
 			i = Boolean.compare(homeTavern==o2, homeTavern==o1);
 			if(i!=0) return i;
-			ResourceLocation d1 = o1.pos().dim;
-			ResourceLocation d2 = o2.pos().dim;
+			ResourceLocation d1 = o1.pos().dim();
+			ResourceLocation d2 = o2.pos().dim();
 			//noinspection ConstantConditions
 			ResourceKey<Level> dim = minecraft.level.dimension();
 			if(d1==d2&&dim.location().equals(d1)){// #3(Optional) distance
@@ -63,7 +63,7 @@ public class HearthstoneScreen extends AbstractScreen{
 			i = Boolean.compare(o1.isMissing(), o2.isMissing());
 			if(i!=0) return i;
 			// dimension
-			i = o1.pos().dim.compareTo(o2.pos().dim);
+			i = o1.pos().dim().compareTo(o2.pos().dim());
 			if(i!=0) return i;
 			// name
 			if((o1.name()==null)!=(o2.name()==null)) return o1.name()==null ? -1 : 1;
@@ -76,30 +76,33 @@ public class HearthstoneScreen extends AbstractScreen{
 		};
 	}
 
-	public void markForUpdate(){
-		this.updateButtons = true;
+	public void updateData(OpenHearthstoneScreenMsg packet){
+		this.playerMemory = packet.playerMemory();
+		this.globalMemory = packet.globalMemory();
+		this.hearthingGem = packet.isHearthingGem();
+		if(initialized) refreshTavernButtons();
 	}
 
 	@Override protected void onInit(){
-		createTavernButtons();
+		refreshTavernButtons();
 	}
 	@Override protected void onResize(){
 		this.xSize = this.width;
 		this.ySize = this.height;
 	}
 
-	public void createTavernButtons(){
-		updateButtons = false;
+	public void refreshTavernButtons(){
+		initialized = true;
 		for(TavernButton tavernButton : tavernButtons) removeWidget(tavernButton);
 		tavernButtons.clear();
 
 		screenY = 0;
 
-		memory.taverns().values().stream()
+		playerMemory.taverns().values().stream()
 				.sorted(tavernComparator)
 				.forEachOrdered(it -> createButton(it, false));
-		TavernMemory.expectClientGlobal().taverns().values().stream()
-				.filter(it -> !memory.has(it.pos()))
+		globalMemory.taverns().values().stream()
+				.filter(it -> !playerMemory.has(it.pos()))
 				.sorted(tavernComparator)
 				.forEachOrdered(it -> createButton(it, true));
 	}
@@ -109,14 +112,12 @@ public class HearthstoneScreen extends AbstractScreen{
 				getLeft(),
 				getTop()+screenY,
 				tavern,
-				memory.getHomePos()!=null&&memory.getHomePos().equals(tavern.pos()),
+				playerMemory.getHomePos()!=null&&playerMemory.getHomePos().equals(tavern.pos()),
 				isFromGlobal)));
 		screenY += TavernButton.HEIGHT+(7*2)+6;
 	}
 
 	@Override public void render(PoseStack pose, int mouseX, int mouseY, float partialTicks){
-		if(updateButtons) createTavernButtons();
-
 		int mouseY2 = mouseY+yOffset;
 		this.renderBackground(pose);
 		pose.pushPose();

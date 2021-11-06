@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.biome.Biome;
@@ -29,17 +28,18 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import tictim.hearthstones.capability.TavernMemory;
 import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.contents.ModBlockEntities;
 import tictim.hearthstones.contents.ModBlocks;
 import tictim.hearthstones.contents.ModEnchantments;
 import tictim.hearthstones.contents.ModItems;
+import tictim.hearthstones.contents.item.hearthstone.HearthstoneItem;
 import tictim.hearthstones.datagen.BlockTagGen;
 import tictim.hearthstones.datagen.ItemTagGen;
 import tictim.hearthstones.datagen.LootTableGen;
 import tictim.hearthstones.datagen.RecipeGen;
 import tictim.hearthstones.net.ModNet;
+import tictim.hearthstones.tavern.TavernMemories;
 
 @Mod(Hearthstones.MODID)
 @Mod.EventBusSubscriber(modid = Hearthstones.MODID, bus = Bus.MOD)
@@ -76,7 +76,8 @@ public class Hearthstones{
 
 	@SubscribeEvent
 	public static void registerCapabilities(RegisterCapabilitiesEvent event){
-		event.register(TavernMemory.class);
+		event.register(TavernMemories.class);
+		event.register(HearthstoneItem.Data.class);
 	}
 
 	@SubscribeEvent
@@ -98,11 +99,12 @@ public class Hearthstones{
 			event.enqueueWork(() -> {
 				ResourceLocation key = new ResourceLocation("has_cooldown");
 				@SuppressWarnings("deprecation")
-				ItemPropertyFunction itemPropertyGetter = (s, w, e, wtf) -> { // TODO wtf
+				ItemPropertyFunction itemPropertyGetter = (s, w, e, wtf) -> {
 					if(e instanceof Player){
-						CompoundTag tag = s.getTag();
-						return tag!=null&&tag.getBoolean("hasCooldown") ? 1 : 0;
-					}else return 0;
+						HearthstoneItem.Data data = HearthstoneItem.data(s);
+						if(data!=null&&data.hasCooldown) return 1;
+					}
+					return 0;
 				};
 
 				ItemProperties.register(ModItems.HEARTHSTONE.get(), key, itemPropertyGetter);

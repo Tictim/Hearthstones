@@ -6,7 +6,7 @@ import tictim.hearthstones.tavern.TavernPos;
 public record TavernMemoryOperationMsg(TavernPos pos, byte operation){
 	public static TavernMemoryOperationMsg read(FriendlyByteBuf buf){
 		return new TavernMemoryOperationMsg(
-				new TavernPos(buf),
+				TavernPos.read(buf),
 				buf.readByte());
 	}
 

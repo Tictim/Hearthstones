@@ -1,15 +1,15 @@
 package tictim.hearthstones.contents.item.hearthstone;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import tictim.hearthstones.capability.TavernMemory;
-import tictim.hearthstones.client.screen.HearthstoneScreen;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import tictim.hearthstones.hearthstone.Hearthstone;
+import tictim.hearthstones.net.ModNet;
+import tictim.hearthstones.net.OpenHearthstoneScreenMsg;
 
 public class ScreenBasedHearthstoneItem extends HearthstoneItem{
 	public ScreenBasedHearthstoneItem(Properties properties, Hearthstone hearthstone){
@@ -19,21 +19,12 @@ public class ScreenBasedHearthstoneItem extends HearthstoneItem{
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand){
 		if(!player.isShiftKeyDown()) return super.use(level, player, hand);
-		if(level.isClientSide) openHearthstoneScreen(player);
-		else if(player instanceof ServerPlayer) TavernMemory.expectFromPlayer(player).sync();
+		if(!level.isClientSide&&player instanceof ServerPlayer sp)
+			ModNet.CHANNEL.send(PacketDistributor.PLAYER.with(() -> sp), new OpenHearthstoneScreenMsg(player, isHearthingGem()));
 		return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide);
 	}
 
-	protected void openHearthstoneScreen(Player player){
-		if(player==Minecraft.getInstance().player)
-			Client.openHearthstoneScreen(false);
-	}
-
-	protected static final class Client{
-		private Client(){}
-
-		public static void openHearthstoneScreen(boolean hearthingGem){
-			Minecraft.getInstance().setScreen(new HearthstoneScreen(hearthingGem));
-		}
+	protected boolean isHearthingGem(){
+		return false;
 	}
 }

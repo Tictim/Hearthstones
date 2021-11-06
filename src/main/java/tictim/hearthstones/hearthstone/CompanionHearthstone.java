@@ -25,13 +25,10 @@ public class CompanionHearthstone extends SelectionHearthstone{
 
 	@Override protected WarpSetup createWarpSetup(WarpContext context, Tavern selectedTavern, BlockPos warpPos){
 		return () -> {
-			for(Entity e : getWarpTargets(context.getPlayer())) warp(e, selectedTavern.pos().dim, warpPos, false);
-			warp(context.getPlayer(), selectedTavern.pos().dim, warpPos, true);
-			context.getStack().hurtAndBreak(1,
-					context.getPlayer(),
-					player -> {
-						if(context.getHand()!=null) player.broadcastBreakEvent(context.getHand());
-					});
+			for(Entity e : getWarpTargets(context.getPlayer())) warp(e, selectedTavern.pos().dim(), warpPos, false);
+			warp(context.getPlayer(), selectedTavern.pos().dim(), warpPos, true);
+			context.hurtItem(1);
+			context.getMemory().addOrUpdate(selectedTavern);
 			context.getMemory().setCooldown(config.cooldown());
 		};
 	}

@@ -17,21 +17,21 @@ public class SelectionHearthstone extends ConfigurableHearthstone{
 	}
 
 	@Nullable @Override public Tavern previewWarp(WarpContext context){
-		return context.getMemory().getSelectedTavern();
+		return context.getSelectedTavern();
 	}
 
 	@Nullable @Override public WarpSetup setupWarp(WarpContext context){
-		Tavern selectedTavern = context.getMemory().getSelectedTavern();
+		Tavern selectedTavern = context.getSelectedTavern();
 		if(selectedTavern==null){
 			context.getPlayer().displayClientMessage(new TranslatableComponent("info.hearthstones.hearthstone.no_selected"), true);
 			return null;
 		}
 		TavernBlockEntity tavern = getTavernAt(selectedTavern.pos());
 		if(tavern==null){
-			context.getMemory().addOrUpdate(selectedTavern.withMissingSet(true));
+			context.getMemory().updateIfPresent(selectedTavern.withMissingSet(true));
 			context.getPlayer().displayClientMessage(new TranslatableComponent("info.hearthstones.hearthstone.tavern_missing"), true);
 		}else{
-			context.getMemory().addOrUpdate(tavern.withMissingSet(false));
+			context.getMemory().updateIfPresent(tavern.withMissingSet(false));
 			if(tavern.canTeleportTo(context))
 				return createWarpSetup(context, selectedTavern, HearthUtils.getWarpPos(tavern));
 			context.getPlayer().displayClientMessage(new TranslatableComponent("info.hearthstones.hearthstone.no_permission"), true);
@@ -41,12 +41,9 @@ public class SelectionHearthstone extends ConfigurableHearthstone{
 
 	protected WarpSetup createWarpSetup(WarpContext context, Tavern selectedTavern, BlockPos warpPos){
 		return () -> {
-			warp(context.getPlayer(), selectedTavern.pos().dim, warpPos, true);
-			context.getStack().hurtAndBreak(1,
-					context.getPlayer(),
-					player -> {
-						if(context.getHand()!=null) player.broadcastBreakEvent(context.getHand());
-					});
+			warp(context.getPlayer(), selectedTavern.pos().dim(), warpPos, true);
+			context.hurtItem(1);
+			context.getMemory().addOrUpdate(selectedTavern);
 			context.getMemory().setCooldown(config.cooldown());
 		};
 	}

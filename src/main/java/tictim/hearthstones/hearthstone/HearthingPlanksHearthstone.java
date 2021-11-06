@@ -19,30 +19,26 @@ public class HearthingPlanksHearthstone extends ConfigurableHearthstone{
 	}
 
 	@Nullable @Override public WarpSetup setupWarp(WarpContext context){
-		Tavern selectedTavern = context.getMemory().getSelectedTavern();
-		if(selectedTavern==null){
+		Tavern homeTavern = context.getMemory().getHomeTavern();
+		if(homeTavern==null){
 			context.getPlayer().displayClientMessage(new TranslatableComponent("info.hearthstones.hearthing_planks.no_home_tavern"), true);
 			return null;
 		}
-		TavernBlockEntity tavern = getTavernAt(selectedTavern.pos());
+		TavernBlockEntity tavern = getTavernAt(homeTavern.pos());
 		if(tavern==null){
-			context.getMemory().addOrUpdate(selectedTavern.withMissingSet(true));
+			context.getMemory().updateIfPresent(homeTavern.withMissingSet(true));
 			context.getPlayer().displayClientMessage(new TranslatableComponent("info.hearthstones.hearthstone.tavern_missing"), true);
 		}else{
-			context.getMemory().addOrUpdate(tavern.withMissingSet(false));
+			context.getMemory().updateIfPresent(tavern.withMissingSet(false));
 			if(!tavern.canTeleportTo(context))
 				context.getPlayer().displayClientMessage(new TranslatableComponent("info.hearthstones.hearthstone.no_permission"), true);
 			return () -> {
-				HearthUtils.warp(context.getPlayer(), tavern.pos().dim, HearthUtils.getWarpPos(tavern), true);
-				context.getStack().hurtAndBreak(1,
-						context.getPlayer(),
-						player -> {
-							if(context.getHand()!=null) player.broadcastBreakEvent(context.getHand());
-						});
+				HearthUtils.warp(context.getPlayer(), tavern.pos().dim(), HearthUtils.getWarpPos(tavern), true);
+				context.hurtItem(1);
+				context.getMemory().addOrUpdate(homeTavern);
 				context.getMemory().setCooldown(config.cooldown());
 			};
 		}
-		context.getMemory().sync();
 		return null;
 	}
 }

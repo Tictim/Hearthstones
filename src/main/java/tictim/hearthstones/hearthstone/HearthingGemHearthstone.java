@@ -16,19 +16,16 @@ public class HearthingGemHearthstone extends SelectionHearthstone{
 	protected WarpSetup createWarpSetup(WarpContext context, Tavern selectedTavern, BlockPos warpPos){
 		return () -> {
 			boolean thresholdExceeded = !context.getPlayer().isCreative()&&isTooFar(context.getPlayer(), selectedTavern.pos());
-			warp(context.getPlayer(), selectedTavern.pos().dim, warpPos, true);
+			warp(context.getPlayer(), selectedTavern.pos().dim(), warpPos, true);
 			if(thresholdExceeded) context.getStack().setDamageValue(context.getStack().getMaxDamage());
-			context.getStack().hurtAndBreak(1,
-					context.getPlayer(),
-					player -> {
-						if(context.getHand()!=null) player.broadcastBreakEvent(context.getHand());
-					});
+			context.hurtItem(1);
+			context.getMemory().addOrUpdate(selectedTavern);
 			context.getMemory().setCooldown(config.cooldown());
 		};
 	}
 
 	public static boolean isTooFar(Entity entity, TavernPos destination){
 		return !destination.isSameDimension(entity.level)||
-				Math.sqrt(entity.distanceToSqr(destination.pos.getX()+.5, destination.pos.getY(), destination.pos.getZ()+.5))<ModCfg.hearthingGem().travelDistanceThreshold();
+				Math.sqrt(entity.distanceToSqr(destination.pos().getX()+.5, destination.pos().getY(), destination.pos().getZ()+.5))<ModCfg.hearthingGem().travelDistanceThreshold();
 	}
 }

@@ -40,9 +40,9 @@ public final class HearthUtils{
 		if(server==null) return null;
 		Level level = ServerLifecycleHooks
 				.getCurrentServer()
-				.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, pos.dim));
+				.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, pos.dim()));
 		if(level==null) return null;
-		BlockEntity te = level.getBlockEntity(pos.pos);
+		BlockEntity te = level.getBlockEntity(pos.pos());
 		if(te instanceof TavernBlockEntity tavern) return tavern;
 		return null;
 	}

@@ -1,5 +1,6 @@
 package tictim.hearthstones.contents.item.hearthstone;
 
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
@@ -14,11 +15,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.LazyOptional;
+import tictim.hearthstones.Caps;
 import tictim.hearthstones.client.Rendering;
 import tictim.hearthstones.contents.ModEnchantments;
 import tictim.hearthstones.hearthstone.Hearthstone;
 import tictim.hearthstones.hearthstone.WarpContext;
+import tictim.hearthstones.tavern.Tavern;
+import tictim.hearthstones.tavern.TavernRecord;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class HearthstoneItem extends Item{
@@ -62,15 +72,13 @@ public class HearthstoneItem extends Item{
 	}
 
 	@Override public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean isSelected){
-		if(!level.isClientSide&&entity instanceof Player player){
-			boolean hasCooldown = new WarpContext(stack, player).hasCooldown();
-
-			CompoundTag tag = stack.getTag();
-			if(hasCooldown!=(tag!=null&&tag.getBoolean("hasCooldown"))){
-				CompoundTag nbt = tag;
-				if(nbt==null) stack.setTag(nbt = new CompoundTag());
-				nbt.putBoolean("hasCooldown", hasCooldown);
-			}
+		if(!level.isClientSide&&level.getGameTime()%2==0&&entity instanceof Player player){
+			Data data = data(stack);
+			if(data==null) return;
+			data.read();
+			WarpContext warpContext = new WarpContext(stack, player);
+			data.updateHasCooldown(warpContext.hasCooldown());
+			data.updateDestination(hearthstone.previewWarp(warpContext));
 		}
 	}
 
@@ -106,6 +114,10 @@ public class HearthstoneItem extends Item{
 		}
 	}
 
+	@Override public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeCharged){
+		if(entity instanceof Player player) player.getCooldowns().addCooldown(this, 5);
+	}
+
 	@Override public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity){
 		if(level.isClientSide||!(entity instanceof Player player)) return stack;
 		WarpContext ctx = new WarpContext(stack, player, player.getUsedItemHand());
@@ -114,5 +126,65 @@ public class HearthstoneItem extends Item{
 
 		player.getCooldowns().addCooldown(this, 20);
 		return stack;
+	}
+
+	@Override public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt){
+		return new Data(stack);
+	}
+
+	@SuppressWarnings("ConstantConditions") @Nullable public static Data data(ICapabilityProvider capabilityProvider){
+		return capabilityProvider.getCapability(Caps.HEARTHSTONE_DATA).orElse(null);
+	}
+
+	public static final class Data implements ICapabilityProvider{
+		private final ItemStack stack;
+		public boolean hasCooldown;
+		@Nullable public TavernRecord destination;
+
+		public Data(ItemStack stack){
+			this.stack = stack;
+		}
+
+		public void updateHasCooldown(boolean hasCooldown){
+			if(this.hasCooldown==hasCooldown) return;
+			this.hasCooldown = hasCooldown;
+			if(hasCooldown) stack.getOrCreateTag().putBoolean("HasCooldown", true);
+			else if(stack.getTag()!=null) stack.getTag().remove("HasCooldown");
+		}
+
+		public void updateDestination(@Nullable Tavern destination){
+			if(this.destination==null){
+				if(destination==null) return;
+			}else if(destination!=null&&!this.destination.pos().equals(destination.pos()))
+				return;
+			this.destination = destination!=null ? destination.toRecord() : null;
+			if(this.destination!=null) stack.getOrCreateTag().put("Destination", this.destination.write());
+			else if(stack.getTag()!=null) stack.getTag().remove("Destination");
+		}
+
+		private LazyOptional<Data> self;
+
+		@Nonnull @Override public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side){
+			if(cap==Caps.HEARTHSTONE_DATA){
+				if(self==null) self = LazyOptional.of(() -> this);
+				return self.cast();
+			}
+			return LazyOptional.empty();
+		}
+
+		private boolean read;
+
+		public void read(){
+			if(read) return;
+			read = true;
+			CompoundTag tag = stack.getTag();
+			if(tag==null){
+				hasCooldown = false;
+				destination = null;
+			}else{
+				hasCooldown = tag.getBoolean("HasCooldown");
+				destination = tag.contains("Destination", Constants.NBT.TAG_COMPOUND) ? new TavernRecord(tag.getCompound("Destination")) : null;
+			}
+		}
 	}
 }

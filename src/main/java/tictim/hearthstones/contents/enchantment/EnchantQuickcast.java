@@ -1,4 +1,4 @@
-package tictim.hearthstones.enchantment;
+package tictim.hearthstones.contents.enchantment;
 
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;

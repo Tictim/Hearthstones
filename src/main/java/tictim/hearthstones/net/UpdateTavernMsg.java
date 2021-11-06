@@ -7,26 +7,17 @@ import tictim.hearthstones.tavern.TavernPos;
 
 import javax.annotation.Nullable;
 
-public class UpdateTavernMsg{
+public record UpdateTavernMsg(TavernPos pos, @Nullable Component name, AccessModifier access){
 	public static UpdateTavernMsg read(FriendlyByteBuf buf){
-		return new UpdateTavernMsg(new TavernPos(buf),
-				ModNet.readOptionalName(buf),
+		return new UpdateTavernMsg(TavernPos.read(buf),
+				buf.readBoolean() ? buf.readComponent() : null,
 				AccessModifier.of(buf.readUnsignedByte()));
-	}
-
-	public TavernPos pos;
-	@Nullable public Component name;
-	public AccessModifier access;
-
-	public UpdateTavernMsg(TavernPos pos, @Nullable Component name, AccessModifier access){
-		this.pos = pos;
-		this.name = name;
-		this.access = access;
 	}
 
 	public void write(FriendlyByteBuf buf){
 		pos.write(buf);
-		ModNet.writeOptionalName(buf, name);
+		buf.writeBoolean(name!=null);
+		if(name!=null) buf.writeComponent(name);
 		buf.writeByte(access.ordinal());
 	}
 }

@@ -12,12 +12,20 @@ import tictim.hearthstones.tavern.TavernType;
 
 import javax.annotation.Nullable;
 
-public class OpenTavernScreenMsg{
+public record OpenTavernScreenMsg(
+		TavernPos pos,
+		TavernType type,
+		@Nullable Component name,
+		Accessibility accessibility,
+		Owner owner,
+		AccessModifier access,
+		boolean isHome
+){
 	public static OpenTavernScreenMsg read(FriendlyByteBuf buf){
 		return new OpenTavernScreenMsg(
-				new TavernPos(buf),
+				TavernPos.read(buf),
 				TavernType.of(buf.readByte()),
-				ModNet.readOptionalName(buf),
+				buf.readBoolean() ? buf.readComponent() : null,
 				Accessibility.fromMeta(buf.readUnsignedByte()),
 				Owner.read(buf),
 				AccessModifier.of(buf.readByte()),
@@ -25,31 +33,15 @@ public class OpenTavernScreenMsg{
 		);
 	}
 
-	public final TavernPos pos;
-	public final TavernType type;
-	@Nullable public final Component name;
-	public final Accessibility accessibility;
-	public final Owner owner;
-	public final AccessModifier access;
-	public final boolean isHome;
-
 	public OpenTavernScreenMsg(Tavern tavern, Player player, boolean isHome){
 		this(tavern.pos(), tavern.type(), tavern.name(), tavern.getAccessibility(player), tavern.owner(), tavern.access(), isHome);
-	}
-	public OpenTavernScreenMsg(TavernPos pos, TavernType type, @Nullable Component name, Accessibility accessibility, Owner owner, AccessModifier access, boolean isHome){
-		this.pos = pos;
-		this.type = type;
-		this.name = name;
-		this.accessibility = accessibility;
-		this.owner = owner;
-		this.access = access;
-		this.isHome = isHome;
 	}
 
 	public void write(FriendlyByteBuf buf){
 		pos.write(buf);
 		buf.writeByte(type.id);
-		ModNet.writeOptionalName(buf, name);
+		buf.writeBoolean(name!=null);
+		if(name!=null) buf.writeComponent(name);
 		buf.writeByte(accessibility.ordinal());
 		owner.write(buf);
 		buf.writeByte(access.ordinal());

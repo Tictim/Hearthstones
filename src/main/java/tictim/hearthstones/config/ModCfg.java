@@ -16,7 +16,6 @@ public final class ModCfg{
 	private static BooleanValue easyMode;
 
 	private static BooleanValue traceHearthstoneUsage;
-	private static BooleanValue traceTavernMemorySync;
 	private static BooleanValue traceTavernUpdate;
 
 	private static boolean initCalled = false;
@@ -40,7 +39,6 @@ public final class ModCfg{
 				.define("easyMode", false);
 
 		traceHearthstoneUsage = common.define("traceHearthstoneUsage", false);
-		traceTavernMemorySync = common.define("traceTavernMemorySync", false);
 		traceTavernUpdate = common.define("traceTavernUpdate", false);
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, common.build());
@@ -51,9 +49,6 @@ public final class ModCfg{
 	}
 	public static boolean traceHearthstoneUsage(){
 		return traceHearthstoneUsage.get();
-	}
-	public static boolean traceTavernMemorySync(){
-		return traceTavernMemorySync.get();
 	}
 	public static boolean traceTavernUpdate(){
 		return traceTavernUpdate.get();

@@ -36,14 +36,14 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import tictim.hearthstones.Hearthstones;
-import tictim.hearthstones.capability.PlayerTavernMemory;
-import tictim.hearthstones.capability.TavernMemory;
 import tictim.hearthstones.contents.blockentity.TavernBlockEntity;
 import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.net.OpenTavernScreenMsg;
 import tictim.hearthstones.tavern.AccessModifier;
 import tictim.hearthstones.tavern.Owner;
+import tictim.hearthstones.tavern.PlayerTavernMemory;
 import tictim.hearthstones.tavern.Tavern;
+import tictim.hearthstones.tavern.TavernMemories;
 import tictim.hearthstones.tavern.TavernPos;
 
 import javax.annotation.Nullable;
@@ -91,9 +91,8 @@ public abstract class TavernBlock extends Block implements EntityBlock{
 			return InteractionResult.SUCCESS;
 		}
 		if(tavern.hasAccessPermission(player)){
-			PlayerTavernMemory memory = TavernMemory.expectFromPlayer(player);
+			PlayerTavernMemory memory = TavernMemories.player(player);
 			memory.addOrUpdate(tavern);
-			memory.sync();
 			if(!player.isShiftKeyDown())
 				level.playSound(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 0.5f, 1);
 			else if(tavern.hasAccessPermission(player)&&player instanceof ServerPlayer sp)
@@ -115,7 +114,7 @@ public abstract class TavernBlock extends Block implements EntityBlock{
 			tavern.setOwner(Owner.of(player));
 			tavern.setAccess(AccessModifier.PROTECTED);
 		}
-		TavernMemory.expectFromPlayer(player).addOrUpdate(tavern);
+		TavernMemories.player(player).addOrUpdate(tavern);
 	}
 
 	@SuppressWarnings("deprecation") @Override public PushReaction getPistonPushReaction(BlockState state){
@@ -125,7 +124,7 @@ public abstract class TavernBlock extends Block implements EntityBlock{
 	@Override public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player){
 		super.playerWillDestroy(level, pos, state, player);
 		if(!level.isClientSide&&level.getBlockEntity(pos) instanceof TavernBlockEntity tavern)
-			TavernMemory.expectFromPlayer(player).delete(new TavernPos(tavern));
+			TavernMemories.player(player).delete(new TavernPos(tavern));
 	}
 
 	@Override public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player){

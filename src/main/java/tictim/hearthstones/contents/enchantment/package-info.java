@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package tictim.hearthstones.capability;
+package tictim.hearthstones.contents.enchantment;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 
