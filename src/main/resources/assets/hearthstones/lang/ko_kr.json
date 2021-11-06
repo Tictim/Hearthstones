@@ -39,9 +39,9 @@
 	"info.hearthstones.screen.property.too_far": "이 여관으로 이동하면 수정이 부서질 것 같습니다...",
 
 	"info.hearthstones.tavern.help": "§6§lSHIFT+우클릭§7으로 GUI 열기",
-	"info.hearthstones.tavern.noName": "이름 없는 여관",
-	"info.hearthstones.tavern.noOwner": "주인 없음",
-	"info.hearthstones.tavern.ownedBy": "%s의 여관",
+	"info.hearthstones.tavern.no_name": "이름 없는 여관",
+	"info.hearthstones.tavern.no_owner": "주인 없음",
+	"info.hearthstones.tavern.owned_by": "%s의 여관",
 	"info.hearthstones.tavern.owner": "§a%s (%s) §r의 여관",
 	"info.hearthstones.tavern.n_meter_away": "§a%dm 거리",
 	"info.hearthstones.tavern.another_dim": "§c다른 차원",
@@ -91,7 +91,5 @@
 	"command.tavern_memory.add.success.global": "여관 %s의 정보를 길드 여관 정보에 기록했습니다.",
 	"command.tavern_memory.remove.success": "여관 %s의 정보를 %s에게서 지웠습니다.",
 	"command.tavern_memory.remove.success.global": "여관 %s의 정보를 길드 여관 정보에서 지웠습니다.",
-	"command.tavern_memory.remove.no_memory": "위치 %s에 해당하는 여관 정보가 없습니다.",
-	"command.tavern_memory.tavern": "%s %s %s %s",
-	"command.tavern_memory.tavern.missing": "%s %s %s %s (Missing)"
+	"command.tavern_memory.remove.no_memory": "위치 %s에 해당하는 여관 정보가 없습니다."
 }

@@ -27,7 +27,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 public abstract class TavernBlockEntity extends BlockEntity implements Tavern, Nameable{
 	private Owner owner = Owner.NO_OWNER;
-	private Component name;
+	@Nullable private String name;
 	private AccessModifier access = AccessModifier.PUBLIC;
 
 	public TavernBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state){
@@ -55,7 +55,7 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern, N
 	}
 
 	protected void copyAttributes(TavernBlockEntity another){
-		if(this.hasCustomName()) another.setName(this.getName());
+		another.setName(this.name());
 		another.setOwner(this.owner());
 		another.setAccess(this.access());
 	}
@@ -82,20 +82,20 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern, N
 		this.access = access;
 	}
 
-	@Nullable @Override public Component name(){
-		return getCustomName();
+	@Nullable @Override public String name(){
+		return name;
 	}
 	@Override public boolean isMissing(){
 		return false;
 	}
 
 	@Override public Component getName(){
-		return hasCustomName() ? name : new TextComponent("");
+		return new TextComponent(name!=null ? name : "");
 	}
 	@Nullable @Override public Component getCustomName(){
-		return name;
+		return name!=null ? new TextComponent(name) : null;
 	}
-	public void setName(@Nullable Component name){
+	public void setName(@Nullable String name){
 		this.name = name;
 	}
 
@@ -119,7 +119,7 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern, N
 	}
 
 	private void read(CompoundTag nbt){
-		this.name = nbt.contains("name", NBT.TAG_STRING) ? Component.Serializer.fromJson(nbt.getString("name")) : null;
+		this.name = nbt.contains("name", NBT.TAG_STRING) ? nbt.getString("name") : null;
 		this.owner = Owner.read(nbt.getCompound("owner"));
 		this.access = AccessModifier.of(nbt.getByte("access"));
 	}
@@ -127,7 +127,7 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern, N
 	@Override
 	public CompoundTag save(CompoundTag nbt){
 		nbt = super.save(nbt);
-		if(name!=null) nbt.putString("name", Component.Serializer.toJson(this.name));
+		if(name!=null) nbt.putString("name", this.name);
 		if(owner.hasOwner()) nbt.put("owner", this.owner.write());
 		if(access.ordinal()!=0) nbt.putByte("access", (byte)access.ordinal());
 		return nbt;
@@ -136,6 +136,7 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern, N
 	public CompoundTag writeNBTForStack(){
 		CompoundTag nbt = new CompoundTag();
 		if(owner.hasOwner()) nbt.put("owner", this.owner.write());
+		if(access.ordinal()!=0) nbt.putByte("access", (byte)access.ordinal());
 		return nbt;
 	}
 

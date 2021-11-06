@@ -140,6 +140,7 @@ public class HearthstoneItem extends Item{
 		private final ItemStack stack;
 		public boolean hasCooldown;
 		@Nullable public TavernRecord destination;
+		@Nullable private Tavern destinationCache;
 
 		public Data(ItemStack stack){
 			this.stack = stack;
@@ -155,8 +156,9 @@ public class HearthstoneItem extends Item{
 		public void updateDestination(@Nullable Tavern destination){
 			if(this.destination==null){
 				if(destination==null) return;
-			}else if(destination!=null&&!this.destination.pos().equals(destination.pos()))
+			}else if(destination!=null&&destinationCache==destination)
 				return;
+			this.destinationCache = destination;
 			this.destination = destination!=null ? destination.toRecord() : null;
 			if(this.destination!=null) stack.getOrCreateTag().put("Destination", this.destination.write());
 			else if(stack.getTag()!=null) stack.getTag().remove("Destination");

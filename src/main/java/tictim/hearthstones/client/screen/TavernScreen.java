@@ -36,7 +36,7 @@ public class TavernScreen extends AbstractScreen{
 	public static final ResourceLocation ACCESS_TEAM = new ResourceLocation(MODID, "textures/screen/access/team.png");
 	public static final ResourceLocation ACCESS_PRIVATE = new ResourceLocation(MODID, "textures/screen/access/private.png");
 
-	private static final Component NO_NAME = new TranslatableComponent("info.hearthstones.tavern.noName");
+	private static final Component NO_NAME = new TranslatableComponent("info.hearthstones.tavern.no_name");
 
 	static{
 		NO_NAME.getStyle().withColor(ChatFormatting.GRAY).withItalic(true);
@@ -55,15 +55,15 @@ public class TavernScreen extends AbstractScreen{
 	private EditBox nameField;
 	private boolean setHome;
 
-	public TavernScreen(TavernPos pos, TavernType type, @Nullable Component name, Accessibility accessibility, Owner owner, AccessModifier accessModifier, boolean isHome){
-		super(name!=null ? name : new TranslatableComponent("info.hearthstones.tavern.noName"));
+	public TavernScreen(TavernPos pos, TavernType type, @Nullable String name, Accessibility accessibility, Owner owner, AccessModifier accessModifier, boolean isHome){
+		super(name!=null ? new TextComponent(name) : new TranslatableComponent("info.hearthstones.tavern.no_name"));
 		this.pos = pos;
 		this.type = type;
 		this.accessibility = accessibility;
 		this.owner = owner;
 		this.isHome = isHome;
 
-		this.originalName = name!=null ? name.getContents() : "";
+		this.originalName = name!=null ? name : "";
 		this.originalAccess = this.accessModifier = accessModifier;
 	}
 
@@ -72,8 +72,8 @@ public class TavernScreen extends AbstractScreen{
 		//noinspection ConstantConditions
 		minecraft.keyboardHandler.setSendRepeatsToGui(true);
 		nameField = this.addRenderableWidget(new EditBox(font, getLeft()+24*2, getTop()+7*2, 139*2, 4*2, TextComponent.EMPTY));
+		nameField.setMaxLength(50);
 		nameField.setValue(originalName);
-		nameField.setMaxLength(100);
 		nameField.setBordered(false);
 		nameField.setTextColorUneditable(0xe0e0e0); // To match with enabled text color
 		nameField.setEditable(accessibility.isModifiable());
@@ -135,7 +135,7 @@ public class TavernScreen extends AbstractScreen{
 		if(accessibility.isModifiable()){
 			String name = this.nameField.getValue();
 			if(!originalName.equals(name)||originalAccess!=accessModifier){
-				ModNet.CHANNEL.sendToServer(new UpdateTavernMsg(pos, name.isEmpty() ? null : new TextComponent(name), accessModifier));
+				ModNet.CHANNEL.sendToServer(new UpdateTavernMsg(pos, name.isEmpty() ? null : name, accessModifier));
 			}
 		}
 		if(setHome) ModNet.CHANNEL.sendToServer(new TavernMemoryOperationMsg(pos, TavernMemoryOperationMsg.SET_HOME));
@@ -175,7 +175,7 @@ public class TavernScreen extends AbstractScreen{
 
 		@Override
 		public void renderToolTip(PoseStack matrixStack, int mouseX, int mouseY){
-			if(isHovered()) renderTooltip(matrixStack, accessModifier.text(), mouseX, mouseY);
+			if(isHovered()) renderTooltip(matrixStack, font.split(accessModifier.text(), TavernScreen.this.width*2/3), mouseX, mouseY);
 		}
 	}
 

@@ -9,7 +9,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import javax.annotation.Nullable;
 
 public record TavernRecord(@Override TavernPos pos,
-                           @Override @Nullable Component name,
+                           @Override @Nullable String name,
                            @Override Owner owner,
                            @Override TavernType type,
                            @Override AccessModifier access,
@@ -22,7 +22,7 @@ public record TavernRecord(@Override TavernPos pos,
 	}
 	public TavernRecord(CompoundTag nbt){
 		this(new TavernPos(nbt.getCompound("pos")),
-				nbt.contains("name", NBT.TAG_STRING) ? Component.Serializer.fromJson(nbt.getString("name")) : null,
+				nbt.contains("name", NBT.TAG_STRING) ? nbt.getString("name") : null,
 				Owner.read(nbt.getCompound("owner")),
 				TavernType.of(nbt.getByte("type")),
 				AccessModifier.of(nbt.getByte("access")),
@@ -40,7 +40,7 @@ public record TavernRecord(@Override TavernPos pos,
 	public CompoundTag write(){
 		CompoundTag nbt = new CompoundTag();
 		nbt.put("pos", pos.write());
-		if(name!=null) nbt.putString("name", Component.Serializer.toJson(name));
+		if(name!=null) nbt.putString("name", name);
 		if(owner.hasOwner()) nbt.put("owner", owner.write());
 		if(type!=TavernType.NORMAL) nbt.putByte("type", type.id);
 		if(access.ordinal()!=0) nbt.putByte("access", (byte)access.ordinal());
@@ -50,18 +50,18 @@ public record TavernRecord(@Override TavernPos pos,
 
 	public void write(FriendlyByteBuf buf){
 		pos.write(buf);
-		if(name!=null) buf.writeComponent(name);
+		buf.writeBoolean(name!=null);
+		if(name!=null) buf.writeUtf(name);
 		owner.write(buf);
 		buf.writeVarInt(type.id);
 		buf.writeByte(access.ordinal());
-		buf.writeBoolean(name!=null);
 		buf.writeBoolean(isMissing);
 	}
 
 	public static TavernRecord read(FriendlyByteBuf buf){
 		return new TavernRecord(
 				TavernPos.read(buf),
-				buf.readBoolean() ? buf.readComponent() : null,
+				buf.readBoolean() ? buf.readUtf() : null,
 				Owner.read(buf),
 				TavernType.of(buf.readByte()),
 				AccessModifier.of(buf.readUnsignedByte()),

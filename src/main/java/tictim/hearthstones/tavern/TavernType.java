@@ -55,4 +55,18 @@ public final class TavernType{
 	public void resetRenderStack(){
 		stackForRender = null;
 	}
+
+	@Override public int hashCode(){
+		return id;
+	}
+	@Override public boolean equals(Object obj){
+		return obj instanceof TavernType t&&t.id==id;
+	}
+
+	@Override public String toString(){
+		return "TavernType{"+
+				"id="+id+
+				", name='"+name+'\''+
+				'}';
+	}
 }

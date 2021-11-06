@@ -14,7 +14,7 @@ public interface Tavern{
 	Owner owner();
 	AccessModifier access();
 
-	@Nullable Component name();
+	@Nullable String name();
 
 	boolean isMissing();
 

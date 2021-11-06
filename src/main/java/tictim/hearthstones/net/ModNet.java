@@ -83,7 +83,9 @@ public final class ModNet{
 				Hearthstones.LOGGER.warn("{} cannot modify option of Tavern on {}.", player, packet.pos());
 				return;
 			}
-			tavern.setName(packet.name());
+			if(packet.name()!=null&&packet.name().length()>50){
+				tavern.setName(packet.name().substring(0, 50));
+			}else tavern.setName(packet.name());
 			if(tavern.owner().hasOwner()&&tavern.owner().isOwnerOrOp(player)) tavern.setAccess(packet.access());
 			BlockState s = level.getBlockState(packet.pos().pos());
 			level.sendBlockUpdated(tavern.blockPos(), s, s, 2);

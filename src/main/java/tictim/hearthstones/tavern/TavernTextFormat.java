@@ -43,17 +43,17 @@ public final class TavernTextFormat{
 				.append(distance(tavern, entity));
 	}
 
-	public static Component formatName(@Nullable Component tavernName, boolean isMissing){
+	public static Component formatName(@Nullable String tavernName, boolean isMissing){
 		MutableComponent component = tavernName==null ?
-				new TranslatableComponent("info.hearthstones.tavern.noName") :
-				tavernName.copy().withStyle(ChatFormatting.BOLD);
+				new TranslatableComponent("info.hearthstones.tavern.no_name") :
+				new TextComponent(tavernName).withStyle(ChatFormatting.BOLD);
 		return isMissing ? component.withStyle(ChatFormatting.RED) : component;
 	}
 
 	public static Component formatOwner(Owner owner){
 		return owner.hasOwner() ?
-				new TranslatableComponent("info.hearthstones.tavern.ownedBy", owner.getName()).withStyle(GREEN) :
-				new TranslatableComponent("info.hearthstones.tavern.noOwner").withStyle(RED);
+				new TranslatableComponent("info.hearthstones.tavern.owned_by", owner.getName()).withStyle(GREEN) :
+				new TranslatableComponent("info.hearthstones.tavern.no_owner").withStyle(RED);
 	}
 
 	public static Component formatDistance(TavernPos pos, Entity entity){

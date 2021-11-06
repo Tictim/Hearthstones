@@ -39,9 +39,9 @@
 	"info.hearthstones.screen.property.too_far": "The Gem might break if you go to this Tavern...",
 
 	"info.hearthstones.tavern.help": "§6§lSHIFT+Right click§7 to open GUI",
-	"info.hearthstones.tavern.noName": "Nameless Tavern",
-	"info.hearthstones.tavern.noOwner": "No Owner",
-	"info.hearthstones.tavern.ownedBy": "Owned By %s",
+	"info.hearthstones.tavern.no_name": "Nameless Tavern",
+	"info.hearthstones.tavern.no_owner": "No Owner",
+	"info.hearthstones.tavern.owned_by": "Owned By %s",
 	"info.hearthstones.tavern.owner": "Owned by §a%s (%s)",
 	"info.hearthstones.tavern.n_meter_away": "§a%dm away",
 	"info.hearthstones.tavern.another_dim": "§cAnother dimension",

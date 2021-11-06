@@ -158,8 +158,9 @@ public final class ModCommands{
 
 			text.append("] ")
 					.append(new TextComponent(tavern.pos().toString()).withStyle(ChatFormatting.DARK_GRAY))
-					.append(" ")
-					.append(tavern.name()!=null ? tavern.name() : new TranslatableComponent("info.hearthstones.tavern.noName"));
+					.append(" ");
+			if(tavern.name()!=null) text.append(tavern.name());
+			else text.append(new TranslatableComponent("info.hearthstones.tavern.no_name"));
 			if(tavern.owner().hasOwner()){
 				text.append(new TextComponent(" by ").append(tavern.owner().toString()).withStyle(ChatFormatting.GREEN));
 			}

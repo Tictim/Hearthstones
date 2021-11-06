@@ -18,10 +18,10 @@ public class ScreenBasedHearthstoneItem extends HearthstoneItem{
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand){
-		if(!player.isShiftKeyDown()) return super.use(level, player, hand);
+		if(!player.isSecondaryUseActive()) return super.use(level, player, hand);
 		if(!level.isClientSide&&player instanceof ServerPlayer sp)
 			ModNet.CHANNEL.send(PacketDistributor.PLAYER.with(() -> sp), new OpenHearthstoneScreenMsg(player, isHearthingGem()));
-		return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide);
+		return InteractionResultHolder.consume(player.getItemInHand(hand));
 	}
 
 	protected boolean isHearthingGem(){

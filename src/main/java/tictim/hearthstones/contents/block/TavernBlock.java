@@ -97,7 +97,7 @@ public abstract class TavernBlock extends Block implements EntityBlock{
 				level.playSound(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 0.5f, 1);
 			else if(tavern.hasAccessPermission(player)&&player instanceof ServerPlayer sp)
 				ModNet.CHANNEL.send(PacketDistributor.PLAYER.with(() -> sp), new OpenTavernScreenMsg(tavern, player, tavern.pos().equals(memory.getHomePos())));
-		}else player.displayClientMessage(new TranslatableComponent("info.hearthstone.noPermission"), true);
+		}else player.displayClientMessage(new TranslatableComponent("info.hearthstones.hearthstone.no_permission"), true);
 		return InteractionResult.SUCCESS;
 	}
 
@@ -109,7 +109,7 @@ public abstract class TavernBlock extends Block implements EntityBlock{
 		if(level.isClientSide||
 				!(placer instanceof Player player)||
 				!(level.getBlockEntity(pos) instanceof TavernBlockEntity tavern)) return;
-		if(stack.hasCustomHoverName()) tavern.setName(stack.getHoverName());
+		if(stack.hasCustomHoverName()) tavern.setName(stack.getHoverName().getContents());
 		if(!tavern.owner().hasOwner()){
 			tavern.setOwner(Owner.of(player));
 			tavern.setAccess(AccessModifier.PROTECTED);

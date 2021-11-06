@@ -14,7 +14,7 @@ public enum AccessModifier{
 		return switch(this){
 			case TEAM -> owner.isOwnerOrOp(player)||owner.isSameTeam(player);
 			case PRIVATE -> owner.isOwnerOrOp(player);
-			default -> true; // case PUBLIC: case PROTECTED:
+			case PUBLIC, PROTECTED -> true;
 		};
 	}
 
@@ -22,7 +22,7 @@ public enum AccessModifier{
 		return switch(this){
 			case TEAM -> owner.isOwnerOrOp(player)||owner.isSameTeam(player);
 			case PROTECTED, PRIVATE -> owner.isOwnerOrOp(player);
-			default -> true; // case PUBLIC:
+			case PUBLIC -> true;
 		};
 	}
 

@@ -21,6 +21,8 @@ public class GlobalTavernBlockEntity extends TavernBlockEntity{
 	}
 
 	@Override public void onLoad(){
-		TavernMemories.global().addOrUpdate(this);
+		super.onLoad();
+		TavernMemories m = TavernMemories.get();
+		if(m!=null) m.getGlobal().addOrUpdate(this);
 	}
 }

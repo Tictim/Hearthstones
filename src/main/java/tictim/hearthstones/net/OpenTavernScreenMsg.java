@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 public record OpenTavernScreenMsg(
 		TavernPos pos,
 		TavernType type,
-		@Nullable Component name,
+		@Nullable String name,
 		Accessibility accessibility,
 		Owner owner,
 		AccessModifier access,
@@ -25,7 +25,7 @@ public record OpenTavernScreenMsg(
 		return new OpenTavernScreenMsg(
 				TavernPos.read(buf),
 				TavernType.of(buf.readByte()),
-				buf.readBoolean() ? buf.readComponent() : null,
+				buf.readBoolean() ? buf.readUtf() : null,
 				Accessibility.fromMeta(buf.readUnsignedByte()),
 				Owner.read(buf),
 				AccessModifier.of(buf.readByte()),
@@ -41,7 +41,7 @@ public record OpenTavernScreenMsg(
 		pos.write(buf);
 		buf.writeByte(type.id);
 		buf.writeBoolean(name!=null);
-		if(name!=null) buf.writeComponent(name);
+		if(name!=null) buf.writeUtf(name);
 		buf.writeByte(accessibility.ordinal());
 		owner.write(buf);
 		buf.writeByte(access.ordinal());

@@ -68,7 +68,7 @@ public class HearthstoneScreen extends AbstractScreen{
 			// name
 			if((o1.name()==null)!=(o2.name()==null)) return o1.name()==null ? -1 : 1;
 			else if(o1.name()!=null){
-				i = o1.name().getContents().compareTo(o2.name().getContents());
+				i = o1.name().compareTo(o2.name());
 				if(i!=0) return i;
 			}
 			// static position

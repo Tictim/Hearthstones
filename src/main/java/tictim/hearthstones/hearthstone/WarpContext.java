@@ -53,8 +53,10 @@ public final class WarpContext{
 	public void hurtItem(int i){
 		getStack().hurtAndBreak(i,
 				getPlayer(),
-				player -> {
-					if(getHand()!=null) player.broadcastBreakEvent(getHand());
-				});
+				player -> onItemBreak());
+	}
+
+	public void onItemBreak(){
+		if(getHand()!=null) player.broadcastBreakEvent(getHand());
 	}
 }
