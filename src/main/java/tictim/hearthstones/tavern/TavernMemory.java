@@ -4,9 +4,9 @@ import com.google.common.collect.Maps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.Constants.NBT;
 import tictim.hearthstones.Hearthstones;
 import tictim.hearthstones.config.ModCfg;
 
@@ -57,7 +57,7 @@ public class TavernMemory{
 
 	public void read(CompoundTag nbt){
 		this.taverns.clear();
-		ListTag list = nbt.getList("memory", NBT.TAG_COMPOUND);
+		ListTag list = nbt.getList("memory", Tag.TAG_COMPOUND);
 		for(int i = 0; i<list.size(); i++){
 			TavernRecord r = new TavernRecord(list.getCompound(i));
 			if(taverns.containsKey(r.pos()))

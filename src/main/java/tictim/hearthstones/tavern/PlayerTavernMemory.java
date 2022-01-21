@@ -1,8 +1,8 @@
 package tictim.hearthstones.tavern;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.common.util.Constants.NBT;
 
 import javax.annotation.Nullable;
 
@@ -70,8 +70,8 @@ public class PlayerTavernMemory extends TavernMemory{
 	public void read(CompoundTag nbt){
 		super.read(nbt);
 		this.cooldown = nbt.getInt("cooldown");
-		this.selected = nbt.contains("selected", NBT.TAG_COMPOUND) ? new TavernPos(nbt.getCompound("selected")) : null;
-		this.homeTavern = nbt.contains("homeTavern", NBT.TAG_COMPOUND) ? new TavernPos(nbt.getCompound("homeTavern")) : null;
+		this.selected = nbt.contains("selected", Tag.TAG_COMPOUND) ? new TavernPos(nbt.getCompound("selected")) : null;
+		this.homeTavern = nbt.contains("homeTavern", Tag.TAG_COMPOUND) ? new TavernPos(nbt.getCompound("homeTavern")) : null;
 	}
 
 	@Override public void write(FriendlyByteBuf buf){

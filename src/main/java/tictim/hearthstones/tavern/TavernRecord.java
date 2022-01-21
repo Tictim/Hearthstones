@@ -2,9 +2,8 @@ package tictim.hearthstones.tavern;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraftforge.common.util.Constants.NBT;
 
 import javax.annotation.Nullable;
 
@@ -22,7 +21,7 @@ public record TavernRecord(@Override TavernPos pos,
 	}
 	public TavernRecord(CompoundTag nbt){
 		this(new TavernPos(nbt.getCompound("pos")),
-				nbt.contains("name", NBT.TAG_STRING) ? nbt.getString("name") : null,
+				nbt.contains("name", Tag.TAG_STRING) ? nbt.getString("name") : null,
 				Owner.read(nbt.getCompound("owner")),
 				TavernType.of(nbt.getByte("type")),
 				AccessModifier.of(nbt.getByte("access")),

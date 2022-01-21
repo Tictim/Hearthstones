@@ -2,6 +2,7 @@ package tictim.hearthstones.contents.item.hearthstone;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -17,7 +18,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 import tictim.hearthstones.Caps;
 import tictim.hearthstones.client.Rendering;
@@ -185,7 +185,7 @@ public class HearthstoneItem extends Item{
 				destination = null;
 			}else{
 				hasCooldown = tag.getBoolean("HasCooldown");
-				destination = tag.contains("Destination", Constants.NBT.TAG_COMPOUND) ? new TavernRecord(tag.getCompound("Destination")) : null;
+				destination = tag.contains("Destination", Tag.TAG_COMPOUND) ? new TavernRecord(tag.getCompound("Destination")) : null;
 			}
 		}
 	}

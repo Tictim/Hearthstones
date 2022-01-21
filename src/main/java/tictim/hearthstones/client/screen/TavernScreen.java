@@ -12,7 +12,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringUtil;
-import net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent;
+import net.minecraftforge.client.event.ScreenEvent.BackgroundDrawnEvent;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.glfw.GLFW;
 import tictim.hearthstones.client.Rendering;
@@ -175,7 +175,7 @@ public class TavernScreen extends AbstractScreen{
 
 		@Override
 		public void renderToolTip(PoseStack matrixStack, int mouseX, int mouseY){
-			if(isHovered()) renderTooltip(matrixStack, font.split(accessModifier.text(), TavernScreen.this.width*2/3), mouseX, mouseY);
+			if(isHoveredOrFocused()) renderTooltip(matrixStack, font.split(accessModifier.text(), TavernScreen.this.width*2/3), mouseX, mouseY);
 		}
 	}
 
@@ -218,12 +218,12 @@ public class TavernScreen extends AbstractScreen{
 		}
 
 		private int getTextureX(){
-			return this.active ? !isHome&&accessibility.isAccessibilityModifiable()&&this.isHovered() ? isPressed ? 14*2 : 7*2 : 0 : 14*2;
+			return this.active ? !isHome&&accessibility.isAccessibilityModifiable()&&this.isHoveredOrFocused() ? isPressed ? 14*2 : 7*2 : 0 : 14*2;
 		}
 
 		@Override
 		public void renderToolTip(PoseStack matrixStack, int mouseX, int mouseY){
-			if(isHovered()) renderTooltip(matrixStack, isHome ? HOME_TOOLTIP : SET_HOME_TOOLTIP, mouseX, mouseY);
+			if(isHoveredOrFocused()) renderTooltip(matrixStack, isHome ? HOME_TOOLTIP : SET_HOME_TOOLTIP, mouseX, mouseY);
 		}
 	}
 }

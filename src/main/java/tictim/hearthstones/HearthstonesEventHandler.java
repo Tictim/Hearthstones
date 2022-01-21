@@ -6,12 +6,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDestroyBlockEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.net.SyncHomePosMsg;
 import tictim.hearthstones.tavern.PlayerTavernMemory;
@@ -21,6 +22,11 @@ import tictim.hearthstones.tavern.TavernMemories;
 @Mod.EventBusSubscriber(modid = Hearthstones.MODID)
 public final class HearthstonesEventHandler{
 	private HearthstonesEventHandler(){}
+
+	@SubscribeEvent
+	public static void registerCommands(RegisterCommandsEvent event){
+		ModCommands.init(event.getDispatcher());
+	}
 
 	@SubscribeEvent
 	public static void blockBreakEvent(LivingDestroyBlockEvent event){

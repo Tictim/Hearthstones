@@ -279,6 +279,12 @@ public class RecipeGen extends RecipeProvider{
 		SimpleCookingRecipeBuilder.blasting(Ingredient.of(AQUAMARINE_ORE.get()), AQUAMARINE.get(), 0.5f, 100)
 				.unlockedBy("has_aquamarine_ore", has(AQUAMARINE_ORE.get()))
 				.save(c, new ResourceLocation(MODID, "smelting/aquamarine_blasting"));
+		SimpleCookingRecipeBuilder.smelting(Ingredient.of(DEEPSLATE_AQUAMARINE_ORE.get()), AQUAMARINE.get(), 0.5f, 200)
+				.unlockedBy("has_deepslate_aquamarine_ore", has(DEEPSLATE_AQUAMARINE_ORE.get()))
+				.save(c, new ResourceLocation(MODID, "smelting/deepslate_aquamarine"));
+		SimpleCookingRecipeBuilder.blasting(Ingredient.of(DEEPSLATE_AQUAMARINE_ORE.get()), AQUAMARINE.get(), 0.5f, 100)
+				.unlockedBy("has_deepslate_aquamarine_ore", has(DEEPSLATE_AQUAMARINE_ORE.get()))
+				.save(c, new ResourceLocation(MODID, "smelting/deepslate_aquamarine_blasting"));
 	}
 
 	private void addMortarRecipe(Ingredient in, ItemLike out, Consumer<FinishedRecipe> consumer){

@@ -9,7 +9,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
 import tictim.hearthstones.client.Rendering;
 import tictim.hearthstones.hearthstone.HearthingGemHearthstone;
 import tictim.hearthstones.net.ModNet;
@@ -24,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 final class TavernButton extends Button{
 	private static final List<Component> howto1 = Collections.singletonList(new TranslatableComponent("info.hearthstones.screen.howtouse.1"));
@@ -106,14 +106,14 @@ final class TavernButton extends Button{
 	}
 
 	public void renderToolTip(PoseStack pose, int mouseX, int mouseY){
-		if(isHovered()){
+		if(isHoveredOrFocused()){
 			for(PropertyWidget p : this.properties.values()){
 				if(p.x<=mouseX&&p.x+14>mouseX&&p.y<=mouseY&&p.y+14>mouseY){
-					GuiUtils.drawHoveringText(pose, p.property.getTooltip(), mouseX, mouseY, screen.width, screen.height, -1, Minecraft.getInstance().font);
+					screen.renderTooltip(pose, p.property.getTooltip(), Optional.empty(), mouseX, mouseY);
 					return;
 				}
 			}
-			GuiUtils.drawHoveringText(pose, isFromGlobal ? howto1 : howto2, mouseX, mouseY, screen.width, screen.height, -1, Minecraft.getInstance().font);
+			screen.renderTooltip(pose, isFromGlobal ? howto1 : howto2, Optional.empty(), mouseX, mouseY);
 		}
 	}
 

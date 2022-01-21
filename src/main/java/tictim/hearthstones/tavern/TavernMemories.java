@@ -3,13 +3,13 @@ package tictim.hearthstones.tavern;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import tictim.hearthstones.Caps;
 
 import javax.annotation.Nonnull;
@@ -55,7 +55,7 @@ public final class TavernMemories implements ICapabilitySerializable<CompoundTag
 	}
 	@Override public void deserializeNBT(CompoundTag nbt){
 		global.read(nbt.getCompound("global"));
-		ListTag players = nbt.getList("players", Constants.NBT.TAG_COMPOUND);
+		ListTag players = nbt.getList("players", Tag.TAG_COMPOUND);
 		for(int i = 0; i<players.size(); i++){
 			CompoundTag playerTag = players.getCompound(i);
 			if(playerTag.hasUUID("id")){

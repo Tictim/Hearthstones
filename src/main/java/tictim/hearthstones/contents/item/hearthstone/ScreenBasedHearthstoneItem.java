@@ -6,7 +6,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 import tictim.hearthstones.hearthstone.Hearthstone;
 import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.net.OpenHearthstoneScreenMsg;

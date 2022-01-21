@@ -3,6 +3,7 @@ package tictim.hearthstones.contents.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -29,12 +30,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 import tictim.hearthstones.Hearthstones;
 import tictim.hearthstones.contents.blockentity.TavernBlockEntity;
 import tictim.hearthstones.net.ModNet;
@@ -127,33 +126,16 @@ public abstract class TavernBlock extends Block implements EntityBlock{
 			TavernMemories.player(player).delete(new TavernPos(tavern));
 	}
 
-	@Override public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player){
-		ItemStack stack = super.getPickBlock(state, target, level, pos, player);
-		if(level.getBlockEntity(pos) instanceof TavernBlockEntity tavern){
-			CompoundTag subnbt = tavern.writeNBTForStack();
-			if(!subnbt.isEmpty()){
-				CompoundTag nbt = new CompoundTag();
-				nbt.put("BlockEntityTag", subnbt);
-				stack.setTag(nbt);
-			}
-			if(tavern.hasCustomName()){
-				stack.setHoverName(tavern.getName());
-				tavern.getDisplayName();
-			}
-		}
-		return stack;
-	}
-
 	@Override public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flagIn){
 		addTipInformation(stack, level, tooltip, flagIn);
 		tooltip.add(new TranslatableComponent("info.hearthstones.tavern.help"));
 
 		CompoundTag tag = stack.getTag();
-		if(tag==null||!tag.contains("BlockEntityTag", NBT.TAG_COMPOUND)) return;
+		if(tag==null||!tag.contains("BlockEntityTag", Tag.TAG_COMPOUND)) return;
 		CompoundTag nbt = tag.getCompound("BlockEntityTag");
-		if(nbt.contains("name", NBT.TAG_STRING))
+		if(nbt.contains("name", Tag.TAG_STRING))
 			tooltip.add(new TextComponent(" ").append(new TranslatableComponent("info.hearthstones.tavern.name", Component.Serializer.fromJson(nbt.getString("name")))));
-		if(nbt.contains("owner", NBT.TAG_COMPOUND)){
+		if(nbt.contains("owner", Tag.TAG_COMPOUND)){
 			Owner owner = Owner.read(nbt.getCompound("owner"));
 			tooltip.add(new TextComponent(" ").append(new TranslatableComponent("info.hearthstones.tavern.owner", owner.getName(), owner.getId())));
 		}

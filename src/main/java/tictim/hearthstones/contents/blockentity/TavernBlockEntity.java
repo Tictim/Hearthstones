@@ -2,6 +2,7 @@ package tictim.hearthstones.contents.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -12,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.Constants.NBT;
 import tictim.hearthstones.Hearthstones;
 import tictim.hearthstones.hearthstone.WarpContext;
 import tictim.hearthstones.tavern.AccessModifier;
@@ -104,7 +104,7 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern, N
 	}
 
 	@Override public ClientboundBlockEntityDataPacket getUpdatePacket(){
-		return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
+		return ClientboundBlockEntityDataPacket.create(this);
 	}
 	@Override public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt){
 		read(pkt.getTag());
@@ -119,7 +119,7 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern, N
 	}
 
 	private void read(CompoundTag nbt){
-		this.name = nbt.contains("name", NBT.TAG_STRING) ? nbt.getString("name") : null;
+		this.name = nbt.contains("name", Tag.TAG_STRING) ? nbt.getString("name") : null;
 		this.owner = Owner.read(nbt.getCompound("owner"));
 		this.access = AccessModifier.of(nbt.getByte("access"));
 	}
@@ -128,13 +128,6 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern, N
 	public CompoundTag save(CompoundTag nbt){
 		nbt = super.save(nbt);
 		if(name!=null) nbt.putString("name", this.name);
-		if(owner.hasOwner()) nbt.put("owner", this.owner.write());
-		if(access.ordinal()!=0) nbt.putByte("access", (byte)access.ordinal());
-		return nbt;
-	}
-
-	public CompoundTag writeNBTForStack(){
-		CompoundTag nbt = new CompoundTag();
 		if(owner.hasOwner()) nbt.put("owner", this.owner.write());
 		if(access.ordinal()!=0) nbt.putByte("access", (byte)access.ordinal());
 		return nbt;
