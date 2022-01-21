@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hearthstones:smelting/aquamarine"
+    ]
+  },
+  "criteria": {
+    "has_aquamarine_ore": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "hearthstones:aquamarine_ore"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hearthstones:smelting/aquamarine"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_aquamarine_ore",
+      "has_the_recipe"
+    ]
+  ]
+}

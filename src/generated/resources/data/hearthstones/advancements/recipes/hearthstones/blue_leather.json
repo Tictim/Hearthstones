@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hearthstones:blue_leather"
+    ]
+  },
+  "criteria": {
+    "has_deep_blue": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "hearthstones:deep_blue"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hearthstones:blue_leather"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_deep_blue",
+      "has_the_recipe"
+    ]
+  ]
+}

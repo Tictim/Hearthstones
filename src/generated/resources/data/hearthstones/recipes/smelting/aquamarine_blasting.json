@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "hearthstones:aquamarine_ore"
+  },
+  "result": {
+    "item": "hearthstones:aquamarine",
+    "count": 9
+  },
+  "experience": 0.5,
+  "cookingtime": 100
+}

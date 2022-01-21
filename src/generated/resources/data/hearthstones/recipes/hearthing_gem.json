@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 11",
+    "111",
+    "11 "
+  ],
+  "key": {
+    "1": {
+      "tag": "forge:gems/aquamarine"
+    }
+  },
+  "result": {
+    "item": "hearthstones:hearthing_gem"
+  }
+}

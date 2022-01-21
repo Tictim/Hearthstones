@@ -1,0 +1,29 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "value": {
+            "type": "hearthstones:easy_mode"
+          },
+          "type": "forge:not"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "hearthstones:tattered_taverncloth"
+          },
+          {
+            "tag": "minecraft:logs"
+          }
+        ],
+        "result": {
+          "item": "hearthstones:shabby_tavern"
+        }
+      }
+    }
+  ]
+}

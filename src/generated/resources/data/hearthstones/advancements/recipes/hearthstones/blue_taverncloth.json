@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hearthstones:blue_taverncloth"
+    ]
+  },
+  "criteria": {
+    "has_blue_leather": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "hearthstones:blue_leather"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hearthstones:blue_taverncloth"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_blue_leather",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hearthstones:companion_stone"
+    ]
+  },
+  "criteria": {
+    "has_blue_leather": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "hearthstones:blue_leather"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hearthstones:companion_stone"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_blue_leather",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "value": {
+            "type": "hearthstones:easy_mode"
+          },
+          "type": "forge:not"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "minecraft:bone_meal"
+          },
+          {
+            "item": "minecraft:bone_meal"
+          },
+          {
+            "item": "minecraft:bone_meal"
+          },
+          {
+            "tag": "forge:leather"
+          },
+          {
+            "item": "minecraft:water_bucket"
+          }
+        ],
+        "result": {
+          "item": "hearthstones:tattered_leather",
+          "count": 7
+        }
+      }
+    }
+  ]
+}

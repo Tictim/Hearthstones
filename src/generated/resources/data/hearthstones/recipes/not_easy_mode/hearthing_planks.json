@@ -1,0 +1,34 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "value": {
+            "type": "hearthstones:easy_mode"
+          },
+          "type": "forge:not"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          " 11",
+          "121",
+          "11 "
+        ],
+        "key": {
+          "1": {
+            "tag": "minecraft:logs"
+          },
+          "2": {
+            "tag": "forge:gems/aquamarine"
+          }
+        },
+        "result": {
+          "item": "hearthstones:hearthing_planks"
+        }
+      }
+    }
+  ]
+}

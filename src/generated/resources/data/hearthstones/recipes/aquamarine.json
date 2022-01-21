@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "hearthstones:aquamarine_block"
+    }
+  ],
+  "result": {
+    "item": "hearthstones:aquamarine",
+    "count": 9
+  }
+}

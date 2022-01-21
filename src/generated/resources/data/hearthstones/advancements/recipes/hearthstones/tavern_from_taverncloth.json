@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hearthstones:tavern_from_taverncloth"
+    ]
+  },
+  "criteria": {
+    "has_taverncloth": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "hearthstones:taverncloth"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hearthstones:tavern_from_taverncloth"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_taverncloth",
+      "has_the_recipe"
+    ]
+  ]
+}

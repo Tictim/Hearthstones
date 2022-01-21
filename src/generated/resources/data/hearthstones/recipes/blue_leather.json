@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:dusts/deep_blue"
+    },
+    {
+      "tag": "forge:dusts/deep_blue"
+    },
+    {
+      "tag": "forge:dusts/deep_blue"
+    },
+    {
+      "tag": "forge:dusts/deep_blue"
+    },
+    {
+      "tag": "forge:leather"
+    },
+    {
+      "item": "minecraft:milk_bucket"
+    }
+  ],
+  "result": {
+    "item": "hearthstones:blue_leather"
+  }
+}

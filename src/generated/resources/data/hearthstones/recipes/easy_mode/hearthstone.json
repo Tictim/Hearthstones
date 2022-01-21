@@ -1,0 +1,31 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "hearthstones:easy_mode"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          " 11",
+          "121",
+          "11 "
+        ],
+        "key": {
+          "1": {
+            "tag": "hearthstones:hearthstone_material"
+          },
+          "2": {
+            "tag": "forge:gems/aquamarine"
+          }
+        },
+        "result": {
+          "item": "hearthstones:hearthstone"
+        }
+      }
+    }
+  ]
+}

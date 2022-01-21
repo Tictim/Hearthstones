@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "hearthstones:mortar"
+    },
+    {
+      "tag": "forge:gems/aquamarine"
+    }
+  ],
+  "result": {
+    "item": "hearthstones:aquamarine_dust"
+  }
+}

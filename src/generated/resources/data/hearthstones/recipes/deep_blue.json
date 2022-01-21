@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:dusts/aquamarine"
+    },
+    {
+      "tag": "forge:dusts/diamond"
+    },
+    {
+      "tag": "forge:dusts/lapis"
+    }
+  ],
+  "result": {
+    "item": "hearthstones:deep_blue",
+    "count": 3
+  }
+}

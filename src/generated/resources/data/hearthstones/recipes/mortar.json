@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  3",
+    "121",
+    "111"
+  ],
+  "key": {
+    "1": {
+      "tag": "forge:stone"
+    },
+    "2": {
+      "tag": "forge:ingots/iron"
+    },
+    "3": {
+      "tag": "forge:nuggets/iron"
+    }
+  },
+  "result": {
+    "item": "hearthstones:mortar"
+  }
+}

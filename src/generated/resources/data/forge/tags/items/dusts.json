@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:dusts/aquamarine",
+    "#forge:dusts/deep_blue",
+    "#forge:dusts/diamond",
+    "#forge:dusts/lapis"
+  ]
+}

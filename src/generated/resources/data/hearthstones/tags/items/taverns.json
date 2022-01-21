@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "hearthstones:tavern",
+    "hearthstones:shabby_tavern",
+    "hearthstones:global_tavern"
+  ]
+}

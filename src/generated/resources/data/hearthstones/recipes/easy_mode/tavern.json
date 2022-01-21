@@ -1,0 +1,34 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "hearthstones:easy_mode"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "111",
+          "121",
+          "131"
+        ],
+        "key": {
+          "1": {
+            "item": "hearthstones:red_leather"
+          },
+          "2": {
+            "tag": "forge:gems/aquamarine"
+          },
+          "3": {
+            "tag": "minecraft:logs"
+          }
+        },
+        "result": {
+          "item": "hearthstones:tavern"
+        }
+      }
+    }
+  ]
+}

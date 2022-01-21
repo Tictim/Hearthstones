@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hearthstones:hearthing_gem"
+    ]
+  },
+  "criteria": {
+    "has_aquamarine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:gems/aquamarine"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hearthstones:hearthing_gem"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_aquamarine",
+      "has_the_recipe"
+    ]
+  ]
+}
