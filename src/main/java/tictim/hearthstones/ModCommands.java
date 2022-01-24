@@ -9,6 +9,7 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.GameProfileArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
@@ -75,7 +76,8 @@ public final class ModCommands{
 
 	private static int addTavernMemory(CommandSourceStack sender, Player player, ServerLevel level, BlockPos pos){
 		if(!level.isInWorldBounds(pos)) sender.sendFailure(new TranslatableComponent("command.tavern_memory.add.out_of_world", new TavernPos(level, pos)));
-		else if(!level.isAreaLoaded(pos, 0)) sender.sendFailure(new TranslatableComponent("command.tavern_memory.add.unloaded", new TavernPos(level, pos)));
+		else if(!level.hasChunk(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ())))
+			sender.sendFailure(new TranslatableComponent("command.tavern_memory.add.unloaded", new TavernPos(level, pos)));
 		else if(level.getBlockEntity(pos) instanceof Tavern tavern){
 			TavernMemories.player(player).addOrUpdate(tavern);
 			sender.sendSuccess(new TranslatableComponent("command.tavern_memory.add.success", new TavernPos(level, pos), player.getDisplayName()), true);
@@ -95,16 +97,17 @@ public final class ModCommands{
 		}
 	}
 
-	private static int addGlobalTavernMemory(CommandSourceStack sender, ServerLevel world, BlockPos pos){
-		if(!world.isInWorldBounds(pos)) sender.sendFailure(new TranslatableComponent("command.tavern_memory.add.out_of_world", new TavernPos(world, pos)));
-		else if(!world.isAreaLoaded(pos, 0)) sender.sendFailure(new TranslatableComponent("command.tavern_memory.add.unloaded", new TavernPos(world, pos)));
-		else if(world.getBlockEntity(pos) instanceof Tavern tavern){
+	private static int addGlobalTavernMemory(CommandSourceStack sender, ServerLevel level, BlockPos pos){
+		if(!level.isInWorldBounds(pos)) sender.sendFailure(new TranslatableComponent("command.tavern_memory.add.out_of_world", new TavernPos(level, pos)));
+		else if(!level.hasChunk(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ())))
+			sender.sendFailure(new TranslatableComponent("command.tavern_memory.add.unloaded", new TavernPos(level, pos)));
+		else if(level.getBlockEntity(pos) instanceof Tavern tavern){
 			if(tavern.type()==TavernType.GLOBAL){
 				TavernMemories.global().addOrUpdate(tavern);
-				sender.sendSuccess(new TranslatableComponent("command.tavern_memory.add.success.global", new TavernPos(world, pos)), true);
+				sender.sendSuccess(new TranslatableComponent("command.tavern_memory.add.success.global", new TavernPos(level, pos)), true);
 				return SINGLE_SUCCESS;
-			}else sender.sendSuccess(new TranslatableComponent("command.tavern_memory.add.not_global", new TavernPos(world, pos)), true);
-		}else sender.sendFailure(new TranslatableComponent("command.tavern_memory.add.no_tavern", new TavernPos(world, pos)));
+			}else sender.sendSuccess(new TranslatableComponent("command.tavern_memory.add.not_global", new TavernPos(level, pos)), true);
+		}else sender.sendFailure(new TranslatableComponent("command.tavern_memory.add.no_tavern", new TavernPos(level, pos)));
 		return 0;
 	}
 
