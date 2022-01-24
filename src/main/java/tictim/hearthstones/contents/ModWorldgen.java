@@ -39,9 +39,9 @@ public final class ModWorldgen{
 				Feature.ORE.configured(new OreConfiguration(aquamarineTargetList, 5)));
 		aquamarineOreFeature = Registry.register(BuiltinRegistries.PLACED_FEATURE, new ResourceLocation(MODID, "aquamarine"),
 				aquamarineOre.placed(List.of(
-						CountPlacement.of(30),
+						CountPlacement.of(20),
 						InSquarePlacement.spread(),
-						HeightRangePlacement.triangle(VerticalAnchor.bottom(), VerticalAnchor.absolute(50)),
+						HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(15), VerticalAnchor.absolute(50)),
 						BiomeFilter.biome())));
 	}
 
