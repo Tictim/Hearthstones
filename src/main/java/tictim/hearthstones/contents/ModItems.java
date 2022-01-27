@@ -19,6 +19,8 @@ import tictim.hearthstones.contents.item.hearthstone.CompanionHearthstoneItem;
 import tictim.hearthstones.contents.item.hearthstone.HearthingGemItem;
 import tictim.hearthstones.contents.item.hearthstone.HearthingPlanksItem;
 import tictim.hearthstones.contents.item.hearthstone.NormalHearthstoneItem;
+import tictim.hearthstones.contents.item.hearthstone.TavernWaypointBinderItem;
+import tictim.hearthstones.contents.item.hearthstone.TavernWaypointItem;
 import tictim.hearthstones.contents.item.tavernupgrade.GuildTavernUpgradeItem;
 import tictim.hearthstones.contents.item.tavernupgrade.RegularTavernUpgradeItem;
 import tictim.hearthstones.contents.item.tavernupgrade.ShabbyTavernUpgradeItem;
@@ -43,6 +45,7 @@ public final class ModItems{
 	public static final RegistryObject<Item> HEARTHING_PLANKS = REGISTER.register("hearthing_planks", () -> new HearthingPlanksItem(p().stacksTo(1)));
 	public static final RegistryObject<Item> HEARTHING_GEM = REGISTER.register("hearthing_gem", () -> new HearthingGemItem(p(Rarity.UNCOMMON).stacksTo(1)));
 	public static final RegistryObject<Item> COMPANION_HEARTHSTONE = REGISTER.register("companion_hearthstone", () -> new CompanionHearthstoneItem(p(Rarity.EPIC).stacksTo(1)));
+
 	public static final RegistryObject<Item> COMPANION_STONE = REGISTER.register("companion_stone", () -> new Item(p().stacksTo(1)){
 		@Override public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag){
 			tooltip.add(new TranslatableComponent("info.hearthstones.companion_stone.tooltip"));
@@ -53,6 +56,9 @@ public final class ModItems{
 	public static final RegistryObject<Item> TATTERED_TAVERNCLOTH = REGISTER.register("tattered_taverncloth", () -> new ShabbyTavernUpgradeItem(p()));
 	public static final RegistryObject<Item> TAVERNCLOTH = REGISTER.register("taverncloth", () -> new RegularTavernUpgradeItem(p()));
 	public static final RegistryObject<Item> BLUE_TAVERNCLOTH = REGISTER.register("blue_taverncloth", () -> new GuildTavernUpgradeItem(p(Rarity.UNCOMMON)));
+
+	public static final RegistryObject<Item> WAYPOINT = REGISTER.register("waypoint", () -> new TavernWaypointItem(p(Rarity.UNCOMMON)));
+	public static final RegistryObject<Item> WAYPOINT_BINDER = REGISTER.register("waypoint_binder", () -> new TavernWaypointBinderItem(p(Rarity.UNCOMMON).stacksTo(1)));
 
 	public static final RegistryObject<Item> AQUAMARINE = REGISTER.register("aquamarine", () -> new Item(p()));
 	public static final RegistryObject<Item> RED_LEATHER = REGISTER.register("red_leather", () -> new Item(p()));

@@ -85,11 +85,8 @@ public class HearthstoneItem extends Item{
 	@Override public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand){
 		ItemStack itemInHand = player.getItemInHand(hand);
 		if(!level.isClientSide){
-			WarpContext ctx = new WarpContext(itemInHand, player, hand);
-			if(!ctx.hasCooldown()){
-				if(hearthstone.setupWarp(ctx)!=null) player.startUsingItem(hand);
-				else player.getCooldowns().addCooldown(this, 20);
-			}else{
+			if(!new WarpContext(itemInHand, player, hand).hasCooldown()) player.startUsingItem(hand);
+			else{
 				player.getCooldowns().addCooldown(this, 20);
 				player.displayClientMessage(new TranslatableComponent("info.hearthstones.hearthstone.cooldown"), true);
 			}

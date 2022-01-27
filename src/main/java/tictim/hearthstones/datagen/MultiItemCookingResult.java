@@ -8,15 +8,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import javax.annotation.Nullable;
 
-public class MultiItemCookingResult implements FinishedRecipe{
-	private final SimpleCookingRecipeBuilder.Result resultDelegate;
-	private final int count;
-
-	public MultiItemCookingResult(SimpleCookingRecipeBuilder.Result resultDelegate, int count){
-		this.resultDelegate = resultDelegate;
-		this.count = count;
-	}
-
+public record MultiItemCookingResult(SimpleCookingRecipeBuilder.Result resultDelegate, int count) implements FinishedRecipe{
 	@Override public void serializeRecipeData(JsonObject json){
 		resultDelegate.serializeRecipeData(json);
 		JsonObject o = new JsonObject();

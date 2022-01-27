@@ -2,21 +2,9 @@ package tictim.hearthstones;
 
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
-import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.levelgen.VerticalAnchor;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
-import net.minecraft.world.level.levelgen.placement.BiomeFilter;
-import net.minecraft.world.level.levelgen.placement.CountPlacement;
-import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
-import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -34,16 +22,16 @@ import tictim.hearthstones.contents.ModBlockEntities;
 import tictim.hearthstones.contents.ModBlocks;
 import tictim.hearthstones.contents.ModEnchantments;
 import tictim.hearthstones.contents.ModItems;
+import tictim.hearthstones.contents.ModRecipes;
 import tictim.hearthstones.contents.ModWorldgen;
 import tictim.hearthstones.contents.item.hearthstone.HearthstoneItem;
+import tictim.hearthstones.contents.item.hearthstone.TavernWaypointBinderItem;
 import tictim.hearthstones.datagen.BlockTagGen;
 import tictim.hearthstones.datagen.ItemTagGen;
 import tictim.hearthstones.datagen.LootTableGen;
 import tictim.hearthstones.datagen.RecipeGen;
 import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.tavern.TavernMemories;
-
-import java.util.List;
 
 @Mod(Hearthstones.MODID)
 @Mod.EventBusSubscriber(modid = Hearthstones.MODID, bus = Bus.MOD)
@@ -60,6 +48,7 @@ public class Hearthstones{
 		ModItems.REGISTER.register(eventBus);
 		ModEnchantments.REGISTER.register(eventBus);
 		ModBlockEntities.REGISTER.register(eventBus);
+		ModRecipes.REGISTER.register(eventBus);
 	}
 
 	@SubscribeEvent
@@ -71,6 +60,7 @@ public class Hearthstones{
 	public static void registerCapabilities(RegisterCapabilitiesEvent event){
 		event.register(TavernMemories.class);
 		event.register(HearthstoneItem.Data.class);
+		event.register(TavernWaypointBinderItem.Data.class);
 	}
 
 	@SubscribeEvent

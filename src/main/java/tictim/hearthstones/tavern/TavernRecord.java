@@ -37,24 +37,11 @@ public record TavernRecord(@Override TavernPos pos,
 	}
 
 	public CompoundTag write(){
-		CompoundTag nbt = new CompoundTag();
-		nbt.put("pos", pos.write());
-		if(name!=null) nbt.putString("name", name);
-		if(owner.hasOwner()) nbt.put("owner", owner.write());
-		if(type!=TavernType.NORMAL) nbt.putByte("type", type.id);
-		if(access.ordinal()!=0) nbt.putByte("access", (byte)access.ordinal());
-		if(isMissing) nbt.putBoolean("missing", true);
-		return nbt;
+		return write(this);
 	}
 
 	public void write(FriendlyByteBuf buf){
-		pos.write(buf);
-		buf.writeBoolean(name!=null);
-		if(name!=null) buf.writeUtf(name);
-		owner.write(buf);
-		buf.writeVarInt(type.id);
-		buf.writeByte(access.ordinal());
-		buf.writeBoolean(isMissing);
+		write(this, buf);
 	}
 
 	public static TavernRecord read(FriendlyByteBuf buf){
@@ -65,5 +52,33 @@ public record TavernRecord(@Override TavernPos pos,
 				TavernType.of(buf.readByte()),
 				AccessModifier.of(buf.readUnsignedByte()),
 				buf.readBoolean());
+	}
+
+	public static CompoundTag write(Tavern tavern){
+		CompoundTag nbt = new CompoundTag();
+
+		String name = tavern.name();
+		Owner owner = tavern.owner();
+		TavernType type = tavern.type();
+		AccessModifier access = tavern.access();
+
+		nbt.put("pos", tavern.pos().write());
+		if(name!=null) nbt.putString("name", name);
+		if(owner.hasOwner()) nbt.put("owner", owner.write());
+		if(type!=TavernType.NORMAL) nbt.putByte("type", type.id);
+		if(access.ordinal()!=0) nbt.putByte("access", (byte)access.ordinal());
+		if(tavern.isMissing()) nbt.putBoolean("missing", true);
+		return nbt;
+	}
+
+	public static void write(Tavern tavern, FriendlyByteBuf buf){
+		tavern.pos().write(buf);
+		String name = tavern.name();
+		buf.writeBoolean(name!=null);
+		if(name!=null) buf.writeUtf(name);
+		tavern.owner().write(buf);
+		buf.writeVarInt(tavern.type().id);
+		buf.writeByte(tavern.access().ordinal());
+		buf.writeBoolean(tavern.isMissing());
 	}
 }
