@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 13",
+    "121",
+    "11 "
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "2": {
+      "tag": "forge:gems/aquamarine"
+    },
+    "3": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "hearthstones:waypoint",
+    "count": 4
+  }
+}

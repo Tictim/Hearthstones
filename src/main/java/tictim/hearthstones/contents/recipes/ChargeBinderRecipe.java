@@ -1,11 +1,12 @@
 package tictim.hearthstones.contents.recipes;
 
+import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import tictim.hearthstones.contents.ModItems;
@@ -18,10 +19,10 @@ import tictim.hearthstones.tavern.TavernRecord;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BinderRecipe implements CraftingRecipe{
+public class ChargeBinderRecipe implements CraftingRecipe{
 	private final ResourceLocation id;
 
-	public BinderRecipe(ResourceLocation id){
+	public ChargeBinderRecipe(ResourceLocation id){
 		this.id = id;
 	}
 
@@ -29,11 +30,11 @@ public class BinderRecipe implements CraftingRecipe{
 		boolean hasBook = false;
 		boolean hasWaypoint = false;
 
-		for(int i = container.getContainerSize(); i>0; i--){
+		for(int i = container.getContainerSize()-1; i>=0; i--){
 			ItemStack stack = container.getItem(i);
 			if(stack.isEmpty()) continue;
 			Item item = stack.getItem();
-			if(item==Items.BOOK||item==ModItems.WAYPOINT_BINDER.get()){
+			if(item==ModItems.WAYPOINT_BINDER.get()){
 				if(hasBook) return false;
 				hasBook = true;
 			}else if(item==ModItems.WAYPOINT.get())
@@ -43,22 +44,17 @@ public class BinderRecipe implements CraftingRecipe{
 		return hasBook&&hasWaypoint;
 	}
 	@Override public ItemStack assemble(CraftingContainer container){
-		boolean hasBook = false;
 		int waypoints = 0;
 		ItemStack book = ItemStack.EMPTY;
 		List<Tavern> taverns = new ArrayList<>();
 
-		for(int i = container.getContainerSize(); i>0; i--){
+		for(int i = container.getContainerSize()-1; i>=0; i--){
 			ItemStack stack = container.getItem(i);
 			if(stack.isEmpty()) continue;
 			Item item = stack.getItem();
-			if(item==Items.BOOK){
-				if(hasBook) return ItemStack.EMPTY;
-				hasBook = true;
+			if(item==ModItems.WAYPOINT_BINDER.get()){
+				if(!book.isEmpty()) return ItemStack.EMPTY;
 				book = stack;
-			}else if(item==ModItems.WAYPOINT_BINDER.get()){
-				if(hasBook) return ItemStack.EMPTY;
-				hasBook = true;
 			}else if(item==ModItems.WAYPOINT.get()){
 				waypoints++;
 				TavernRecord tavern = TavernWaypointItem.getTavern(stack);
@@ -66,9 +62,10 @@ public class BinderRecipe implements CraftingRecipe{
 			}else return ItemStack.EMPTY;
 		}
 
-		ItemStack newStack = book.isEmpty() ? new ItemStack(ModItems.WAYPOINT_BINDER.get()) : book.copy();
+		if(book.isEmpty()||waypoints==0) return ItemStack.EMPTY;
+		ItemStack newStack = book.copy();
 		TavernWaypointBinderItem.Data data = TavernWaypointBinderItem.data(newStack);
-		if(data==null||Integer.MAX_VALUE-waypoints-data.getWaypoints()<0)
+		if(data==null||waypoints+data.getWaypoints()<0)
 			return ItemStack.EMPTY;
 		data.setWaypoints(data.getWaypoints()+waypoints);
 		for(Tavern t : taverns)
@@ -86,6 +83,21 @@ public class BinderRecipe implements CraftingRecipe{
 		return id;
 	}
 	@Override public RecipeSerializer<?> getSerializer(){
-		return ModRecipes.BINDER_RECIPE.get();
+		return ModRecipes.CHARGE_BINDER_RECIPE.get();
+	}
+
+	@Override public boolean isSpecial(){
+		return true;
+	}
+
+	private NonNullList<Ingredient> ingredients;
+
+	@Override public NonNullList<Ingredient> getIngredients(){
+		if(ingredients==null){
+			ingredients = NonNullList.of(Ingredient.EMPTY,
+					Ingredient.of(ModItems.WAYPOINT_BINDER.get()),
+					Ingredient.of(ModItems.WAYPOINT.get()));
+		}
+		return ingredients;
 	}
 }

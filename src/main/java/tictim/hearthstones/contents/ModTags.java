@@ -12,9 +12,9 @@ public final class ModTags{
 	private ModTags(){}
 
 	public static final Tags.IOptionalNamedTag<Item> DUSTS_AQUAMARINE = ItemTags.createOptional(new ResourceLocation("forge", "dusts/aquamarine"));
-	public static final Tags.IOptionalNamedTag<Item> DUSTS_DEEP_BLUE = ItemTags.createOptional(new ResourceLocation("forge", "dusts/deep_blue"));
 	public static final Tags.IOptionalNamedTag<Item> DUSTS_DIAMOND = ItemTags.createOptional(new ResourceLocation("forge", "dusts/diamond"));
 	public static final Tags.IOptionalNamedTag<Item> DUSTS_LAPIS = ItemTags.createOptional(new ResourceLocation("forge", "dusts/lapis"));
+	public static final Tags.IOptionalNamedTag<Item> DUSTS_AMETHYST = ItemTags.createOptional(new ResourceLocation("forge", "dusts/amethyst"));
 
 	public static final Tags.IOptionalNamedTag<Item> GEMS_AQUAMARINE = ItemTags.createOptional(new ResourceLocation("forge", "gems/aquamarine"));
 

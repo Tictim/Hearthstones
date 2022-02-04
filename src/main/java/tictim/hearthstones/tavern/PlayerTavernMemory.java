@@ -57,6 +57,12 @@ public class PlayerTavernMemory extends TavernMemory{
 		if(getHomeTavern()==null) setHomeTavern(tavern.pos());
 	}
 
+	@Override public void clear(){
+		super.clear();
+		this.selected = null;
+		this.homeTavern = null;
+	}
+
 	@Override
 	public CompoundTag write(){
 		CompoundTag nbt = super.write();

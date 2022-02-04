@@ -8,6 +8,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import tictim.hearthstones.contents.block.AquamarineOreBlock;
+import tictim.hearthstones.contents.block.BinderLecternBlock;
 import tictim.hearthstones.contents.block.GlobalTavernBlock;
 import tictim.hearthstones.contents.block.NormalTavernBlock;
 import tictim.hearthstones.contents.block.ShabbyTavernBlock;
@@ -25,4 +26,5 @@ public final class ModBlocks{
 	public static final RegistryObject<Block> TAVERN = REGISTER.register("tavern", NormalTavernBlock::new);
 	public static final RegistryObject<Block> SHABBY_TAVERN = REGISTER.register("shabby_tavern", ShabbyTavernBlock::new);
 	public static final RegistryObject<Block> GLOBAL_TAVERN = REGISTER.register("global_tavern", GlobalTavernBlock::new);
+	public static final RegistryObject<Block> BINDER_LECTERN = REGISTER.register("binder_lectern", () -> new BinderLecternBlock(Properties.copy(Blocks.LECTERN)));
 }

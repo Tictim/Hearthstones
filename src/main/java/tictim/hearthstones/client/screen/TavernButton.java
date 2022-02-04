@@ -10,52 +10,36 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import tictim.hearthstones.client.Rendering;
-import tictim.hearthstones.hearthstone.HearthingGemHearthstone;
-import tictim.hearthstones.net.ModNet;
-import tictim.hearthstones.net.TavernMemoryOperationMsg;
 import tictim.hearthstones.tavern.Tavern;
 import tictim.hearthstones.tavern.TavernTextFormat;
-import tictim.hearthstones.tavern.TavernType;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 final class TavernButton extends Button{
-	private static final List<Component> howto1 = Collections.singletonList(new TranslatableComponent("info.hearthstones.screen.howtouse.1"));
-	private static final List<Component> howto2 = Arrays.asList(
-			new TranslatableComponent("info.hearthstones.screen.howtouse.1"),
-			new TranslatableComponent("info.hearthstones.screen.howtouse.2"));
+	private static final Component HELP_SELECT = new TranslatableComponent("info.hearthstones.screen.help.select");
+	private static final Component HELP_REMOVE = new TranslatableComponent("info.hearthstones.screen.help.remove");
 
 	public static final int BASE_WIDTH = 179;
 	public static final int BASE_HEIGHT = 20;
 	public static final int WIDTH = BASE_WIDTH*2;
 	public static final int HEIGHT = BASE_HEIGHT*2;
 
-	private final HearthstoneScreen screen;
-	private final Tavern tavern;
-	private final boolean isHome;
-	private final boolean isFromGlobal;
-	private final Map<TavernProperty, PropertyWidget> properties = new HashMap<>();
+	public final Set<TavernProperty> properties = EnumSet.noneOf(TavernProperty.class);
+	public final TavernMemoryScreen screen;
+	public final Tavern tavern;
 
-	public TavernButton(HearthstoneScreen screen, int x, int y, Tavern tavern, boolean isHome, boolean isFromGlobal){
-		super(x, y, WIDTH, HEIGHT, TextComponent.EMPTY, button -> {});
+	public boolean selected;
+	public boolean canSelect;
+	public boolean canDelete;
+
+	public TavernButton(TavernMemoryScreen screen, Tavern tavern){
+		super(0, 0, WIDTH, HEIGHT, TextComponent.EMPTY, button -> {});
 		this.screen = screen;
 		this.tavern = tavern;
-		this.isHome = isHome;
-		this.isFromGlobal = isFromGlobal;
-
-		int properties = 1;
-		TavernProperty[] values = TavernProperty.values();
-		for(int i1 = values.length-1; i1>=0; i1--){
-			TavernProperty property = values[i1];
-			if(property.matches(this))
-				this.properties.put(property, new PropertyWidget(this.x+WIDTH-8-16*(properties++), this.y+HEIGHT-22, property));
-		}
 	}
 
 	@Override public void renderButton(PoseStack pose, int mouseX, int mouseY, float partialTicks){
@@ -65,14 +49,15 @@ final class TavernButton extends Button{
 		RenderSystem.enableBlend();
 		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		pose.translate(x, y, 0);
-		Rendering.renderTavernUIBase(pose, tavern.type(), tavern.pos().equals(screen.playerMemory.getSelectedPos()));
+		Rendering.renderTavernUIBase(pose, tavern.type(), selected);
 		pose.translate(6*2, 2, 0);
 		Rendering.renderTavernAccess(pose, tavern.access());
 		pose.popPose();
 
-		for(PropertyWidget p : properties.values()){
+		int i = 1;
+		for(TavernProperty p : properties){
 			RenderSystem.setShaderTexture(0, HearthstoneScreen.ICONS);
-			blit(pose, p.x, p.y, 7*2*p.property.ordinal(), 0, 7*2, 7*2);
+			blit(pose, getPropertyWidgetX(i++), getPropertyWidgetY(), 7*2*p.ordinal(), 0, 7*2, 7*2);
 		}
 
 		Font font = Minecraft.getInstance().font;
@@ -89,12 +74,11 @@ final class TavernButton extends Button{
 		if(this.active&&this.visible&&this.isValidClickButton(button)&&this.clicked(mouseX, mouseY)){
 			this.playDownSound(Minecraft.getInstance().getSoundManager());
 			if(button==0){
-				ModNet.CHANNEL.sendToServer(new TavernMemoryOperationMsg(tavern.pos(), TavernMemoryOperationMsg.SELECT));
-				screen.playerMemory.select(tavern.pos());
-			}else if(!isFromGlobal){
-				ModNet.CHANNEL.sendToServer(new TavernMemoryOperationMsg(tavern.pos(), TavernMemoryOperationMsg.DELETE));
-				screen.playerMemory.delete(tavern.pos());
-				screen.refreshTavernButtons();
+				if(canSelect) screen.select(tavern);
+				else return false;
+			}else{
+				if(canDelete) screen.askForDeletion(tavern);
+				else return false;
 			}
 			return true;
 		}
@@ -106,33 +90,34 @@ final class TavernButton extends Button{
 	}
 
 	public void renderToolTip(PoseStack pose, int mouseX, int mouseY){
-		if(isHoveredOrFocused()){
-			for(PropertyWidget p : this.properties.values()){
-				if(p.x<=mouseX&&p.x+14>mouseX&&p.y<=mouseY&&p.y+14>mouseY){
-					screen.renderTooltip(pose, p.property.getTooltip(), Optional.empty(), mouseX, mouseY);
-					return;
-				}
+		if(!isHoveredOrFocused()) return;
+		int i = 1;
+		for(TavernProperty p : this.properties){
+			int px = getPropertyWidgetX(i);
+			int py = getPropertyWidgetY();
+			if(px<=mouseX&&px+14>mouseX&&py<=mouseY&&py+14>mouseY){
+				screen.renderTooltip(pose, p.getTooltip(), Optional.empty(), mouseX, mouseY);
+				return;
 			}
-			screen.renderTooltip(pose, isFromGlobal ? howto1 : howto2, Optional.empty(), mouseX, mouseY);
+			i++;
 		}
+		screen.renderTooltip(pose, canDelete ?
+				canSelect ? List.of(HELP_SELECT, HELP_REMOVE) : List.of(HELP_REMOVE) :
+				canSelect ? List.of(HELP_SELECT) : List.of(),
+				Optional.empty(), mouseX, mouseY);
 	}
 
-	private record PropertyWidget(int x, int y, TavernProperty property){}
+	private int getPropertyWidgetX(int index){
+		return this.x+WIDTH-8-16*(index);
+	}
+	private int getPropertyWidgetY(){
+		return this.y+HEIGHT-22;
+	}
 
-	private enum TavernProperty{
+	public enum TavernProperty{
 		MISSING, HOME, GLOBAL, SHABBY, TOO_FAR;
 
 		private final List<Component> tooltip = Collections.singletonList(new TranslatableComponent("info.hearthstones.screen.property."+name().toLowerCase()));
-
-		public boolean matches(TavernButton button){
-			return switch(this){
-				case MISSING -> button.tavern.isMissing();
-				case HOME -> button.isHome;
-				case GLOBAL -> button.isFromGlobal;
-				case SHABBY -> button.tavern.type()==TavernType.SHABBY;
-				case TOO_FAR -> button.screen.hearthingGem&&HearthingGemHearthstone.isTooFar(Objects.requireNonNull(Minecraft.getInstance().player), button.tavern.pos());
-			};
-		}
 
 		public List<Component> getTooltip(){
 			return tooltip;

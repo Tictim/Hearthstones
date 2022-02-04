@@ -2,16 +2,16 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:dusts/deep_blue"
+      "item": "hearthstones:deep_blue"
     },
     {
-      "tag": "forge:dusts/deep_blue"
+      "item": "hearthstones:deep_blue"
     },
     {
-      "tag": "forge:dusts/deep_blue"
+      "item": "hearthstones:deep_blue"
     },
     {
-      "tag": "forge:dusts/deep_blue"
+      "item": "hearthstones:deep_blue"
     },
     {
       "tag": "forge:leather"

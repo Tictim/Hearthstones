@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hearthstones:amethyst_dust"
+    ]
+  },
+  "criteria": {
+    "has_aquamarine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "hearthstones:aquamarine"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hearthstones:amethyst_dust"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_aquamarine",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,58 +1,77 @@
 package tictim.hearthstones.client.screen;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.chat.NarratorChatListener;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-import tictim.hearthstones.Hearthstones;
+import tictim.hearthstones.client.screen.TavernButton.TavernProperty;
+import tictim.hearthstones.hearthstone.HearthingGemHearthstone;
+import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.net.OpenHearthstoneScreenMsg;
+import tictim.hearthstones.net.TavernMemoryOperationMsg;
 import tictim.hearthstones.tavern.PlayerTavernMemory;
 import tictim.hearthstones.tavern.Tavern;
 import tictim.hearthstones.tavern.TavernMemory;
 import tictim.hearthstones.tavern.TavernRecord;
+import tictim.hearthstones.tavern.TavernType;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
-public class HearthstoneScreen extends AbstractScreen{
-	public static final ResourceLocation ICONS = new ResourceLocation(Hearthstones.MODID, "textures/screen/icons.png");
-
+public class HearthstoneScreen extends TavernMemoryScreen{
 	public PlayerTavernMemory playerMemory;
 	public TavernMemory globalMemory;
 	public boolean hearthingGem;
 
-	private int yOffset = 0;
-	private double yOffsetFloat = 0;
-	private double yOffsetDest = 0;
-	private int screenY;
-
-	private boolean initialized;
-
-	private final Comparator<TavernRecord> tavernComparator;
-	private final List<TavernButton> tavernButtons = new ArrayList<>();
-
 	public HearthstoneScreen(){
-		super(NarratorChatListener.NO_TITLE);
 		this.playerMemory = new PlayerTavernMemory();
 		this.globalMemory = new TavernMemory();
+	}
 
-		this.tavernComparator = (o1, o2) -> {
+	public void updateData(OpenHearthstoneScreenMsg packet){
+		this.playerMemory = packet.playerMemory();
+		this.globalMemory = packet.globalMemory();
+		this.hearthingGem = packet.isHearthingGem();
+		if(isInitialized()) refreshTavernButtons();
+	}
+
+	@Override protected List<TavernButton> createTavernButtons(){
+		List<TavernButton> buttons = new ArrayList<>();
+		for(TavernRecord t : playerMemory.taverns().values()){
+			TavernButton b = new TavernButton(this, t);
+			b.canSelect = true;
+			b.canDelete = true;
+			addProperties(b);
+			buttons.add(b);
+		}
+		for(TavernRecord t : globalMemory.taverns().values()){
+			if(playerMemory.has(t.pos())) continue;
+			TavernButton b = new TavernButton(this, t);
+			b.canSelect = true;
+			b.properties.add(TavernProperty.GLOBAL);
+			addProperties(b);
+			buttons.add(b);
+		}
+		buttons.sort((b1, b2) -> {
+			// substitute for comparing between player memory / global memory
+			if(b1.canDelete!=b2.canDelete)
+				return b1.canDelete ? -1 : 1;
+			Tavern o1 = b1.tavern, o2 = b2.tavern;
+
 			int i;
+
 			// home
 			Tavern homeTavern = this.playerMemory.getHomeTavern();
 			i = Boolean.compare(homeTavern==o2, homeTavern==o1);
 			if(i!=0) return i;
+
+			// (Optional) distance
 			ResourceLocation d1 = o1.pos().dim();
 			ResourceLocation d2 = o2.pos().dim();
-			//noinspection ConstantConditions
 			ResourceKey<Level> dim = minecraft.level.dimension();
-			if(d1==d2&&dim.location().equals(d1)){// #3(Optional) distance
-				//noinspection ConstantConditions
+			if(d1.equals(d2)&&dim.location().equals(d1)){
 				double s1 = minecraft.player.distanceToSqr(o1.blockPos().getX()+0.5, o1.blockPos().getY()+0.5, o1.blockPos().getZ()+0.5);
 				double s2 = minecraft.player.distanceToSqr(o2.blockPos().getX()+0.5, o2.blockPos().getY()+0.5, o2.blockPos().getZ()+0.5);
 				i = Double.compare(s1, s2);
@@ -62,100 +81,55 @@ public class HearthstoneScreen extends AbstractScreen{
 			// missing
 			i = Boolean.compare(o1.isMissing(), o2.isMissing());
 			if(i!=0) return i;
+
 			// dimension
 			i = o1.pos().dim().compareTo(o2.pos().dim());
 			if(i!=0) return i;
+
 			// name
-			if((o1.name()==null)!=(o2.name()==null)) return o1.name()==null ? -1 : 1;
-			else if(o1.name()!=null){
-				i = o1.name().compareTo(o2.name());
+			String n1 = o1.name();
+			String n2 = o2.name();
+			if(n1==null){
+				if(n2!=null) return -1;
+			}else if(n2==null) return 1;
+			else{
+				i = n1.compareTo(n2);
 				if(i!=0) return i;
 			}
+
 			// static position
 			return o1.blockPos().compareTo(o2.blockPos());
-		};
+		});
+		return buttons;
 	}
 
-	public void updateData(OpenHearthstoneScreenMsg packet){
-		this.playerMemory = packet.playerMemory();
-		this.globalMemory = packet.globalMemory();
-		this.hearthingGem = packet.isHearthingGem();
-		if(initialized) refreshTavernButtons();
+	@Override protected void select(Tavern tavern){
+		ModNet.CHANNEL.sendToServer(new TavernMemoryOperationMsg(tavern.pos(), TavernMemoryOperationMsg.SELECT));
+		playerMemory.select(tavern.pos());
+		for(TavernButton b : tavernButtons)
+			b.selected = b.tavern.pos().equals(tavern.pos());
 	}
-
-	@Override protected void onInit(){
+	@Override protected void delete(Tavern tavern){
+		ModNet.CHANNEL.sendToServer(new TavernMemoryOperationMsg(tavern.pos(), TavernMemoryOperationMsg.DELETE));
+		playerMemory.delete(tavern.pos());
 		refreshTavernButtons();
 	}
-	@Override protected void onResize(){
-		this.xSize = this.width;
-		this.ySize = this.height;
+
+	@SuppressWarnings("ConstantConditions")
+	private void addProperties(TavernButton button){
+		if(button.tavern.isMissing())
+			button.properties.add(TavernProperty.MISSING);
+		if(button.tavern.pos().equals(playerMemory.getHomePos()))
+			button.properties.add(TavernProperty.HOME);
+		if(button.tavern.type()==TavernType.SHABBY)
+			button.properties.add(TavernProperty.SHABBY);
+		if(hearthingGem&&HearthingGemHearthstone.isTooFar(minecraft.player, button.tavern.pos()))
+			button.properties.add(TavernProperty.TOO_FAR);
+		if(button.tavern.pos().equals(playerMemory.getSelectedPos()))
+			button.selected = true;
 	}
 
-	public void refreshTavernButtons(){
-		initialized = true;
-		for(TavernButton tavernButton : tavernButtons) removeWidget(tavernButton);
-		tavernButtons.clear();
-
-		screenY = 0;
-
-		playerMemory.taverns().values().stream()
-				.sorted(tavernComparator)
-				.forEachOrdered(it -> createButton(it, false));
-		globalMemory.taverns().values().stream()
-				.filter(it -> !playerMemory.has(it.pos()))
-				.sorted(tavernComparator)
-				.forEachOrdered(it -> createButton(it, true));
-	}
-
-	private void createButton(Tavern tavern, boolean isFromGlobal){
-		tavernButtons.add(addRenderableWidget(new TavernButton(this,
-				getLeft(),
-				getTop()+screenY,
-				tavern,
-				playerMemory.getHomePos()!=null&&playerMemory.getHomePos().equals(tavern.pos()),
-				isFromGlobal)));
-		screenY += TavernButton.HEIGHT+(7*2)+6;
-	}
-
-	@Override public void render(PoseStack pose, int mouseX, int mouseY, float partialTicks){
-		int mouseY2 = mouseY+yOffset;
-		this.renderBackground(pose);
-		pose.pushPose();
-		pose.translate(0, -yOffset, 0);
-		super.render(pose, mouseX, mouseY2, partialTicks);
-		pose.popPose();
-		super.drawTooltip(pose, mouseX, mouseY);
-		this.yOffsetFloat = Mth.lerp(0.4, yOffsetFloat, this.yOffsetDest = Mth.clamp(yOffsetDest, 0, Math.max(0, screenY-width/2)));
-		this.yOffset = (int)Math.round(yOffsetFloat);
-	}
-
-	@Override protected void renderLabels(PoseStack pose, int mouseX, int mouseY){
-		if(this.tavernButtons.isEmpty()) drawCenteredString(pose, font, I18n.get("info.hearthstones.screen.empty"), this.xSize/2, this.ySize/2-5, 0xFFFFFF);
-	}
-
-	@Override protected void drawTooltip(PoseStack pose, int mouseX, int mouseY){}
-
-	@Override public boolean mouseClicked(double mouseX, double mouseY, int button){
-		return super.mouseClicked(mouseX, mouseY+yOffset, button);
-	}
-	@Override public boolean mouseReleased(double mouseX, double mouseY, int button){
-		return super.mouseReleased(mouseX, mouseY+yOffset, button);
-	}
-	@Override public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double dragX, double dragY){
-		return super.mouseDragged(mouseX, mouseY+yOffset, mouseButton, dragX, dragY);
-	}
-	@Override public boolean mouseScrolled(double mouseX, double mouseY, double scroll){
-		this.yOffsetDest -= scroll*40;
-		return true;
-	}
-
-	@Override public boolean keyPressed(int keyCode, int scanCode, int modifier){
-		if(super.keyPressed(keyCode, scanCode, modifier)) return true;
-		InputConstants.Key mouseKey = InputConstants.getKey(keyCode, scanCode);
-		//noinspection ConstantConditions
-		if(this.minecraft.options.keyInventory.getKey().equals(mouseKey)){
-			onClose();
-			return true;
-		}else return false;
+	@Nullable @Override protected Component getEmptyScreenMessage(){
+		return new TranslatableComponent("info.hearthstones.screen.empty");
 	}
 }

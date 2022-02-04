@@ -10,7 +10,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import tictim.hearthstones.Hearthstones;
-import tictim.hearthstones.contents.recipes.BinderRecipe;
+import tictim.hearthstones.contents.recipes.ChargeBinderRecipe;
 import tictim.hearthstones.contents.recipes.EasyModeCondition;
 
 import static tictim.hearthstones.Hearthstones.MODID;
@@ -20,7 +20,7 @@ public class ModRecipes{
 
 	public static final DeferredRegister<RecipeSerializer<?>> REGISTER = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MODID);
 
-	public static final RegistryObject<SimpleRecipeSerializer<?>> BINDER_RECIPE = REGISTER.register("binder_recipe", () -> new SimpleRecipeSerializer<>(BinderRecipe::new));
+	public static final RegistryObject<SimpleRecipeSerializer<?>> CHARGE_BINDER_RECIPE = REGISTER.register("charge_binder", () -> new SimpleRecipeSerializer<>(ChargeBinderRecipe::new));
 
 	@SubscribeEvent
 	public static void registerRecipes(RegistryEvent.Register<RecipeSerializer<?>> event){

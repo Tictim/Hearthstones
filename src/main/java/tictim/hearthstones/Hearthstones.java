@@ -1,5 +1,6 @@
 package tictim.hearthstones;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.data.DataGenerator;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import tictim.hearthstones.client.BinderLecternRenderer;
 import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.contents.ModBlockEntities;
 import tictim.hearthstones.contents.ModBlocks;
@@ -94,6 +96,8 @@ public class Hearthstones{
 				ItemProperties.register(ModItems.HEARTHING_PLANKS.get(), key, itemPropertyGetter);
 				ItemProperties.register(ModItems.HEARTHING_GEM.get(), key, itemPropertyGetter);
 				ItemProperties.register(ModItems.COMPANION_HEARTHSTONE.get(), key, itemPropertyGetter);
+
+				BlockEntityRenderers.register(ModBlockEntities.BINDER_LECTERN.get(), BinderLecternRenderer::new);
 			});
 		}
 	}

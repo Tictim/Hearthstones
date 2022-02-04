@@ -73,13 +73,17 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern, N
 		return this.owner;
 	}
 	public void setOwner(Owner owner){
+		if(this.owner == owner) return;
 		this.owner = owner;
+		setChanged();
 	}
 	@Override public AccessModifier access(){
 		return access;
 	}
 	public void setAccess(AccessModifier access){
+		if(this.access == access) return;
 		this.access = access;
+		setChanged();
 	}
 
 	@Nullable @Override public String name(){
@@ -96,7 +100,9 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern, N
 		return name!=null ? new TextComponent(name) : null;
 	}
 	public void setName(@Nullable String name){
+		if(Objects.equals(this.name, name)) return;
 		this.name = name;
+		setChanged();
 	}
 
 	public boolean canTeleportTo(WarpContext context){
@@ -107,30 +113,23 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern, N
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 	@Override public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt){
-		read(pkt.getTag());
+		load(pkt.getTag());
 	}
 	@Override public CompoundTag getUpdateTag(){
-		return save(new CompoundTag());
+		return saveWithoutMetadata();
 	}
 
 	@Override public void load(CompoundTag tag){
 		super.load(tag);
-		read(tag);
+		this.name = tag.contains("name", Tag.TAG_STRING) ? tag.getString("name") : null;
+		this.owner = Owner.read(tag.getCompound("owner"));
+		this.access = AccessModifier.of(tag.getByte("access"));
 	}
 
-	private void read(CompoundTag nbt){
-		this.name = nbt.contains("name", Tag.TAG_STRING) ? nbt.getString("name") : null;
-		this.owner = Owner.read(nbt.getCompound("owner"));
-		this.access = AccessModifier.of(nbt.getByte("access"));
-	}
-
-	@Override
-	public CompoundTag save(CompoundTag nbt){
-		nbt = super.save(nbt);
-		if(name!=null) nbt.putString("name", this.name);
-		if(owner.hasOwner()) nbt.put("owner", this.owner.write());
-		if(access.ordinal()!=0) nbt.putByte("access", (byte)access.ordinal());
-		return nbt;
+	@Override protected void saveAdditional(CompoundTag tag){
+		if(name!=null) tag.putString("name", this.name);
+		if(owner.hasOwner()) tag.put("owner", this.owner.write());
+		if(access.ordinal()!=0) tag.putByte("access", (byte)access.ordinal());
 	}
 
 	@Override public String toString(){

@@ -4,6 +4,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import tictim.hearthstones.contents.blockentity.BinderLecternBlockEntity;
 import tictim.hearthstones.contents.blockentity.GlobalTavernBlockEntity;
 import tictim.hearthstones.contents.blockentity.NormalTavernBlockEntity;
 import tictim.hearthstones.contents.blockentity.ShabbyTavernBlockEntity;
@@ -23,5 +24,9 @@ public final class ModBlockEntities{
 	);
 	public static final RegistryObject<BlockEntityType<GlobalTavernBlockEntity>> GLOBAL_TAVERN = REGISTER.register("global_tavern",
 			() -> BlockEntityType.Builder.of(GlobalTavernBlockEntity::new, ModBlocks.GLOBAL_TAVERN.get()).build(null)
+	);
+
+	public static final RegistryObject<BlockEntityType<BinderLecternBlockEntity>> BINDER_LECTERN = REGISTER.register("binder_lectern",
+			() -> BlockEntityType.Builder.of(BinderLecternBlockEntity::new, ModBlocks.BINDER_LECTERN.get()).build(null)
 	);
 }

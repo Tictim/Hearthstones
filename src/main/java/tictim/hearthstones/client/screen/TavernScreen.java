@@ -89,22 +89,20 @@ public class TavernScreen extends AbstractScreen{
 
 	@Override
 	public void render(PoseStack pose, int mouseX, int mouseY, float partialTicks){
+		RenderSystem.disableDepthTest();
 		this.renderBackground(pose);
-		super.render(pose, mouseX, mouseY, partialTicks);
-	}
-
-	@Override
-	protected void renderBg(PoseStack pose, float partialTicks, int mouseX, int mouseY){
 		pose.pushPose();
 		pose.translate(6, 6, 0);
 		Rendering.renderTavernUIBase(pose, type, false);
 		pose.popPose();
-	}
+		super.render(pose, mouseX, mouseY, partialTicks);
 
-	@Override
-	protected void renderLabels(PoseStack pose, int mouseX, int mouseY){
-		if(!nameField.isFocused()&&StringUtil.isNullOrEmpty(nameField.getValue())) drawString(pose, font, NO_NAME.getString(), 24*2, 7*2+1, 0xFFFFFF);
-		drawString(pose, font, TavernTextFormat.formatOwner(owner), 24*2, 13*2-1, 0xFFFFFF);
+		if(!nameField.isFocused()&&StringUtil.isNullOrEmpty(nameField.getValue()))
+			drawString(pose, font, NO_NAME.getString(), getLeft()+24*2, getTop()+7*2+1, 0xFFFFFF);
+		drawString(pose, font, TavernTextFormat.formatOwner(owner), getLeft()+24*2, getTop()+13*2-1, 0xFFFFFF);
+
+		drawTooltip(pose, mouseX, mouseY);
+		RenderSystem.enableDepthTest();
 	}
 
 	@Override

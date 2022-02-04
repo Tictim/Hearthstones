@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hearthstones:clear_waypoint"
+    ]
+  },
+  "criteria": {
+    "has_waypoint": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "hearthstones:waypoint"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hearthstones:clear_waypoint"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_waypoint",
+      "has_the_recipe"
+    ]
+  ]
+}

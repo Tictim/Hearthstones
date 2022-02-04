@@ -5,6 +5,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,9 +16,13 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import tictim.hearthstones.Hearthstones;
 import tictim.hearthstones.client.OverlayRenderEventHandler;
+import tictim.hearthstones.client.screen.BinderScreen;
 import tictim.hearthstones.client.screen.HearthstoneScreen;
 import tictim.hearthstones.client.screen.TavernScreen;
+import tictim.hearthstones.contents.ModItems;
+import tictim.hearthstones.contents.blockentity.BinderLecternBlockEntity;
 import tictim.hearthstones.contents.blockentity.TavernBlockEntity;
+import tictim.hearthstones.contents.item.hearthstone.TavernWaypointBinderItem;
 import tictim.hearthstones.tavern.PlayerTavernMemory;
 import tictim.hearthstones.tavern.TavernMemories;
 
@@ -58,6 +63,26 @@ public final class ModNet{
 				SyncHomePosMsg::write, SyncHomePosMsg::read,
 				ModNet::handleSyncHomePos,
 				Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+
+		CHANNEL.registerMessage(5, OpenBinderScreenMsg.class,
+				OpenBinderScreenMsg::write, OpenBinderScreenMsg::read,
+				ModNet::handleOpenBinderScreen,
+				Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+
+		CHANNEL.registerMessage(6, OpenLecternBinderScreenMsg.class,
+				OpenLecternBinderScreenMsg::write, OpenLecternBinderScreenMsg::read,
+				ModNet::handleOpenLecternBinderScreen,
+				Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+
+		CHANNEL.registerMessage(7, RemoveBinderWaypointMsg.class,
+				RemoveBinderWaypointMsg::write, RemoveBinderWaypointMsg::read,
+				ModNet::handleRemoveBinderWaypoint,
+				Optional.of(NetworkDirection.PLAY_TO_SERVER));
+
+		CHANNEL.registerMessage(8, RemoveLecternBinderWaypointMsg.class,
+				RemoveLecternBinderWaypointMsg::write, RemoveLecternBinderWaypointMsg::read,
+				ModNet::handleLecternRemoveBinderWaypoint,
+				Optional.of(NetworkDirection.PLAY_TO_SERVER));
 	}
 
 	private static void handleUpdateTavern(UpdateTavernMsg packet, Supplier<NetworkEvent.Context> contextSupplier){
@@ -115,6 +140,44 @@ public final class ModNet{
 		});
 	}
 
+	private static void handleRemoveBinderWaypoint(RemoveBinderWaypointMsg packet, Supplier<NetworkEvent.Context> contextSupplier){
+		NetworkEvent.Context context = contextSupplier.get();
+		context.setPacketHandled(true);
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
+			if(player==null){
+				Hearthstones.LOGGER.error("Sender doesn't exist.");
+				return;
+			}
+			ItemStack stack = player.getInventory().getItem(packet.binderInventoryPosition());
+			if(stack.getItem()==ModItems.WAYPOINT_BINDER.get()){
+				TavernWaypointBinderItem.Data data = TavernWaypointBinderItem.data(stack);
+				if(data!=null)
+					data.memory.delete(packet.pos());
+			}
+		});
+	}
+
+	private static void handleLecternRemoveBinderWaypoint(RemoveLecternBinderWaypointMsg packet, Supplier<NetworkEvent.Context> contextSupplier){
+		NetworkEvent.Context context = contextSupplier.get();
+		context.setPacketHandled(true);
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
+			if(player==null){
+				Hearthstones.LOGGER.error("Sender doesn't exist.");
+				return;
+			}
+			if(player.level.isLoaded(packet.lecternPos())){
+				if(player.level.getBlockEntity(packet.lecternPos()) instanceof BinderLecternBlockEntity binderLectern){
+					if((binderLectern.getPlayer()==null||binderLectern.getPlayer().equals(player.getUUID()))&&binderLectern.getData()!=null){
+						binderLectern.getData().memory.delete(packet.tavernPos());
+						binderLectern.setChanged();
+					}
+				}
+			}
+		});
+	}
+
 	private static void handleOpenHearthstoneScreen(OpenHearthstoneScreenMsg packet, Supplier<NetworkEvent.Context> contextSupplier){
 		NetworkEvent.Context context = contextSupplier.get();
 		context.setPacketHandled(true);
@@ -131,6 +194,18 @@ public final class ModNet{
 		NetworkEvent.Context context = contextSupplier.get();
 		context.setPacketHandled(true);
 		context.enqueueWork(() -> Client.handleSyncHomePos(packet));
+	}
+
+	private static void handleOpenBinderScreen(OpenBinderScreenMsg packet, Supplier<NetworkEvent.Context> contextSupplier){
+		NetworkEvent.Context context = contextSupplier.get();
+		context.setPacketHandled(true);
+		context.enqueueWork(() -> Client.handleOpenBinderScreen(packet));
+	}
+
+	private static void handleOpenLecternBinderScreen(OpenLecternBinderScreenMsg packet, Supplier<NetworkEvent.Context> contextSupplier){
+		NetworkEvent.Context context = contextSupplier.get();
+		context.setPacketHandled(true);
+		context.enqueueWork(() -> Client.handleOpenLecternBinderScreen(packet));
 	}
 
 	private static final class Client{
@@ -152,6 +227,26 @@ public final class ModNet{
 
 		private static void handleSyncHomePos(SyncHomePosMsg packet){
 			OverlayRenderEventHandler.homePos = packet.homePos();
+		}
+
+		private static void handleOpenBinderScreen(OpenBinderScreenMsg packet){
+			if(Minecraft.getInstance().screen instanceof BinderScreen.Inventory screen){
+				screen.updateData(packet);
+			}else{
+				BinderScreen.Inventory s = new BinderScreen.Inventory();
+				s.updateData(packet);
+				Minecraft.getInstance().setScreen(s);
+			}
+		}
+
+		private static void handleOpenLecternBinderScreen(OpenLecternBinderScreenMsg packet){
+			if(Minecraft.getInstance().screen instanceof BinderScreen.Lectern screen){
+				screen.updateData(packet);
+			}else{
+				BinderScreen.Lectern s = new BinderScreen.Lectern();
+				s.updateData(packet);
+				Minecraft.getInstance().setScreen(s);
+			}
 		}
 	}
 }

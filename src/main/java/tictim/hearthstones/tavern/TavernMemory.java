@@ -47,6 +47,10 @@ public class TavernMemory{
 		if(taverns.containsKey(tavern.pos())) addOrUpdate(tavern);
 	}
 
+	public void clear(){
+		taverns.clear();
+	}
+
 	public CompoundTag write(){
 		CompoundTag nbt = new CompoundTag();
 		ListTag list = new ListTag();

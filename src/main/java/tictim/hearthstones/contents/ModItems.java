@@ -69,9 +69,11 @@ public final class ModItems{
 	});
 	public static final RegistryObject<Item> BLUE_LEATHER = REGISTER.register("blue_leather", () -> new Item(p(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> DEEP_BLUE = REGISTER.register("deep_blue", () -> new Item(p(Rarity.UNCOMMON)));
+	public static final RegistryObject<Item> DEEP_PURPLE = REGISTER.register("deep_purple", () -> new Item(p(Rarity.UNCOMMON)));
 	public static final RegistryObject<Item> AQUAMARINE_DUST = REGISTER.register("aquamarine_dust", () -> new Item(p()));
 	public static final RegistryObject<Item> DIAMOND_DUST = REGISTER.register("diamond_dust", () -> new Item(p()));
 	public static final RegistryObject<Item> LAPIS_DUST = REGISTER.register("lapis_dust", () -> new Item(p()));
+	public static final RegistryObject<Item> AMETHYST_DUST = REGISTER.register("amethyst_dust", () -> new Item(p()));
 
 	public static final RegistryObject<Item> AQUAMARINE_ORE = REGISTER.register("aquamarine_ore", () -> new BlockItem(ModBlocks.AQUAMARINE_ORE.get(), p()));
 	public static final RegistryObject<Item> DEEPSLATE_AQUAMARINE_ORE = REGISTER.register("deepslate_aquamarine_ore", () -> new BlockItem(ModBlocks.DEEPSLATE_AQUAMARINE_ORE.get(), p()));

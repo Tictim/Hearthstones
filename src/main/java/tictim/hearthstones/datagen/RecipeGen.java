@@ -5,7 +5,6 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
-import net.minecraft.data.recipes.SpecialRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -103,10 +102,10 @@ public class RecipeGen extends RecipeProvider{
 				.save(consumer);
 
 		shapeless(BLUE_LEATHER.get())
-				.requires(ModTags.DUSTS_DEEP_BLUE)
-				.requires(ModTags.DUSTS_DEEP_BLUE)
-				.requires(ModTags.DUSTS_DEEP_BLUE)
-				.requires(ModTags.DUSTS_DEEP_BLUE)
+				.requires(DEEP_BLUE.get())
+				.requires(DEEP_BLUE.get())
+				.requires(DEEP_BLUE.get())
+				.requires(DEEP_BLUE.get())
 				.requires(Tags.Items.LEATHER)
 				.requires(Items.MILK_BUCKET)
 				.unlockedBy("has_deep_blue", has(DEEP_BLUE.get()))
@@ -116,6 +115,13 @@ public class RecipeGen extends RecipeProvider{
 				.requires(ModTags.DUSTS_AQUAMARINE)
 				.requires(ModTags.DUSTS_DIAMOND)
 				.requires(ModTags.DUSTS_LAPIS)
+				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+				.save(consumer);
+
+		shapeless(DEEP_PURPLE.get(), 3)
+				.requires(ModTags.DUSTS_AQUAMARINE)
+				.requires(ModTags.DUSTS_DIAMOND)
+				.requires(ModTags.DUSTS_AMETHYST)
 				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
 				.save(consumer);
 
@@ -137,6 +143,7 @@ public class RecipeGen extends RecipeProvider{
 		addMortarRecipe(Ingredient.of(ModTags.GEMS_AQUAMARINE), AQUAMARINE_DUST.get(), consumer);
 		addMortarRecipe(Ingredient.of(Tags.Items.GEMS_DIAMOND), DIAMOND_DUST.get(), consumer);
 		addMortarRecipe(Ingredient.of(Tags.Items.GEMS_LAPIS), LAPIS_DUST.get(), consumer);
+		addMortarRecipe(Ingredient.of(Items.AMETHYST_SHARD), AMETHYST_DUST.get(), consumer);
 
 		// Easy Mode
 		easyMode(consumer, "hearthstone", c -> shaped(HEARTHSTONE.get())
@@ -173,7 +180,7 @@ public class RecipeGen extends RecipeProvider{
 				.pattern("121")
 				.pattern("11 ")
 				.define('1', ModTags.HEARTHSTONE_MATERIAL)
-				.define('2', ModTags.DUSTS_DEEP_BLUE)
+				.define('2', DEEP_BLUE.get())
 				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
 				.save(c));
 
@@ -248,31 +255,33 @@ public class RecipeGen extends RecipeProvider{
 				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
 				.save(c));
 
-		shaped(WAYPOINT.get())
+		shaped(WAYPOINT.get(), 4)
 				.pattern(" 13")
 				.pattern("121")
 				.pattern("11 ")
 				.define('1', Items.AMETHYST_SHARD)
 				.define('2', ModTags.GEMS_AQUAMARINE)
 				.define('3', Items.STRING)
-				.unlockedBy("has_amethyst", has(Items.AMETHYST_SHARD))
+				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
 				.save(consumer);
 
 		shapeless(WAYPOINT.get())
 				.requires(WAYPOINT.get())
 				.unlockedBy("has_waypoint", has(WAYPOINT.get()))
-				.save(consumer, MODID+":waypoint");
+				.save(consumer, MODID+":clear_waypoint");
 
 		shapeless(WAYPOINT_BINDER.get())
 				.requires(Items.BOOK)
-				.requires(WAYPOINT.get())
-				.unlockedBy("has_waypoint", has(WAYPOINT.get()))
-				.save(r -> consumer.accept(new BinderRecipeBuilder(r)));
-		special(ModRecipes.BINDER_RECIPE.get())
-				.save(consumer, MODID+":binder");
+				.requires(DEEP_PURPLE.get())
+				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+				.save(consumer);
+
+		special(ModRecipes.CHARGE_BINDER_RECIPE.get())
+				.save(consumer, MODID+":charge_binder");
 
 		// Furnace Recipe
-		Consumer<FinishedRecipe> c = result -> consumer.accept(result instanceof SimpleCookingRecipeBuilder.Result ? new MultiItemCookingResult((SimpleCookingRecipeBuilder.Result)result, 9) : result);
+		Consumer<FinishedRecipe> c = result -> consumer.accept(result instanceof SimpleCookingRecipeBuilder.Result ?
+				new MultiItemCookingResult((SimpleCookingRecipeBuilder.Result)result, 9) : result);
 		SimpleCookingRecipeBuilder.smelting(Ingredient.of(AQUAMARINE_ORE.get()), AQUAMARINE.get(), 0.5f, 200)
 				.unlockedBy("has_aquamarine_ore", has(AQUAMARINE_ORE.get()))
 				.save(c, new ResourceLocation(MODID, "smelting/aquamarine"));

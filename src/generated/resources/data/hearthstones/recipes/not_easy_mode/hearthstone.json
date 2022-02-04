@@ -22,7 +22,7 @@
             "tag": "hearthstones:hearthstone_material"
           },
           "2": {
-            "tag": "forge:dusts/deep_blue"
+            "item": "hearthstones:deep_blue"
           }
         },
         "result": {
