@@ -12,7 +12,6 @@ public final class ModCfg{
 	private static HearthstoneConfig hearthingPlanks;
 	private static HearthingGemConfig hearthingGem;
 	private static HearthstoneConfig companionHearthstone;
-	private static HearthstoneConfig amethystHearthstone;
 
 	private static BooleanValue easyMode;
 
@@ -30,7 +29,6 @@ public final class ModCfg{
 		hearthingPlanks = new HearthstoneConfig(server, "hearthingPlanks", "Hearthing Planks", 30, 75);
 		hearthingGem = new HearthingGemConfig(server, "hearthingGem", "Hearthing Gem", 0, 150);
 		companionHearthstone = new HearthstoneConfig(server, "companionHearthstone", "Companion Hearthstone", 0, 225);
-		amethystHearthstone = new HearthstoneConfig(server, "amethystHearthstone", "Amethyst Hearthstone", 0, 75);
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, server.build());
 
@@ -67,8 +65,5 @@ public final class ModCfg{
 	}
 	public static HearthstoneConfig companionHearthstone(){
 		return companionHearthstone;
-	}
-	public static HearthstoneConfig amethystHearthstone(){
-		return amethystHearthstone;
 	}
 }
