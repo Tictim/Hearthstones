@@ -1,147 +1,67 @@
 package tictim.hearthstones;
 
-import net.minecraft.data.DataGenerator;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.IItemPropertyGetter;
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.OreFeatureConfig;
-import net.minecraft.world.gen.placement.Placement;
-import net.minecraft.world.gen.placement.TopSolidRangeConfig;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.gen.feature.WorldGenMinable;
+import net.minecraftforge.event.terraingen.OreGenEvent;
+import net.minecraftforge.event.terraingen.TerrainGen;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.contents.ModBlocks;
-import tictim.hearthstones.contents.ModEnchantments;
-import tictim.hearthstones.contents.ModItems;
-import tictim.hearthstones.contents.ModTileEntities;
-import tictim.hearthstones.data.PlayerTavernMemory;
-import tictim.hearthstones.datagen.BlockTagGen;
-import tictim.hearthstones.datagen.ItemTagGen;
-import tictim.hearthstones.datagen.LootTableGen;
-import tictim.hearthstones.datagen.RecipeGen;
+import tictim.hearthstones.contents.ModOreDict;
+import tictim.hearthstones.contents.tileentity.BinderLecternTile;
+import tictim.hearthstones.contents.tileentity.GlobalTavernTile;
+import tictim.hearthstones.contents.tileentity.NormalTavernTile;
+import tictim.hearthstones.contents.tileentity.ShabbyTavernTile;
 import tictim.hearthstones.net.ModNet;
-import tictim.hearthstones.proxy.ClientProxy;
-import tictim.hearthstones.proxy.IProxy;
-import tictim.hearthstones.proxy.ServerProxy;
 
-import javax.annotation.Nullable;
-
-@Mod(Hearthstones.MODID)
-@Mod.EventBusSubscriber(modid = Hearthstones.MODID, bus = Bus.MOD)
+@Mod(modid = Hearthstones.MODID,
+		name = Hearthstones.NAME,
+		version = Hearthstones.VERSION,
+		guiFactory = "tictim.hearthstones.config.GuiFactory")
 public class Hearthstones{
 	public static final String MODID = "hearthstones";
-	public static final Logger LOGGER = LogManager.getLogger("Hearthstones");
+	public static final String NAME = "Hearthstones";
+	public static final String VERSION = "1.0.1.0-SNAPSHOT";
 
-	public static final IProxy PROXY = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+	public static final Logger LOGGER = LogManager.getLogger(NAME);
 
-	public Hearthstones(){
-		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-		ModCfg.init();
+	@Mod.Instance(MODID)
+	public static Hearthstones instance;
 
-		ModBlocks.BLOCKS.register(eventBus);
-		ModItems.ITEMS.register(eventBus);
-		ModEnchantments.ENCHANTMENTS.register(eventBus);
-		ModTileEntities.TILE_ENTITIES.register(eventBus);
-	}
+	@SidedProxy(clientSide = "tictim.hearthstones.Proxy$Client", serverSide = "tictim.hearthstones.Proxy", modId = MODID)
+	public static Proxy proxy;
 
-	@SubscribeEvent
-	public static void setup(FMLCommonSetupEvent event){
-		Registry.register(
-				WorldGenRegistries.CONFIGURED_FEATURE,
-				new ResourceLocation(MODID, "aquamarine"),
-				Feature.ORE.configured(
-						new OreFeatureConfig(
-								OreFeatureConfig.FillerBlockType.NATURAL_STONE,
-								ModBlocks.AQUAMARINE_ORE.get().defaultBlockState(),
-								5))
-						.decorated(Placement.RANGE.configured(new TopSolidRangeConfig(0, 0, 50))
-								.squared() // TODO what does this shit do
-								.count(12)));
-
-		CapabilityManager.INSTANCE.register(PlayerTavernMemory.class, new Capability.IStorage<PlayerTavernMemory>(){
-			@Nullable @Override public INBT writeNBT(Capability<PlayerTavernMemory> capability, PlayerTavernMemory instance, Direction side){
-				return null;
-			}
-			@Override public void readNBT(Capability<PlayerTavernMemory> capability, PlayerTavernMemory instance, Direction side, INBT nbt){}
-		}, () -> {
-			throw new UnsupportedOperationException();
-		});
-
+	@Mod.EventHandler
+	public void preInit(FMLPreInitializationEvent event){
 		ModNet.init();
+		Caps.register();
+
+		GameRegistry.registerTileEntity(NormalTavernTile.class, new ResourceLocation(MODID, "tavern"));
+		GameRegistry.registerTileEntity(ShabbyTavernTile.class, new ResourceLocation(MODID, "tavern_shabby"));
+		GameRegistry.registerTileEntity(GlobalTavernTile.class, new ResourceLocation(MODID, "tavern_global"));
+		GameRegistry.registerTileEntity(BinderLecternTile.class, new ResourceLocation(MODID, "binder_lectern"));
 	}
 
-	@SubscribeEvent
-	public static void gatherData(GatherDataEvent event){
-		DataGenerator gen = event.getGenerator();
-		if(event.includeServer()){
-			gen.addProvider(new RecipeGen(gen));
-			BlockTagGen blockTagGen = new BlockTagGen(gen, event.getExistingFileHelper());
-			gen.addProvider(blockTagGen);
-			gen.addProvider(new ItemTagGen(gen, blockTagGen, event.getExistingFileHelper()));
-			gen.addProvider(new LootTableGen(gen));
-		}
-	}
+	@Mod.EventHandler
+	public void init(FMLInitializationEvent event){
+		ModOreDict.register();
 
-
-	@Mod.EventBusSubscriber(modid = MODID, bus = Bus.MOD, value = Dist.CLIENT)
-	public static final class Client{
-		@SubscribeEvent
-		public static void clientSetup(FMLClientSetupEvent event){
-			ResourceLocation key = new ResourceLocation("has_cooldown");
-			IItemPropertyGetter itemPropertyGetter = (s, w, e) -> {
-				if(e instanceof PlayerEntity){
-					CompoundNBT tag = s.getTag();
-					return tag!=null&&tag.getBoolean("hasCooldown") ? 1 : 0;
-				}else return 0;
-			};
-
-			ItemModelsProperties.register(ModItems.HEARTHSTONE.get(), key, itemPropertyGetter);
-			ItemModelsProperties.register(ModItems.HEARTHING_PLANKS.get(), key, itemPropertyGetter);
-			ItemModelsProperties.register(ModItems.HEARTHING_GEM.get(), key, itemPropertyGetter);
-			ItemModelsProperties.register(ModItems.COMPANION_HEARTHSTONE.get(), key, itemPropertyGetter);
-		}
-	}
-
-	@Mod.EventBusSubscriber(modid = MODID)
-	public static final class ForgeEventHandler{
-		@SubscribeEvent
-		public static void registerCommands(RegisterCommandsEvent event){
-			ModCommands.init(event.getDispatcher());
-		}
-
-		@SubscribeEvent(priority = EventPriority.LOW)
-		public static void loadBiome(BiomeLoadingEvent event){
-			if(event.getCategory()==Biome.Category.NETHER||event.getCategory()==Biome.Category.THEEND) return;
-
-			ConfiguredFeature<?, ?> aquamarine = WorldGenRegistries.CONFIGURED_FEATURE.get(new ResourceLocation(MODID, "aquamarine"));
-			if(aquamarine!=null){
-				event.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, aquamarine);
+		WorldGenMinable worldGen = new WorldGenMinable(ModBlocks.AQUAMARINE_ORE.getDefaultState(), ModCfg.aquamarineOreSize);
+		GameRegistry.registerWorldGenerator((random, chunkX, chunkZ, world, chunkGenerator, chunkProvider) -> {
+			if(ModCfg.aquamarineGen&&TerrainGen.generateOre(world, random, worldGen, new BlockPos(chunkX, 0, chunkZ), OreGenEvent.GenerateMinable.EventType.CUSTOM)){
+				for(int i = 0, j = ModCfg.aquamarineCountInChunk; i<j; i++){
+					BlockPos blockpos = new BlockPos(chunkX*16+random.nextInt(16), random.nextInt(ModCfg.aquamarineMaxY-ModCfg.aquamarineMinY)+ModCfg.aquamarineMinY, chunkZ*16+random.nextInt(16));
+					worldGen.generate(world, random, blockpos);
+				}
 			}
-		}
+		}, 0);
+		proxy.registerRenderer();
 	}
 }

@@ -1,119 +1,138 @@
 package tictim.hearthstones.contents;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.BlockItem;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
 import tictim.hearthstones.config.ModCfg;
-import tictim.hearthstones.item.CompanionHearthstoneItem;
-import tictim.hearthstones.item.GuidTavernUpgradeItem;
-import tictim.hearthstones.item.HearthingGemItem;
-import tictim.hearthstones.item.HearthingPlanksItem;
-import tictim.hearthstones.item.MortarItem;
-import tictim.hearthstones.item.RegularHearthstoneItem;
-import tictim.hearthstones.item.RegularTavernUpgradeItem;
-import tictim.hearthstones.item.ShabbyTavernUpgradeItem;
+import tictim.hearthstones.contents.item.MortarItem;
+import tictim.hearthstones.contents.item.RareItem;
+import tictim.hearthstones.contents.item.TavernBinderItem;
+import tictim.hearthstones.contents.item.TavernItem;
+import tictim.hearthstones.contents.item.TavernWaypointItem;
+import tictim.hearthstones.contents.item.hearthstone.CompanionHearthstoneItem;
+import tictim.hearthstones.contents.item.hearthstone.HearthingGemItem;
+import tictim.hearthstones.contents.item.hearthstone.HearthingPlanksItem;
+import tictim.hearthstones.contents.item.hearthstone.NormalHearthstoneItem;
+import tictim.hearthstones.contents.item.tavernupgrade.GuildTavernUpgradeItem;
+import tictim.hearthstones.contents.item.tavernupgrade.RegularTavernUpgradeItem;
+import tictim.hearthstones.contents.item.tavernupgrade.ShabbyTavernUpgradeItem;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 import static tictim.hearthstones.Hearthstones.MODID;
 
-public final class ModItems{
-	private ModItems(){}
+@Mod.EventBusSubscriber(modid = MODID)
+@GameRegistry.ObjectHolder(MODID)
+public class ModItems{
+	@SuppressWarnings("ConstantConditions") @Nonnull private static <T> T definitelyNotNull(){
+		return null;
+	}
 
-	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
+	public static final Item HEARTHSTONE = definitelyNotNull();
+	public static final Item SHABBY_HEARTHSTONE = definitelyNotNull();
+	public static final Item HEARTHING_GEM = definitelyNotNull();
+	public static final Item COMPANION_HEARTHSTONE = definitelyNotNull();
 
-	public static final ItemGroup TAB = new ItemGroup("hearthstones"){
-		@Override public ItemStack makeIcon(){
-			return new ItemStack(ModItems.HEARTHSTONE.get());
-		}
-	}.setEnchantmentCategories(ModEnchantments.HEARTHSTONE);
+	public static final Item COMPANION_STONE = definitelyNotNull();
 
-	public static final RegistryObject<Item> HEARTHSTONE = ITEMS.register("hearthstone",
-			() -> new RegularHearthstoneItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).tab(TAB))
-	);
-	public static final RegistryObject<Item> HEARTHING_PLANKS = ITEMS.register("hearthing_planks",
-			() -> new HearthingPlanksItem(new Item.Properties().stacksTo(1).tab(TAB))
-	);
-	public static final RegistryObject<Item> HEARTHING_GEM = ITEMS.register("hearthing_gem",
-			() -> new HearthingGemItem(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).tab(TAB))
-	);
-	public static final RegistryObject<Item> COMPANION_HEARTHSTONE = ITEMS.register("companion_hearthstone",
-			() -> new CompanionHearthstoneItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).tab(TAB))
-	);
-	public static final RegistryObject<Item> COMPANION_STONE = ITEMS.register("companion_stone",
-			() -> new Item(new Item.Properties().stacksTo(1).tab(TAB)){
-				@Override public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-					tooltip.add(new TranslationTextComponent("info.hearthstones.companion_stone.tooltip"));
-				}
+	public static final Item MORTAR = definitelyNotNull();
+
+	public static final Item TATTERED_TAVERNCLOTH = definitelyNotNull();
+	public static final Item TAVERNCLOTH = definitelyNotNull();
+	public static final Item BLUE_TAVERNCLOTH = definitelyNotNull();
+
+	public static final Item WAYPOINT = definitelyNotNull();
+	public static final Item WAYPOINT_BINDER = definitelyNotNull();
+	public static final Item INFINITE_WAYPOINT_BINDER = definitelyNotNull();
+
+	public static final Item AQUAMARINE = definitelyNotNull();
+	public static final Item RED_LEATHER = definitelyNotNull();
+	public static final Item TATTERED_LEATHER = definitelyNotNull();
+	public static final Item BLUE_LEATHER = definitelyNotNull();
+	public static final Item PURPLE_LEATHER = definitelyNotNull();
+	public static final Item DEEP_BLUE = definitelyNotNull();
+	public static final Item DEEP_PURPLE = definitelyNotNull();
+	public static final Item AQUAMARINE_DUST = definitelyNotNull();
+	public static final Item DIAMOND_DUST = definitelyNotNull();
+	public static final Item LAPIS_DUST = definitelyNotNull();
+	public static final Item AMETHYST_SHARD = definitelyNotNull();
+	public static final Item AMETHYST_DUST = definitelyNotNull();
+
+	public static final Item AQUAMARINE_ORE = definitelyNotNull();
+	public static final Item AQUAMARINE_BLOCK = definitelyNotNull();
+	public static final Item TAVERN = definitelyNotNull();
+	public static final Item BINDER_LECTERN = definitelyNotNull();
+
+	@SubscribeEvent
+	public static void registerItems(RegistryEvent.Register<Item> event){
+		IForgeRegistry<Item> registry = event.getRegistry();
+		register(registry, "hearthstone", new NormalHearthstoneItem().setRarity(EnumRarity.RARE));
+		register(registry, "shabby_hearthstone", new HearthingPlanksItem());
+		register(registry, "hearthing_gem", new HearthingGemItem().setRarity(EnumRarity.UNCOMMON));
+		register(registry, "companion_hearthstone", new CompanionHearthstoneItem().setRarity(EnumRarity.EPIC));
+
+		register(registry, "companion_stone", new Item(){
+			@Override public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
+				tooltip.add(I18n.format("info.hearthstones.companion_stone.tooltip"));
 			}
-	);
-	public static final RegistryObject<Item> MORTAR = ITEMS.register("mortar",
-			() -> new MortarItem(new Item.Properties().durability(155).tab(TAB).setNoRepair())
-	);
+		}.setMaxStackSize(1));
 
-	public static final RegistryObject<Item> TATTERED_TAVERNCLOTH = ITEMS.register("tattered_taverncloth",
-			() -> new ShabbyTavernUpgradeItem(new Item.Properties().tab(TAB))
-	);
-	public static final RegistryObject<Item> TAVERNCLOTH = ITEMS.register("taverncloth",
-			() -> new RegularTavernUpgradeItem(new Item.Properties().tab(TAB))
-	);
-	public static final RegistryObject<Item> BLUE_TAVERNCLOTH = ITEMS.register("blue_taverncloth",
-			() -> new GuidTavernUpgradeItem(new Item.Properties().rarity(Rarity.UNCOMMON).tab(TAB))
-	);
+		register(registry, "mortar", new MortarItem());
 
-	public static final RegistryObject<Item> AQUAMARINE = ITEMS.register("aquamarine",
-			() -> new Item(new Item.Properties().tab(TAB))
-	);
-	public static final RegistryObject<Item> RED_LEATHER = ITEMS.register("red_leather",
-			() -> new Item(new Item.Properties().tab(TAB))
-	);
-	public static final RegistryObject<Item> TATTERED_LEATHER = ITEMS.register("tattered_leather",
-			() -> new Item(new Item.Properties().tab(TAB)){
-				@Override public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items){
-					if(this.allowdedIn(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
-				}
+		register(registry, "tattered_taverncloth", new ShabbyTavernUpgradeItem());
+		register(registry, "taverncloth", new RegularTavernUpgradeItem());
+		register(registry, "blue_taverncloth", new GuildTavernUpgradeItem().setRarity(EnumRarity.UNCOMMON));
+
+		register(registry, "waypoint", new TavernWaypointItem().setRarity(EnumRarity.UNCOMMON));
+		register(registry, "waypoint_binder", new TavernBinderItem(false).setRarity(EnumRarity.UNCOMMON));
+		register(registry, "infinite_waypoint_binder", new TavernBinderItem(true).setRarity(EnumRarity.EPIC));
+
+		register(registry, "aquamarine", new Item());
+		register(registry, "red_leather", new Item());
+		register(registry, "tattered_leather", new Item(){
+			@Override public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items){
+				if(this.isInCreativeTab(tab)&&!ModCfg.easyMode) items.add(new ItemStack(this));
 			}
-	);
-	public static final RegistryObject<Item> BLUE_LEATHER = ITEMS.register("blue_leather",
-			() -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON).tab(TAB))
-	);
-	public static final RegistryObject<Item> DEEP_BLUE = ITEMS.register("deep_blue",
-			() -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON).tab(TAB))
-	);
-	public static final RegistryObject<Item> AQUAMARINE_DUST = ITEMS.register("aquamarine_dust",
-			() -> new Item(new Item.Properties().tab(TAB))
-	);
-	public static final RegistryObject<Item> DIAMOND_DUST = ITEMS.register("diamond_dust",
-			() -> new Item(new Item.Properties().tab(TAB))
-	);
-	public static final RegistryObject<Item> LAPIS_DUST = ITEMS.register("lapis_dust",
-			() -> new Item(new Item.Properties().tab(TAB))
-	);
+		});
+		register(registry, "blue_leather", new RareItem().setRarity(EnumRarity.UNCOMMON));
+		register(registry, "purple_leather", new RareItem().setRarity(EnumRarity.UNCOMMON));
+		register(registry, "deep_blue", new RareItem().setRarity(EnumRarity.UNCOMMON));
+		register(registry, "deep_purple", new RareItem().setRarity(EnumRarity.UNCOMMON));
+		register(registry, "aquamarine_dust", new Item());
+		register(registry, "diamond_dust", new Item());
+		register(registry, "lapis_dust", new Item());
+		register(registry, "amethyst_shard", new Item());
+		register(registry, "amethyst_dust", new Item());
 
-	public static final RegistryObject<Item> AQUAMARINE_ORE = ITEMS.register("aquamarine_ore",
-			() -> new BlockItem(ModBlocks.AQUAMARINE_ORE.get(), new Item.Properties().tab(TAB))
-	);
-	public static final RegistryObject<Item> AQUAMARINE_BLOCK = ITEMS.register("aquamarine_block",
-			() -> new BlockItem(ModBlocks.AQUAMARINE_BLOCK.get(), new Item.Properties().tab(TAB))
-	);
-	public static final RegistryObject<Item> TAVERN = ITEMS.register("tavern",
-			() -> new BlockItem(ModBlocks.TAVERN.get(), new Item.Properties().tab(TAB))
-	);
-	public static final RegistryObject<Item> SHABBY_TAVERN = ITEMS.register("shabby_tavern",
-			() -> new BlockItem(ModBlocks.SHABBY_TAVERN.get(), new Item.Properties().tab(TAB))
-	);
-	public static final RegistryObject<Item> GLOBAL_TAVERN = ITEMS.register("global_tavern",
-			() -> new BlockItem(ModBlocks.GLOBAL_TAVERN.get(), new Item.Properties().rarity(Rarity.UNCOMMON).tab(TAB))
-	);
+		registerBlockItem(registry, ModBlocks.AQUAMARINE_ORE);
+		registerBlockItem(registry, ModBlocks.AQUAMARINE_BLOCK);
+		register(registry, "tavern", new TavernItem(ModBlocks.TAVERN));
+		registerBlockItem(registry, ModBlocks.BINDER_LECTERN);
+	}
+
+	private static void registerBlockItem(IForgeRegistry<Item> registry, Block block){
+		registry.register(new ItemBlock(block)
+				.setRegistryName(Objects.requireNonNull(block.getRegistryName())));
+	}
+
+	private static void register(IForgeRegistry<Item> registry, String name, Item item){
+		registry.register(item.setCreativeTab(HearthstoneTab.get())
+				.setRegistryName(name)
+				.setTranslationKey(MODID+"."+name));
+	}
 }

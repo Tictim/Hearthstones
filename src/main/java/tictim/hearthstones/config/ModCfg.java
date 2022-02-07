@@ -1,57 +1,40 @@
 package tictim.hearthstones.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public final class ModCfg{
-	private ModCfg(){}
+import static tictim.hearthstones.Hearthstones.MODID;
 
-	public static final HearthstoneConfig hearthstone;
-	public static final HearthstoneConfig hearthingPlanks;
-	public static final HearthingGemConfig hearthingGem;
-	public static final HearthstoneConfig companionHearthstone;
-
-	private static final BooleanValue easyMode;
-
-	private static final BooleanValue traceHearthstoneUsage;
-	private static final BooleanValue traceTavernUpdate;
-
-	private static final ForgeConfigSpec spec;
-
-	static{
-		ForgeConfigSpec.Builder b = new ForgeConfigSpec.Builder();
-		hearthstone = new HearthstoneConfig(b, "hearthstone", "Hearthstone", 0, 75);
-		hearthingPlanks = new HearthstoneConfig(b, "hearthingPlanks", "Hearthing Planks", 30, 75);
-		hearthingGem = new HearthingGemConfig(b, "hearthingGem", "Hearthing Gem", 0, 150);
-		companionHearthstone = new HearthstoneConfig(b, "companionHearthstone", "Companion Hearthstone", 0, 225);
-
-		easyMode = b.comment("Removes the recipe of Shabby Tavern/Hearthing Planks, and reverts the recipe of Tavern/Hearthstone to much cheaper version.")
-				.worldRestart()
-				.define("easyMode", false);
-
-		traceHearthstoneUsage = b.define("traceHearthstoneUsage", false);
-		traceTavernUpdate = b.define("traceTavernUpdate", false);
-
-		spec = b.build();
+@Mod.EventBusSubscriber(modid = MODID)
+@Config(modid = MODID, name = "ttmp/hearthstones", category = "master")
+public class ModCfg{
+	@SubscribeEvent
+	@SuppressWarnings("unused")
+	public static void onConfigChange(ConfigChangedEvent.OnConfigChangedEvent event){
+		if(event.getModID().equals(MODID))
+			ConfigManager.sync(MODID, Config.Type.INSTANCE);
 	}
 
-	private static boolean initCalled = false;
-	public static void init(){
-		if(initCalled) throw new IllegalStateException("ModCfg#init() called twice");
-		else initCalled = true;
+	public static final SimpleHearthstoneConfig hearthstone = new SimpleHearthstoneConfig(0, 75);
+	public static final SimpleHearthstoneConfig hearthingPlanks = new SimpleHearthstoneConfig(30, 75);
+	public static final HearthingGemConfig hearthingGem = new HearthingGemConfig(0, 150, 500);
+	public static final SimpleHearthstoneConfig companionHearthstone = new SimpleHearthstoneConfig(0, 225);
 
-		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, spec, "hearthstones.toml");
-	}
+	@Config.Comment("Removes the recipe of Shabby Tavern/Hearthing Planks, and reverts the recipe of Tavern/Hearthstone to much cheaper version.")
+	@Config.RequiresMcRestart
+	public static boolean easyMode;
 
-	public static boolean easyMode(){
-		return easyMode.get();
-	}
-	public static boolean traceHearthstoneUsage(){
-		return traceHearthstoneUsage.get();
-	}
-	public static boolean traceTavernUpdate(){
-		return traceTavernUpdate.get();
-	}
+	public static boolean traceHearthstoneUsage;
+	public static boolean traceTavernUpdate;
+
+	public static boolean aquamarineGen = true;
+	public static int aquamarineMinY = 5;
+	public static int aquamarineMaxY = 50;
+	@Config.RangeInt(min = 0)
+	public static int aquamarineOreSize = 3;
+	@Config.RangeInt(min = 0)
+	public static int aquamarineCountInChunk = 12;
 }

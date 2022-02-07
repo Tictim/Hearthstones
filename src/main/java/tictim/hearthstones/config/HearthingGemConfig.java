@@ -1,20 +1,31 @@
 package tictim.hearthstones.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
+import net.minecraftforge.common.config.Config;
 
-public class HearthingGemConfig extends HearthstoneConfig{
-	private final DoubleValue travelDistanceThreshold;
+public class HearthingGemConfig implements HearthstoneConfig{
+	@Config.Comment("Number of times the hearthstone can be used. Set to 0 if you don't want it to wear off.")
+	@Config.RangeInt(min = 0)
+	public int maxUse;
+	@Config.Comment("Cooldown of the hearthstone, in seconds.")
+	@Config.RangeInt(min = 0)
+	public int cooldown;
+	@Config.Comment("Maximum distance the Hearthing Gem can be used without breaking it.")
+	@Config.RangeDouble(min = 0, max = Double.POSITIVE_INFINITY)
+	public int travelDistanceThreshold;
 
-	public HearthingGemConfig(ForgeConfigSpec.Builder b, String configName, String readableName, int defaultMaxUse, int defaultCooldown){
-		super(b, configName, readableName, defaultMaxUse, defaultCooldown);
-		b.push(configName);
-		travelDistanceThreshold = b.comment("Maximum distance the Hearthing Gem can be used without breaking it.")
-				.defineInRange("travelDistanceThreshold", 500, 0, Double.POSITIVE_INFINITY);
-		b.pop();
+	public HearthingGemConfig(int maxUse, int cooldown, int travelDistanceThreshold){
+		this.maxUse = maxUse;
+		this.cooldown = cooldown;
+		this.travelDistanceThreshold = travelDistanceThreshold;
 	}
 
-	public double travelDistanceThreshold(){
-		return travelDistanceThreshold.get();
+	@Override public int maxUse(){
+		return maxUse;
+	}
+	@Override public int cooldown(){
+		return cooldown;
+	}
+	public int travelDistanceThreshold(){
+		return travelDistanceThreshold;
 	}
 }

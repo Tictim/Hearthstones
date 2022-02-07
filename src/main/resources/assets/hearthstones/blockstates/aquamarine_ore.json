@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"": { "model": "hearthstones:block/aquamarine_ore" }
+		"normal": { "model": "hearthstones:aquamarine_ore" }
 	}
 }

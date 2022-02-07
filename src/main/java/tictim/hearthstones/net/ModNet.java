@@ -1,198 +1,180 @@
 package tictim.hearthstones.net;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 import tictim.hearthstones.Hearthstones;
-import tictim.hearthstones.client.screen.HearthstoneScreen;
-import tictim.hearthstones.client.screen.TavernScreen;
-import tictim.hearthstones.data.GlobalTavernMemory;
-import tictim.hearthstones.data.Owner;
-import tictim.hearthstones.data.PlayerTavernMemory;
-import tictim.hearthstones.data.TavernPos;
-import tictim.hearthstones.logic.Tavern;
-import tictim.hearthstones.utils.AccessModifier;
-import tictim.hearthstones.utils.Accessibility;
-import tictim.hearthstones.utils.TavernType;
+import tictim.hearthstones.client.HearthstoneOverlay;
+import tictim.hearthstones.client.gui.BinderScreen;
+import tictim.hearthstones.client.gui.HearthstoneScreen;
+import tictim.hearthstones.client.gui.TavernScreen;
+import tictim.hearthstones.contents.ModItems;
+import tictim.hearthstones.contents.item.TavernBinderItem;
+import tictim.hearthstones.contents.tileentity.BinderLecternTile;
+import tictim.hearthstones.contents.tileentity.TavernTile;
+import tictim.hearthstones.tavern.PlayerTavernMemory;
+import tictim.hearthstones.tavern.TavernBinderData;
+import tictim.hearthstones.tavern.TavernMemories;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 import static tictim.hearthstones.Hearthstones.MODID;
-import static tictim.hearthstones.net.ModNet.Client.handleOpenTavernScreen;
-import static tictim.hearthstones.net.ModNet.Client.handleSyncTavernMemory;
 
-public final class ModNet{
-	private ModNet(){}
-
-	public static final String NETVERSION = "1.0";
-	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "master"), () -> NETVERSION, NETVERSION::equals, NETVERSION::equals);
+public class ModNet{
+	public static final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
 	public static void init(){
-		ModNet.CHANNEL.registerMessage(0, UpdateTavern.class, (packet, buffer) -> {
-			packet.pos.write(buffer);
-			writeOptionalName(buffer, packet.name);
-			buffer.writeByte(packet.access.ordinal());
-		}, buffer -> new UpdateTavern(
-				new TavernPos(buffer),
-				readOptionalName(buffer),
-				AccessModifier.fromMeta(buffer.readUnsignedByte())
-		), (packet, contextSupplier) -> {
-			NetworkEvent.Context context = contextSupplier.get();
-			if(context.getDirection()!=NetworkDirection.PLAY_TO_SERVER) return;
-			context.enqueueWork(() -> {
-				ServerPlayerEntity player = context.getSender();
-				if(player==null){
-					Hearthstones.LOGGER.error("Sender doesn't exists.");
-					return;
-				}
-				World w = Objects.requireNonNull(player.getServer()).getLevel(RegistryKey.create(Registry.DIMENSION_REGISTRY, packet.pos.dim));
-				if(w==null){
-					Hearthstones.LOGGER.error("Dimension {} is not loaded yet.", packet.pos.dim);
-					return;
-				}
-				TileEntity te = w.getBlockEntity(packet.pos.pos);
-				if(!(te instanceof Tavern)){
-					Hearthstones.LOGGER.error("There's no tavern block in {}.", packet.pos);
-					return;
-				}
-				Tavern tavern = (Tavern)te;
-				Owner o = tavern.owner();
-				if(!o.hasModifyPermission(player)){
-					Hearthstones.LOGGER.warn("{} cannot modify option of Tavern on {}.", player, packet.pos);
-					return;
-				}
-				tavern.setName(packet.name);
-				if(o.hasOwner()&&o.isOwnerOrOp(player)) o.setAccessModifier(packet.access);
-				BlockState s = w.getBlockState(packet.pos.pos);
-				w.sendBlockUpdated(tavern.pos(), s, s, 2);
-				PlayerTavernMemory.get(player).add(tavern);
-			});
-			context.setPacketHandled(true);
-		});
+		CHANNEL.registerMessage(Client::handleOpenHearthstoneScreen, OpenHearthstoneScreenMsg.class, 0, Side.CLIENT);
+		CHANNEL.registerMessage(Client::handleOpenTavernScreen, OpenTavernScreenMsg.class, 1, Side.CLIENT);
+		CHANNEL.registerMessage(ModNet::handleUpdateTavern, UpdateTavernMsg.class, 2, Side.SERVER);
+		CHANNEL.registerMessage(ModNet::handleTavernMemoryOperation, TavernMemoryOperationMsg.class, 3, Side.SERVER);
+		CHANNEL.registerMessage(Client::handleSyncHomePos, SyncHomePosMsg.class, 4, Side.CLIENT);
+		CHANNEL.registerMessage(Client::handleOpenBinderScreen, OpenBinderScreenMsg.class, 5, Side.CLIENT);
+		CHANNEL.registerMessage(Client::handleOpenLecternBinderScreen, OpenLecternBinderScreenMsg.class, 6, Side.CLIENT);
+		CHANNEL.registerMessage(ModNet::handleRemoveBinderWaypoint, RemoveBinderWaypointMsg.class, 7, Side.SERVER);
+		CHANNEL.registerMessage(ModNet::handleLecternRemoveBinderWaypoint, RemoveLecternBinderWaypointMsg.class, 8, Side.SERVER);
+	}
 
-		ModNet.CHANNEL.registerMessage(1, SyncTavernMemory.class, (packet, buffer) -> {
-			buffer.writeNbt(packet.player);
-			buffer.writeNbt(packet.global);
-		}, buffer -> new SyncTavernMemory(Objects.requireNonNull(buffer.readNbt()), Objects.requireNonNull(buffer.readNbt())), (packet, contextSupplier) -> {
-			NetworkEvent.Context context = contextSupplier.get();
-			if(context.getDirection().getOriginationSide()==LogicalSide.SERVER) context.enqueueWork(() -> handleSyncTavernMemory(packet));
-			context.setPacketHandled(true);
-		});
-
-		ModNet.CHANNEL.registerMessage(2, TavernMemoryOperation.class, (packet, buffer) -> {
-			packet.pos.write(buffer);
-			buffer.writeByte(packet.operation);
-		}, buffer -> new TavernMemoryOperation(
-				new TavernPos(buffer),
-				buffer.readByte()
-		), (packet, contextSupplier) -> {
-			NetworkEvent.Context context = contextSupplier.get();
-			if(context.getDirection()!=NetworkDirection.PLAY_TO_SERVER) return;
-			context.enqueueWork(() -> {
-				ServerPlayerEntity player = context.getSender();
-				if(player==null){
-					Hearthstones.LOGGER.error("Sender doesn't exists.");
-					return;
-				}
-				PlayerTavernMemory memory = PlayerTavernMemory.get(player);
-				switch(packet.operation){
-					case TavernMemoryOperation.SELECT:
-						memory.select(packet.pos);
-						break;
-					case TavernMemoryOperation.DELETE:
-						memory.delete(packet.pos);
-						break;
-					case TavernMemoryOperation.SET_HOME:
-						memory.setHomeTavern(packet.pos);
-						break;
-					default:
-						Hearthstones.LOGGER.warn("Unknown operation {} on TavernMemory#operate", packet.operation);
-						return;
-				}
-				ModNet.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SyncTavernMemory(memory, GlobalTavernMemory.get(), player));
-			});
-			context.setPacketHandled(true);
-		});
-
-		ModNet.CHANNEL.registerMessage(3, SyncTavernMemoryRequest.class, (packet, buffer) -> {}, buffer -> new SyncTavernMemoryRequest(), (packet, contextSupplier) -> {
-			NetworkEvent.Context context = contextSupplier.get();
-			if(context.getDirection()!=NetworkDirection.PLAY_TO_SERVER) return;
-			ServerPlayerEntity player = context.getSender();
+	@Nullable private static IMessage handleUpdateTavern(UpdateTavernMsg packet, MessageContext ctx){
+		FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
+			EntityPlayerMP player = ctx.getServerHandler().player;
 			if(player==null){
-				Hearthstones.LOGGER.error("Sender doesn't exists.");
+				Hearthstones.LOGGER.error("Sender doesn't exist.");
 				return;
 			}
-			ModNet.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SyncTavernMemory(PlayerTavernMemory.get(player), GlobalTavernMemory.get(), player));
-			context.setPacketHandled(true);
+			World world = DimensionManager.getWorld(packet.getPos().dim(), true);
+			if(world==null){
+				Hearthstones.LOGGER.error("Dimension {} is not loaded yet.", packet.getPos().dim());
+				return;
+			}
+			TileEntity te = world.getTileEntity(packet.getPos().pos());
+			if(!(te instanceof TavernTile)){
+				Hearthstones.LOGGER.error("There's no tavern block in {}.", packet.getPos());
+				return;
+			}
+			TavernTile tavern = (TavernTile)te;
+			if(!tavern.hasModifyPermission(player)){
+				Hearthstones.LOGGER.warn("{} cannot modify option of Tavern on {}.", player, packet.getPos());
+				return;
+			}
+			if(packet.getName()!=null&&packet.getName().length()>50){
+				tavern.setName(packet.getName().substring(0, 50));
+			}else tavern.setName(packet.getName());
+			if(tavern.owner().hasOwner()&&tavern.owner().isOwnerOrOp(player)) tavern.setAccess(packet.getAccess());
+			IBlockState s = world.getBlockState(packet.getPos().pos());
+			world.notifyBlockUpdate(tavern.blockPos(), s, s, 2);
+			TavernMemories.player(player).addOrUpdate(tavern);
 		});
+		return null;
+	}
 
-		ModNet.CHANNEL.registerMessage(4, OpenTavernScreen.class, (packet, buffer) -> {
-			packet.pos.write(buffer);
-			buffer.writeByte(packet.type.id);
-			writeOptionalName(buffer, packet.name);
-			buffer.writeByte(packet.access.ordinal());
-			buffer.writeNbt(packet.owner.serializeNBT());
-			buffer.writeBoolean(packet.isHome);
-		}, buffer -> new OpenTavernScreen(
-				new TavernPos(buffer),
-				TavernType.of(buffer.readByte()),
-				readOptionalName(buffer),
-				Accessibility.fromMeta(buffer.readUnsignedByte()),
-				new Owner(Objects.requireNonNull(buffer.readNbt())),
-				buffer.readBoolean()
-		), (packet, contextSupplier) -> {
-			NetworkEvent.Context context = contextSupplier.get();
-			if(context.getDirection()!=NetworkDirection.PLAY_TO_CLIENT) return;
-			context.enqueueWork(() -> handleOpenTavernScreen(packet));
-			context.setPacketHandled(true);
+	@Nullable private static IMessage handleTavernMemoryOperation(TavernMemoryOperationMsg packet, MessageContext ctx){
+		FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
+			PlayerTavernMemory memory = TavernMemories.player(ctx.getServerHandler().player);
+			switch(packet.getOperation()){
+				case TavernMemoryOperationMsg.SELECT:
+					memory.select(packet.getPos());
+					break;
+				case TavernMemoryOperationMsg.DELETE:
+					memory.delete(packet.getPos());
+					break;
+				case TavernMemoryOperationMsg.SET_HOME:
+					memory.setHomeTavern(packet.getPos());
+					CHANNEL.sendTo(new SyncHomePosMsg(packet.getPos()), ctx.getServerHandler().player);
+					break;
+				default:
+					Hearthstones.LOGGER.warn("Unknown operation {} on TavernMemory#operate", packet.getOperation());
+			}
 		});
+		return null;
 	}
 
-	private static void writeOptionalName(PacketBuffer buffer, @Nullable ITextComponent name){
-		buffer.writeBoolean(name!=null);
-		if(name!=null) buffer.writeUtf(ITextComponent.Serializer.toJson(name));
+	@Nullable private static IMessage handleRemoveBinderWaypoint(RemoveBinderWaypointMsg packet, MessageContext ctx){
+		FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
+			EntityPlayerMP player = ctx.getServerHandler().player;
+
+			ItemStack stack = player.inventory.getStackInSlot(packet.getBinderInventoryPosition());
+			if(stack.getItem()==ModItems.WAYPOINT_BINDER){
+				TavernBinderData data = TavernBinderItem.data(stack);
+				if(data!=null)
+					data.memory.delete(packet.getPos());
+			}
+		});
+		return null;
 	}
 
-	@Nullable
-	private static ITextComponent readOptionalName(PacketBuffer buffer){
-		return buffer.readBoolean() ? ITextComponent.Serializer.fromJson(buffer.readUtf(32767)) : null;
-	}
-
-	@SuppressWarnings("unused")
-	static final class Client{
-		private Client(){}
-
-		public static void handleSyncTavernMemory(SyncTavernMemory packet){
-			PlayerEntity p = Minecraft.getInstance().player;
-			if(p!=null){
-				PlayerTavernMemory.get(p).deserializeNBT(packet.player);
-				GlobalTavernMemory.get().deserializeNBT(packet.global);
-				//Hearthstones.LOGGER.debug("Synced Tavern Memory.");
-				if(Minecraft.getInstance().screen instanceof HearthstoneScreen){
-					HearthstoneScreen screen = (HearthstoneScreen)Minecraft.getInstance().screen;
-					screen.flagResetButtons = true;
-					//Hearthstones.LOGGER.debug("Updated Screen.");
+	@Nullable private static IMessage handleLecternRemoveBinderWaypoint(RemoveLecternBinderWaypointMsg packet, MessageContext ctx){
+		FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
+			EntityPlayerMP player = ctx.getServerHandler().player;
+			if(player.world.isBlockLoaded(packet.getLecternPos())){
+				TileEntity te = player.world.getTileEntity(packet.getLecternPos());
+				if(te instanceof BinderLecternTile){
+					BinderLecternTile binderLectern = (BinderLecternTile)te;
+					if((binderLectern.getPlayer()==null||binderLectern.getPlayer().equals(player.getUniqueID()))&&binderLectern.getData()!=null){
+						binderLectern.getData().memory.delete(packet.getTavernPos());
+					}
 				}
-			}else Hearthstones.LOGGER.error("Player does not exists.");
+			}
+		});
+		return null;
+	}
+
+	private static final class Client{
+		@Nullable private static IMessage handleOpenHearthstoneScreen(OpenHearthstoneScreenMsg message, MessageContext ctx){
+			Minecraft mc = Minecraft.getMinecraft();
+			if(mc.currentScreen instanceof HearthstoneScreen){
+				HearthstoneScreen s = (HearthstoneScreen)mc.currentScreen;
+				s.updateData(message);
+			}else{
+				HearthstoneScreen s = new HearthstoneScreen();
+				s.updateData(message);
+				mc.displayGuiScreen(s);
+			}
+			return null;
 		}
 
-		public static void handleOpenTavernScreen(OpenTavernScreen packet){
-			if(packet.pos!=null) Minecraft.getInstance().setScreen(new TavernScreen(packet.pos, packet.type, packet.name, packet.access, packet.owner, packet.isHome));
+		@Nullable private static IMessage handleOpenTavernScreen(OpenTavernScreenMsg packet, MessageContext ctx){
+			Minecraft.getMinecraft().displayGuiScreen(new TavernScreen(packet.getPos(), packet.getType(), packet.getName(), packet.getAccessibility(), packet.getOwner(), packet.getAccess(), packet.isHome()));
+			return null;
+		}
+
+		@Nullable private static IMessage handleSyncHomePos(SyncHomePosMsg packet, MessageContext ctx){
+			HearthstoneOverlay.homePos = packet.getHomePos();
+			return null;
+		}
+
+		@Nullable private static IMessage handleOpenBinderScreen(OpenBinderScreenMsg packet, MessageContext ctx){
+			Minecraft mc = Minecraft.getMinecraft();
+			if(mc.currentScreen instanceof BinderScreen.Inventory){
+				((BinderScreen.Inventory)mc.currentScreen).updateData(packet);
+			}else{
+				BinderScreen.Inventory s = new BinderScreen.Inventory();
+				s.updateData(packet);
+				mc.displayGuiScreen(s);
+			}
+			return null;
+		}
+
+		@Nullable private static IMessage handleOpenLecternBinderScreen(OpenLecternBinderScreenMsg packet, MessageContext ctx){
+			Minecraft mc = Minecraft.getMinecraft();
+			if(mc.currentScreen instanceof BinderScreen.Lectern){
+				((BinderScreen.Lectern)mc.currentScreen).updateData(packet);
+			}else{
+				BinderScreen.Lectern s = new BinderScreen.Lectern();
+				s.updateData(packet);
+				mc.displayGuiScreen(s);
+			}
+			return null;
 		}
 	}
 }

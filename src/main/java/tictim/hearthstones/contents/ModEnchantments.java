@@ -1,21 +1,28 @@
 package tictim.hearthstones.contents;
 
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentType;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import tictim.hearthstones.enchantment.EnchantQuickcast;
-import tictim.hearthstones.logic.HearthstoneItem;
+import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
+import tictim.hearthstones.contents.enchantment.EnchantQuickcast;
+import tictim.hearthstones.contents.item.hearthstone.HearthstoneItem;
 
 import static tictim.hearthstones.Hearthstones.MODID;
 
-public final class ModEnchantments{
-	private ModEnchantments(){}
+@Mod.EventBusSubscriber(modid = MODID)
+public class ModEnchantments{
+	public static final EnumEnchantmentType HEARTHSTONE = EnumHelper.addEnchantmentType("HEARTHSTONE", i -> i instanceof HearthstoneItem);
 
-	public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, MODID);
+	@GameRegistry.ObjectHolder(MODID+":quickcast")
+	public static final Enchantment QUICKCAST = null;
 
-	public static final EnchantmentType HEARTHSTONE = EnchantmentType.create("HEARTHSTONE", i -> i instanceof HearthstoneItem);
-
-	public static final RegistryObject<Enchantment> QUICKCAST = ENCHANTMENTS.register("quickcast", () -> new EnchantQuickcast(HEARTHSTONE));
+	@SubscribeEvent
+	public static void registerEnchantments(RegistryEvent.Register<Enchantment> event){
+		IForgeRegistry<Enchantment> registry = event.getRegistry();
+		registry.register(new EnchantQuickcast(HEARTHSTONE).setRegistryName("quickcast").setName("hearthstones.quickcast"));
+	}
 }

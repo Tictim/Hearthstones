@@ -1,8 +1,16 @@
 {
 	"variants": {
-		"facing=north": { "model": "hearthstones:block/tavern" },
-		"facing=south": { "model": "hearthstones:block/tavern", "y": 180 },
-		"facing=east": { "model": "hearthstones:block/tavern", "y": 90 },
-		"facing=west": { "model": "hearthstones:block/tavern", "y": 270 }
+		"facing=north,type=normal": { "model": "hearthstones:tavern" },
+		"facing=south,type=normal": { "model": "hearthstones:tavern", "y": 180 },
+		"facing=east,type=normal": { "model": "hearthstones:tavern", "y": 90 },
+		"facing=west,type=normal": { "model": "hearthstones:tavern", "y": 270 },
+		"facing=north,type=shabby": { "model": "hearthstones:shabby_tavern" },
+		"facing=south,type=shabby": { "model": "hearthstones:shabby_tavern", "y": 180 },
+		"facing=east,type=shabby": { "model": "hearthstones:shabby_tavern", "y": 90 },
+		"facing=west,type=shabby": { "model": "hearthstones:shabby_tavern", "y": 270 },
+		"facing=north,type=global": { "model": "hearthstones:global_tavern" },
+		"facing=south,type=global": { "model": "hearthstones:global_tavern", "y": 180 },
+		"facing=east,type=global": { "model": "hearthstones:global_tavern", "y": 90 },
+		"facing=west,type=global": { "model": "hearthstones:global_tavern", "y": 270 }
 	}
 }

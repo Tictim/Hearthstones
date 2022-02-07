@@ -1,0 +1,144 @@
+itemGroup.hearthstones=Hearthstones
+
+item.hearthstones.hearthstone.name=Hearthstone
+item.hearthstones.hearthing_planks.name=Hearthing Planks
+item.hearthstones.hearthing_gem.name=Hearthing Crystal
+item.hearthstones.companion_hearthstone.name=Companion's Hearthstone
+item.hearthstones.companion_stone.name=Companion's Stone
+item.hearthstones.mortar.name=Mortar
+
+item.hearthstones.tattered_taverncloth.name=Tattered Taverncloth
+item.hearthstones.taverncloth.name=Taverncloth
+item.hearthstones.blue_taverncloth.name=Blue Taverncloth
+item.hearthstones.waypoint.name=Tavern Waypoint
+item.hearthstones.waypoint_binder.name=Tavern Waypoint Binder
+item.hearthstones.infinite_waypoint_binder.name=Tavern Waypoint Binder
+
+item.hearthstones.red_leather.name=Taverncloth Patch
+item.hearthstones.tattered_leather.name=Tattered Taverncloth Patch
+item.hearthstones.blue_leather.name=Blue Taverncloth Patch
+item.hearthstones.purple_leather.name=Purple Taverncloth Patch
+item.hearthstones.aquamarine.name=Aquamarine
+item.hearthstones.deep_blue.name=Deep Blue
+item.hearthstones.deep_purple.name=Deep Purple
+item.hearthstones.aquamarine_dust.name=Aquamarine Dust
+item.hearthstones.diamond_dust.name=Diamond Dust
+item.hearthstones.lapis_dust.name=Lapis Lazuli Dust
+item.hearthstones.amethyst_dust.name=Amethyst Dust
+item.hearthstones.amethyst_shard.name=Amethyst Shard
+
+tile.hearthstones.tavern.name=Tavern
+tile.hearthstones.shabby_tavern.name=Shabby Tavern
+tile.hearthstones.global_tavern.name=Global Tavern
+tile.hearthstones.aquamarine_block.name=Aquamarine Block
+tile.hearthstones.aquamarine_ore.name=Aquamarine Ore
+tile.hearthstones.deepslate_aquamarine_ore.name=Deepslate Aquamarine Ore
+tile.hearthstones.binder_lectern.name=Binder Lectern
+
+info.hearthstones.screen.empty=You haven't visited any Tavern yet. Try build new one!
+
+info.hearthstones.screen.binder.waypoints=%s written Waypoints, %s blank Waypoints
+info.hearthstones.screen.binder.waypoints.infinite=%s written Waypoints
+info.hearthstones.screen.binder.help.collapsed=§8[Help: Shift]
+info.hearthstones.screen.binder.help.0=§6§lRight click§r to read all Waypoints
+info.hearthstones.screen.binder.help.1=§6§lSHIFT+Right click§r to see list of Waypoints
+info.hearthstones.screen.binder.help.2=§eOn Hand / Inventory:
+info.hearthstones.screen.binder.help.3=§6§lUse on Tavern§r to create a new Waypoint
+info.hearthstones.screen.binder.help.4=§6§lUse on Lectern§r to put Binder on
+info.hearthstones.screen.binder.help.5=§6§lCraft with Waypoints§r to add the Waypoint to Binder
+info.hearthstones.screen.binder.help.6=§eOn Lectern:
+info.hearthstones.screen.binder.help.7=§6§lRight click with Waypoint§r to add the Waypoint
+info.hearthstones.screen.binder.help.8=§6§lRight click with Binder§r to copy each other's data to another
+info.hearthstones.screen.help.select=§6§lLeft click§r to select this Tavern as destination
+info.hearthstones.screen.help.remove=§6§lRight click§r to remove this Tavern from List (Cannot be undone!)
+info.hearthstones.screen.set_home=Set this Tavern to home
+info.hearthstones.screen.property.missing=This Tavern is missing
+info.hearthstones.screen.property.home=This Tavern is set to Home Tavern
+info.hearthstones.screen.property.global=You didn't visit this Tavern, but still can use this Tavern thanks to the power of Global Tavern!
+info.hearthstones.screen.property.shabby=This Tavern can be accessed only with Hearthing Planks
+info.hearthstones.screen.property.too_far=The Gem might break if you go to this Tavern...
+
+info.hearthstones.tavern.help=§6§lSHIFT+Right click§7 to open GUI
+info.hearthstones.tavern.no_name=Nameless Tavern
+info.hearthstones.tavern.no_owner=No Owner
+info.hearthstones.tavern.owned_by=Owned By %s
+info.hearthstones.tavern.owner=Owned by §a%s (%s)
+info.hearthstones.tavern.n_meter_away=§a%dm away
+info.hearthstones.tavern.another_dim=§cAnother dimension
+info.hearthstones.tavern.far_away=§aFar away
+info.hearthstones.tavern.nearby=§a§lNearby
+info.hearthstones.tavern.tooltip=§eCan warp to Tavern using Hearthstone.§r
+info.hearthstones.tavern.shabby.tooltip=§cOnly works with Hearthing Planks.§r
+info.hearthstones.tavern.global.tooltip.0=§aPlayers can use this Tavern even if the player haven't visited the Tavern yet.§r
+info.hearthstones.tavern.global.tooltip.1=§7Can be crafted by using Blue Taverncloth on Tavern Block.§r
+
+info.hearthstones.hearthstone.confirm_delete=Are you sure you want to remove this Tavern from list? §lThis cannot be undone!
+info.hearthstones.hearthstone.confirm_delete.yes=Yes!
+info.hearthstones.hearthstone.confirm_delete.no=No!
+info.hearthstones.hearthstone.dest=Destination:
+info.hearthstones.hearthstone.help=§6§lSHIFT+Right click§r to select destination
+info.hearthstones.hearthstone.hearthing=§b§l...Hearthing...
+info.hearthstones.hearthstone.tavern_missing=§cCouldn't find selected Tavern.§r
+info.hearthstones.hearthstone.no_selected=§cYou have to select Tavern first.§r
+info.hearthstones.hearthstone.no_permission=§cYou can't use this Tavern.§r
+info.hearthstones.hearthstone.cooldown=§cYou have to wait to use Hearthstone again.§r
+info.hearthstones.hearthstone.tooltip=§eWarps to selected Tavern.§r
+info.hearthstones.hearthing_planks.help=Home Tavern is not have been set.
+info.hearthstones.hearthing_planks.no_home_tavern=§cHome Tavern is not have been set.§r
+info.hearthstones.hearthing_planks.tooltip.0=§eWarps to home Tavern.§r
+info.hearthstones.hearthing_planks.tooltip.1=§8§oSmall. Lightweight. Durable. Works perfectly. Definitely for long-time use. Most importantly, can be used to travel to Tavern other than home.§r
+info.hearthstones.hearthing_gem.tooltip=§cHas longer cooldown than Hearthstone. Will not withstand long-ranged, or interdimension travel.§r
+info.hearthstones.companion_hearthstone.tooltip.0=§bWarps with currently riding animal/vehicle, nearby tamed/leashed animals, and nearby players with Companion Stone in their hand.§r
+info.hearthstones.companion_hearthstone.tooltip.1=§cHas very long cooldown.§r
+info.hearthstones.companion_hearthstone.companions=§bCompanion(s):§r
+info.hearthstones.companion_stone.tooltip=§bAllows to warp with other players using Companion's Hearthstone.§r
+
+info.hearthstones.taverncloth.tooltip=§eUpgrades Shabby Tavern to Normal Tavern.§r
+info.hearthstones.taverncloth.tooltip.easyMode=§eUpgrades Shabby Tavern to Normal Tavern. But what is Shabby Tavern? I don't know.§r
+info.hearthstones.blue_taverncloth.tooltip=§eUpgrades Normal Tavern to Global Tavern.§r
+info.hearthstones.blue_taverncloth.tooltip.easyMode=§oUsed to make the Tavern.§r
+info.hearthstones.tattered_taverncloth.tooltip=§8§oDowngrades Taverns into Shabby Tavern... If you want to.§r
+
+info.hearthstones.waypoint.saved=Tavern saved at waypoint.
+info.hearthstones.waypoint.tooltip.tavern=§6Written: %s %s
+info.hearthstones.waypoint.tooltip.0=§eStores the name and position of a Tavern. Can be given to other players.
+info.hearthstones.waypoint.tooltip.1=§eRight click at a Tavern to store its data. Use it again to retrieve the data.
+info.hearthstones.waypoint.overlay.help.bind=§6§lUse on Tavern§r to bind Waypoint
+info.hearthstones.waypoint.overlay.help.lectern=§6§lUse on Binder§r to put Waypoint
+info.hearthstones.waypoint.overlay.help.read=§6§lRight click§r to read Waypoint
+info.hearthstones.waypoint.overlay.saved=Written:
+
+info.hearthstones.binder.saved=Tavern saved at binder.
+info.hearthstones.binder.no_waypoint=There's no waypoints left in Waypoint Binder.
+info.hearthstones.binder.combined=Combined two binders.
+info.hearthstones.binder.tooltip.waypoints=§6%s written Waypoints, %s blank Waypoints
+info.hearthstones.binder.tooltip.waypoints.infinite=§6%s written Waypoints
+info.hearthstones.binder.tooltip=§eManages multiple waypoints.
+info.hearthstones.binder.tooltip.infinite=§5Infinite Waypoints
+info.hearthstones.binder.overlay.waypoints=%s written Waypoints, %s blank Waypoints
+info.hearthstones.binder.overlay.waypoints.infinite=%s written Waypoints
+info.hearthstones.binder.overlay.help.0=§6§lRight click§r to read all Waypoints
+info.hearthstones.binder.overlay.help.1=§6§lSHIFT+Right click§r to see list of Waypoints
+
+info.hearthstones.access.public=§aPublic Tavern§r grants both §aaccess and modification§r of the Tavern to §aeveryone§r even if they are not the owner of the Tavern. But they can't make Tavern not public, of course.
+info.hearthstones.access.protected=§6Protected Tavern§r §6allows everyone to use§r the Tavern. However the property can be §6changed only by the owner, or player with OP permission§r.
+info.hearthstones.access.team=§bTeam Tavern§r can be used by §byou and your team members, and player with OP permission§r.
+info.hearthstones.access.private=§cPrivate Tavern§r can be used only by §cyou and player with OP permission§r.
+
+enchantment.hearthstones.quickcast=Quickcast
+
+command.tavern_memory.add.no_tavern=There's no Tavern block at %s.
+command.tavern_memory.add.unloaded=Position %s is outside of loaded area.
+command.tavern_memory.add.out_of_world=Position %s is outside of world boundary.
+command.tavern_memory.add.not_global=Tavern at %s is not Global Tavern.
+command.tavern_memory.add.success=Added Tavern memory %s to %s.
+command.tavern_memory.add.success.global=Added Tavern memory %s to Global Tavern Memory.
+command.tavern_memory.remove.success=Removed Tavern memory %s from %s.
+command.tavern_memory.remove.success.global=Removed Tavern memory %s from Global Tavern Memory.
+command.tavern_memory.remove.no_memory=Tavern memory with Tavern at %s doesn't exist.
+command.tavern_memory.global.entry=Global Tavern Memory: 1 entry
+command.tavern_memory.global.entries=Global Tavern Memory: %s entries
+command.tavern_memory.global.no_entry=Global Tavern Memory: No entry
+command.tavern_memory.player.entry=%s(%s)'s Tavern Memory: 1 entry
+command.tavern_memory.player.entries=%s(%s)'s Tavern Memory: %s entries
+command.tavern_memory.player.no_entry=%s(%s)'s Tavern Memory: No entry

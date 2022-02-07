@@ -1,8 +1,0 @@
-{
-	"variants": {
-		"facing=north": { "model": "hearthstones:block/global_tavern" },
-		"facing=south": { "model": "hearthstones:block/global_tavern", "y": 180 },
-		"facing=east": { "model": "hearthstones:block/global_tavern", "y": 90 },
-		"facing=west": { "model": "hearthstones:block/global_tavern", "y": 270 }
-	}
-}

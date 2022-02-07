@@ -1,0 +1,143 @@
+itemGroup.hearthstones=귀환석
+
+item.hearthstones.hearthstone.name=귀환석
+item.hearthstones.hearthing_planks.name=귀환 통나무
+item.hearthstones.hearthing_gem.name=귀환 수정
+item.hearthstones.companion_hearthstone.name=동반자의 귀환석
+item.hearthstones.companion_stone.name=동반자의 돌
+item.hearthstones.mortar.name=모르타르
+
+item.hearthstones.tattered_taverncloth.name=지저분한 여관 장식보
+item.hearthstones.taverncloth.name=여관 장식보
+item.hearthstones.blue_taverncloth.name=푸른색 여관 장식보
+item.hearthstones.waypoint.name=여관 웨이포인트
+item.hearthstones.waypoint_binder.name=여관 웨이포인트 바인더
+item.hearthstones.infinite_waypoint_binder.name=여관 웨이포인트 바인더
+
+item.hearthstones.red_leather.name=여관 가죽
+item.hearthstones.tattered_leather.name=지저분한 여관 천 쪼가리
+item.hearthstones.blue_leather.name=푸른색 여관 가죽
+item.hearthstones.purple_leather.name=보라색 여관 가죽
+item.hearthstones.aquamarine.name=아쿠아마린
+item.hearthstones.deep_blue.name=딥 블루
+item.hearthstones.deep_purple.name=딥 퍼플
+item.hearthstones.aquamarine_dust.name=아쿠아마린 가루
+item.hearthstones.diamond_dust.name=다이아몬드 가루
+item.hearthstones.lapis_dust.name=라피스 라줄리 가루
+item.hearthstones.amethyst_dust.name=자수정 가루
+
+tile.hearthstones.tavern.name=여관
+tile.hearthstones.shabby_tavern.name=초라한 여관
+tile.hearthstones.global_tavern.name=글로벌 여관
+tile.hearthstones.aquamarine_block.name=아쿠아마린 블럭
+tile.hearthstones.aquamarine_ore.name=아쿠아마린 광석
+tile.hearthstones.deepslate_aquamarine_ore.name=심층암 아쿠아마린 광석
+tile.hearthstones.binder_lectern.name=바인더 독서대
+
+info.hearthstones.screen.empty=방문한 여관이 없습니다. 당신의 여관을 만들어 보세요!
+
+info.hearthstones.screen.binder.waypoints=%s 저장된 웨이포인트, %s 빈 웨이포인트
+info.hearthstones.screen.binder.waypoints.infinite=%s 저장된 웨이포인트
+info.hearthstones.screen.binder.help.collapsed=§8[도움말: Shift]
+info.hearthstones.screen.binder.help.0=§6§l우클릭§r으로 모든 웨이포인트 읽기
+info.hearthstones.screen.binder.help.1=§6§lSHIFT+우클릭§r으로 웨이포인트 목록 열기
+info.hearthstones.screen.binder.help.2=§e인벤토리:
+info.hearthstones.screen.binder.help.3=§6§l여관에 사용§r하여 새 웨이포인트 만들기
+info.hearthstones.screen.binder.help.4=§6§l독서대에 사용§r하여 바인더 놓기
+info.hearthstones.screen.binder.help.5=§6§l웨이포인트와 같이 조합§r하여 바인더 안에 웨이포인트 삽입
+info.hearthstones.screen.binder.help.6=§e독서대 위:
+info.hearthstones.screen.binder.help.7=§6§l웨이포인트로 우클릭§r하여 웨이포인트 삽입
+info.hearthstones.screen.binder.help.8=§6§l바인더로 우클릭§r하여 웨이포인트 병합
+info.hearthstones.screen.help.select=§6§l좌클릭§r으로 이 여관을 목적지로 설정
+info.hearthstones.screen.help.remove=§6§l우클릭§r으로 이 여관을 목록에서 삭제(돌이킬 수 없습니다!)
+info.hearthstones.screen.set_home=이 여관을 본진으로 설정
+info.hearthstones.screen.property.missing=최근 이 여관으로의 귀환에 실패했습니다
+info.hearthstones.screen.property.home=이 여관은 본진으로 설정되어 있습니다
+info.hearthstones.screen.property.global=이 여관은 방문한 적이 없지만, 당신은 글로벌 여관의 힘으로 이 여관을 이용할 수 있습니다!
+info.hearthstones.screen.property.shabby=이 여관은 귀환 통나무만을 사용할 수 있습니다
+info.hearthstones.screen.property.too_far=이 여관으로 이동하면 수정이 부서질 것 같습니다...
+
+info.hearthstones.tavern.help=§6§lSHIFT+우클릭§7으로 GUI 열기
+info.hearthstones.tavern.no_name=이름 없는 여관
+info.hearthstones.tavern.no_owner=주인 없음
+info.hearthstones.tavern.owned_by=%s의 여관
+info.hearthstones.tavern.owner=§a%s (%s) §r의 여관
+info.hearthstones.tavern.n_meter_away=§a%dm 거리
+info.hearthstones.tavern.another_dim=§c다른 차원
+info.hearthstones.tavern.far_away=§a아주 먼 거리
+info.hearthstones.tavern.nearby=§a§l근방
+info.hearthstones.tavern.tooltip=§e귀환석을 사용하여 여관으로 돌아올 수 있습니다.§r
+info.hearthstones.tavern.shabby.tooltip=§c귀환 통나무만 사용이 가능합니다.§r
+info.hearthstones.tavern.global.tooltip.0=§a이 여관을 방문하지 않은 플레이어도 여관을 사용할 수 있습니다.§r
+info.hearthstones.tavern.global.tooltip.1=§o일반 여관에 푸른색 여관 가죽을 사용하여 제작할 수 있습니다.§r
+
+info.hearthstones.hearthstone.confirm_delete=정말로 %s 여관을 지우시겠습니까? §l돌이킬 수 없습니다!
+info.hearthstones.hearthstone.confirm_delete.yes=네!
+info.hearthstones.hearthstone.confirm_delete.no=아니오!
+info.hearthstones.hearthstone.dest=목적지:
+info.hearthstones.hearthstone.help=§6§lSHIFT+우클릭§r으로 목적지를 설정하십시오.
+info.hearthstones.hearthstone.hearthing=§b§l...귀환 중...
+info.hearthstones.hearthstone.tavern_missing=§c설정된 목적지를 찾을 수 없습니다.§r
+info.hearthstones.hearthstone.no_selected=§c설정된 목적지가 없습니다.§r
+info.hearthstones.hearthstone.no_permission=§c이 여관을 수정하기 위한 권한이 없습니다.§r
+info.hearthstones.hearthstone.cooldown=§c귀환석을 다시 사용하려면 조금 기다려야 합니다.§r
+info.hearthstones.hearthstone.tooltip=§e선택한 여관으로 귀환합니다.§r
+info.hearthstones.hearthing_planks.help=본진 여관이 없습니다.
+info.hearthstones.hearthing_planks.no_home_tavern=§c설정된 본진 여관이 없습니다.§r
+info.hearthstones.hearthing_planks.tooltip.0=§e본진 여관으로 귀환합니다.§r
+info.hearthstones.hearthing_planks.tooltip.1=§8§o작습니다. 가볍습니다. 튼튼합니다. 완전 잘 작동합니다. 진짜 오랫동안 쓸 수 있습니다. 무엇보다도, 본진이 아닌 다른 여관도 이용할 수 있습니다.§r
+info.hearthstones.hearthing_gem.tooltip=§c재사용 대기 시간이 깁니다. 장거리 여행이나 차원간 이동은 견뎌낼 수 없습니다.§r
+info.hearthstones.companion_hearthstone.tooltip.0=§b탑승 중인 탈것, 길들여진 동물, 동반자의 돌을 손에 든 플레이어와 함께 귀환합니다.§r
+info.hearthstones.companion_hearthstone.tooltip.1=§c재사용 대기 시간이 매우 깁니다.§r
+info.hearthstones.companion_hearthstone.companions=§b동반자(들):§r
+info.hearthstones.companion_stone.tooltip=§b동반자의 돌을 사용하는 플레이어와 함께 귀환할 수 있습니다.§r
+
+info.hearthstones.taverncloth.tooltip=§e초라한 여관을 일반 여관으로 업그레이드시킵니다.§r
+info.hearthstones.taverncloth.tooltip.easyMode=§e초라한 여관을 일반 여관으로 업그레이드시킵니다. 그런데 초라한 여관이 뭐죠? 저도 몰라요.r§r
+info.hearthstones.blue_taverncloth.tooltip=§e여관을 글로벌 여관으로 업그레이드시킵니다.§r
+info.hearthstones.blue_taverncloth.tooltip.easyMode=§o여관을 만드는 데 사용됩니다.§r
+info.hearthstones.tattered_taverncloth.tooltip=§8§o여관을 다시 초라한 여관으로 만들 수 있습니다... 당신이 원한다면요.§r
+
+info.hearthstones.waypoint.saved=여관의 정보를 저장했습니다.
+info.hearthstones.waypoint.tooltip.tavern=§6여관: %s %s
+info.hearthstones.waypoint.tooltip.0=§e여관의 이름과 위치를 저장합니다. 다른 플레이어에게 줄 수 있습니다.
+info.hearthstones.waypoint.tooltip.1=§e여관에 우클릭하여 정보를 저장하고, 다시 사용하여 정보를 읽어들일 수 있습니다.
+info.hearthstones.waypoint.overlay.help.bind=§6§l여관에 사용§r하여 웨이포인트 생성
+info.hearthstones.waypoint.overlay.help.lectern=§6§l바인더에 사용§r하여 웨이포인트 삽입
+info.hearthstones.waypoint.overlay.help.read=§6§l우클릭§r으로 웨이포인트 읽기
+info.hearthstones.waypoint.overlay.saved=저장됨:
+
+info.hearthstones.binder.saved=여관의 정보를 저장했습니다.
+info.hearthstones.binder.no_waypoint=바인더 안에 남은 웨이포인트가 없습니다.
+info.hearthstones.binder.combined=두 바인더의 정보를 합쳤습니다.
+info.hearthstones.binder.tooltip.waypoints=§6%s 저장된 웨이포인트, %s 빈 웨이포인트
+info.hearthstones.binder.tooltip.waypoints.infinite=§6%s 저장된 웨이포인트
+info.hearthstones.binder.tooltip=§e여러 개의 웨이포인트를 저장하고 관리합니다.
+info.hearthstones.binder.tooltip.infinite=§5무한 웨이포인트
+info.hearthstones.binder.overlay.waypoints=%s 저장된 웨이포인트, %s 빈 웨이포인트
+info.hearthstones.binder.overlay.waypoints.infinite=%s 저장된 웨이포인트
+info.hearthstones.binder.overlay.help.0=§6§l우클릭§r으로 모든 웨이포인트 읽기
+info.hearthstones.binder.overlay.help.1=§6§lSHIFT+우클릭§r으로 웨이포인트 목록 열기
+
+info.hearthstones.access.public=§a공용 여관§r은 §a모두가 자유롭게 이용하거나 정보를 수정§r할 수 있습니다. 여관을 공용이 아니도록 만드는 것 빼고요.
+info.hearthstones.access.protected=§6보호된 여관§r은 §6모두가 이용할§r 수 있습니다. 하지만 여관의 정보는 §6주인과 관리자 권한을 가진 플레이어만 수정§r할 수 있습니다.
+info.hearthstones.access.team=§b팀 여관§r은 §b주인과 같은 팀, 그리고 관리자 권한을 가진 플레이어가 사용§r할 수 있습니다.
+info.hearthstones.access.private=§c개인용 여관§r은 §c주인과 관리자 권한을 가진 플레이어만 사용§r할 수 있습니다.
+
+enchantment.hearthstones.quickcast=빠른 시전
+
+command.tavern_memory.add.no_tavern=%s에 여관이 없습니다.
+command.tavern_memory.add.unloaded=%s는 로드되지 않은 지역입니다.
+command.tavern_memory.add.out_of_world=%s는 월드 경계선 바깥에 있습니다.
+command.tavern_memory.add.not_global=%s의 여관은 글로벌 여관이 아닙니다.
+command.tavern_memory.add.success=여관 %s의 정보를 %s에게 기록했습니다.
+command.tavern_memory.add.success.global=여관 %s의 정보를 글로벌 여관 정보에 기록했습니다.
+command.tavern_memory.remove.success=여관 %s의 정보를 %s에게서 지웠습니다.
+command.tavern_memory.remove.success.global=여관 %s의 정보를 글로벌 여관 정보에서 지웠습니다.
+command.tavern_memory.remove.no_memory=위치 %s에 해당하는 여관 정보가 없습니다.
+command.tavern_memory.global.entry=글로벌 여관 기록: 1
+command.tavern_memory.global.entries=글로벌 여관 기록: %s
+command.tavern_memory.global.no_entry=글로벌 여관 기록: 0
+command.tavern_memory.player.entry=%s(%s)의 여관 기록: 1
+command.tavern_memory.player.entries=%s(%s)의 여관 기록: %s
+command.tavern_memory.player.no_entry=%s(%s)의 여관 기록: 0
