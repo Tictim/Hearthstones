@@ -9,6 +9,8 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import tictim.hearthstones.Hearthstones;
 import tictim.hearthstones.client.Rendering;
 import tictim.hearthstones.tavern.Tavern;
 import tictim.hearthstones.tavern.TavernTextFormat;
@@ -19,7 +21,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-final class TavernButton extends Button{
+public final class TavernButton extends Button{
+	public static final ResourceLocation ICONS = new ResourceLocation(Hearthstones.MODID, "textures/screen/icons.png");
+
 	private static final Component HELP_SELECT = new TranslatableComponent("info.hearthstones.screen.help.select");
 	private static final Component HELP_REMOVE = new TranslatableComponent("info.hearthstones.screen.help.remove");
 
@@ -56,7 +60,7 @@ final class TavernButton extends Button{
 
 		int i = 1;
 		for(TavernProperty p : properties){
-			RenderSystem.setShaderTexture(0, HearthstoneScreen.ICONS);
+			RenderSystem.setShaderTexture(0, ICONS);
 			blit(pose, getPropertyWidgetX(i++), getPropertyWidgetY(), 7*2*p.ordinal(), 0, 7*2, 7*2);
 		}
 

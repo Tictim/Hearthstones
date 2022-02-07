@@ -190,7 +190,7 @@ public class TavernScreen extends AbstractScreen{
 		@Override
 		public void renderButton(PoseStack pose, int mouseX, int mouseY, float partialTicks){
 			if(this.visible){
-				RenderSystem.setShaderTexture(0, HearthstoneScreen.ICONS);
+				RenderSystem.setShaderTexture(0, TavernButton.ICONS);
 				RenderSystem.setShaderColor(1, 1, 1, 1);
 				this.blit(pose, x, y, getTextureX(), getTextureY(), 7*2, 7*2);
 			}

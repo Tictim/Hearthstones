@@ -20,7 +20,7 @@ import net.minecraftforge.client.gui.GuiUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tictim.hearthstones.Hearthstones;
-import tictim.hearthstones.client.screen.HearthstoneScreen;
+import tictim.hearthstones.client.screen.TavernButton;
 import tictim.hearthstones.contents.ModItems;
 import tictim.hearthstones.contents.item.hearthstone.HearthstoneItem;
 import tictim.hearthstones.hearthstone.CompanionHearthstone;
@@ -115,7 +115,7 @@ public final class OverlayRenderEventHandler{
 
 		TavernPos homePos = OverlayRenderEventHandler.homePos;
 		if(homePos!=null&&homePos.equals(tavern.pos())){
-			RenderSystem.setShaderTexture(0, HearthstoneScreen.ICONS);
+			RenderSystem.setShaderTexture(0, TavernButton.ICONS);
 			GuiComponent.blit(pose, 167*2, 9*2, 7*2, 0, 7*2, 7*2, 256, 256);
 		}
 		Font font = Minecraft.getInstance().font;
