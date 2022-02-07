@@ -8,8 +8,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import tictim.hearthstones.contents.ModBlockEntities;
-import tictim.hearthstones.contents.item.hearthstone.TavernWaypointBinderItem;
-import tictim.hearthstones.contents.item.hearthstone.TavernWaypointBinderItem.Data;
+import tictim.hearthstones.contents.item.TavernWaypointBinderItem;
+import tictim.hearthstones.contents.item.TavernWaypointBinderItem.Data;
 
 import javax.annotation.Nullable;
 import java.util.UUID;

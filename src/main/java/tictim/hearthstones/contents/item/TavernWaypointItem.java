@@ -1,4 +1,4 @@
-package tictim.hearthstones.contents.item.hearthstone;
+package tictim.hearthstones.contents.item;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;

@@ -11,8 +11,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import tictim.hearthstones.contents.ModItems;
 import tictim.hearthstones.contents.ModRecipes;
-import tictim.hearthstones.contents.item.hearthstone.TavernWaypointBinderItem;
-import tictim.hearthstones.contents.item.hearthstone.TavernWaypointItem;
+import tictim.hearthstones.contents.item.TavernWaypointBinderItem;
+import tictim.hearthstones.contents.item.TavernWaypointItem;
 import tictim.hearthstones.tavern.Tavern;
 import tictim.hearthstones.tavern.TavernRecord;
 

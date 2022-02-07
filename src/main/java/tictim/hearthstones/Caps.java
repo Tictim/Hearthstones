@@ -4,7 +4,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import tictim.hearthstones.contents.item.hearthstone.HearthstoneItem;
-import tictim.hearthstones.contents.item.hearthstone.TavernWaypointBinderItem;
+import tictim.hearthstones.contents.item.TavernWaypointBinderItem;
 import tictim.hearthstones.tavern.TavernMemories;
 
 public final class Caps{

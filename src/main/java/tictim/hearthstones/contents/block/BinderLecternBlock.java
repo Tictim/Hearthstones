@@ -26,7 +26,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.PacketDistributor;
 import tictim.hearthstones.contents.blockentity.BinderLecternBlockEntity;
-import tictim.hearthstones.contents.item.hearthstone.TavernWaypointBinderItem;
+import tictim.hearthstones.contents.item.TavernWaypointBinderItem;
 import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.net.OpenLecternBinderScreenMsg;
 import tictim.hearthstones.tavern.TavernMemories;

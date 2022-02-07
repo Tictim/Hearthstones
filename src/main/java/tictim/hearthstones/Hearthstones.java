@@ -27,7 +27,7 @@ import tictim.hearthstones.contents.ModItems;
 import tictim.hearthstones.contents.ModRecipes;
 import tictim.hearthstones.contents.ModWorldgen;
 import tictim.hearthstones.contents.item.hearthstone.HearthstoneItem;
-import tictim.hearthstones.contents.item.hearthstone.TavernWaypointBinderItem;
+import tictim.hearthstones.contents.item.TavernWaypointBinderItem;
 import tictim.hearthstones.datagen.BlockTagGen;
 import tictim.hearthstones.datagen.ItemTagGen;
 import tictim.hearthstones.datagen.LootTableGen;

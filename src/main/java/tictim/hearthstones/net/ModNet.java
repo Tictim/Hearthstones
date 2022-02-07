@@ -22,7 +22,7 @@ import tictim.hearthstones.client.screen.TavernScreen;
 import tictim.hearthstones.contents.ModItems;
 import tictim.hearthstones.contents.blockentity.BinderLecternBlockEntity;
 import tictim.hearthstones.contents.blockentity.TavernBlockEntity;
-import tictim.hearthstones.contents.item.hearthstone.TavernWaypointBinderItem;
+import tictim.hearthstones.contents.item.TavernWaypointBinderItem;
 import tictim.hearthstones.tavern.PlayerTavernMemory;
 import tictim.hearthstones.tavern.TavernMemories;
 
