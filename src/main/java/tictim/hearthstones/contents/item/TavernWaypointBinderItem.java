@@ -71,10 +71,10 @@ public class TavernWaypointBinderItem extends Item{
 				boolean r1 = data.syncFrom(d2.memory), r2 = d2.syncFrom(data.memory);
 				if(r1||r2){
 					if(r2) binderLectern.setChanged();
-					TavernBlock.playSyncSound(level, pos);
 					if(context.getPlayer()!=null)
 						context.getPlayer().displayClientMessage(new TranslatableComponent("info.hearthstones.binder.combined"), true);
 				}
+				TavernBlock.playSyncSound(level, pos);
 			}
 			return InteractionResult.SUCCESS;
 		}else{
@@ -83,7 +83,7 @@ public class TavernWaypointBinderItem extends Item{
 				if(state.getValue(LecternBlock.HAS_BOOK)) return InteractionResult.PASS;
 				level.setBlock(pos, ModBlocks.BINDER_LECTERN.get()
 						.defaultBlockState()
-						.setValue(BlockStateProperties.HORIZONTAL_FACING, state.getValue(LecternBlock.FACING)), 0);
+						.setValue(BlockStateProperties.HORIZONTAL_FACING, state.getValue(LecternBlock.FACING)), 3);
 				if(level.getBlockEntity(pos) instanceof BinderLecternBlockEntity binderLectern)
 					binderLectern.setBinder(context.getPlayer(), context.getItemInHand());
 				level.playSound(null, pos, SoundEvents.BOOK_PUT, SoundSource.BLOCKS, 1, 1);
@@ -106,7 +106,8 @@ public class TavernWaypointBinderItem extends Item{
 								new OpenBinderScreenMsg(hand==InteractionHand.OFF_HAND ?
 										Inventory.SLOT_OFFHAND : player.getInventory().selected,
 										data.memory, data.getWaypoints()));
-				}else if(data.syncTo(TavernMemories.player(player))){
+				}else{
+					data.syncTo(TavernMemories.player(player));
 					TavernBlock.playSyncSound(level, player);
 				}
 			}
@@ -131,11 +132,7 @@ public class TavernWaypointBinderItem extends Item{
 	@Nullable @Override public CompoundTag getShareTag(ItemStack stack){
 		CompoundTag tag = stack.getTag();
 		Data data = data(stack);
-		if(data!=null&&data.getWaypoints()>0){
-			if(tag==null) tag = data.serializeNBT();
-			else tag.merge(data.serializeNBT());
-		}
-		return tag;
+		return data!=null ? tag==null ? data.serializeNBT() : data.serializeNBT().merge(tag) : tag;
 	}
 
 	@Override public void readShareTag(ItemStack stack, @Nullable CompoundTag nbt){
@@ -200,6 +197,7 @@ public class TavernWaypointBinderItem extends Item{
 			if(self==null) self = LazyOptional.of(() -> this);
 			return self.cast();
 		}
+
 		@Override public CompoundTag serializeNBT(){
 			CompoundTag tag = memory.write();
 			if(waypoints>0)

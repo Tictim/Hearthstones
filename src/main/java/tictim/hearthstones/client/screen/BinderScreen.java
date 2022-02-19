@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class BinderScreen extends TavernMemoryScreen{
 	private TavernMemory memory = new TavernMemory();
@@ -115,8 +116,8 @@ public abstract class BinderScreen extends TavernMemoryScreen{
 
 	private final class WaypointWidget extends AbstractWidget{
 		private final ItemStack stack = new ItemStack(ModItems.WAYPOINT.get());
-		private int waypointsCache;
-		private TextComponent waypointText;
+		private int leftoverWaypointsCache, waypointsCache;
+		private Component waypointText;
 
 		public WaypointWidget(){
 			super(0, 0, 0, 0, TextComponent.EMPTY);
@@ -129,19 +130,22 @@ public abstract class BinderScreen extends TavernMemoryScreen{
 			this.y = 8+BinderScreen.this.getYOffset();
 		}
 
-		private TextComponent getWaypointText(){
-			if(waypointText==null||waypoints!=waypointsCache){
-				waypointText = new TextComponent(String.valueOf(waypoints));
-				if(waypoints<=0) waypointText.withStyle(ChatFormatting.RED);
-				waypointsCache = waypoints;
+		private Component getWaypointText(){
+			if(waypointText==null||waypoints!=leftoverWaypointsCache||waypointsCache!=memory.taverns().size()){
+				waypointText = new TextComponent(memory.taverns().size()+" / ")
+						.append(new TextComponent(waypointsCache+waypoints+"")
+								.withStyle(waypoints<=0 ?
+										memory.taverns().isEmpty() ? ChatFormatting.RED : ChatFormatting.GOLD :
+										ChatFormatting.RESET));
+				leftoverWaypointsCache = waypoints;
+				waypointsCache = memory.taverns().size();
 			}
 			return waypointText;
 		}
 
 		@Override public void renderButton(PoseStack pose, int mouseX, int mouseY, float partialTick){
 			updateSize();
-			TextComponent c = getWaypointText();
-			drawString(pose, font, c, x+24, y+2, 0xFFFFFF);
+			drawString(pose, font, getWaypointText(), x+24, y+2, 0xFFFFFF);
 
 			RenderSystem.enableDepthTest();
 			itemRenderer.renderAndDecorateFakeItem(stack, x, y);
@@ -152,7 +156,12 @@ public abstract class BinderScreen extends TavernMemoryScreen{
 
 		@Override public void renderToolTip(PoseStack pose, int mouseX, int mouseY){
 			if(isHoveredOrFocused())
-				renderTooltip(pose, new TranslatableComponent("info.hearthstones.screen.help.binder"), mouseX, mouseY);
+				renderTooltip(pose, List.of(
+						new TranslatableComponent("info.hearthstones.screen.binder.waypoints", waypointsCache),
+						new TranslatableComponent("info.hearthstones.screen.binder.leftover_waypoints", leftoverWaypointsCache),
+						new TranslatableComponent("info.hearthstones.screen.help.binder"),
+						new TranslatableComponent("info.hearthstones.screen.help.binder_on_lectern")
+				), Optional.empty(), mouseX, mouseY);
 		}
 	}
 }

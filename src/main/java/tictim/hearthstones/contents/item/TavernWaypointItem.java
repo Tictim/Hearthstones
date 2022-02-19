@@ -82,10 +82,8 @@ public class TavernWaypointItem extends Item{
 			TavernRecord tavern = getTavern(stack);
 			if(tavern!=null){
 				PlayerTavernMemory m = TavernMemories.player(player);
-				if(!m.has(tavern.pos())){
-					m.addOrUpdate(tavern);
-					TavernBlock.playSyncSound(level, player);
-				}
+				if(!m.has(tavern.pos())) m.addOrUpdate(tavern);
+				TavernBlock.playSyncSound(level, player);
 			}
 		}
 		return InteractionResultHolder.fail(stack);

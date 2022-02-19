@@ -34,9 +34,12 @@
 
 	"info.hearthstones.screen.empty": "You haven't visited any Tavern yet. Try build new one!",
 
+	"info.hearthstones.screen.binder.waypoints": "%s taverns are recorded in this binder",
+	"info.hearthstones.screen.binder.leftover_waypoints": "%s leftover waypoints are stored in this binder",
 	"info.hearthstones.screen.help.select": "§6§lLeft click§r to select this Tavern as destination",
 	"info.hearthstones.screen.help.remove": "§6§lRight click§r to remove this Tavern from List (Cannot be undone!)",
-	"info.hearthstones.screen.help.binder": "Craft with waypoints to add the waypoint to binder.",
+	"info.hearthstones.screen.help.binder": "Craft with waypoints to add the waypoints to binder",
+	"info.hearthstones.screen.help.binder_on_lectern": "When placed on lectern, use §6§lRight click§r to add waypoints",
 	"info.hearthstones.screen.set_home": "Set this Tavern to home",
 	"info.hearthstones.screen.property.missing": "This Tavern is missing",
 	"info.hearthstones.screen.property.home": "This Tavern is set to Home Tavern",

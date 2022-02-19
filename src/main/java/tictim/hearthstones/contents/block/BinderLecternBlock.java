@@ -106,8 +106,10 @@ public class BinderLecternBlock extends Block implements EntityBlock{
 					if(player instanceof ServerPlayer sp)
 						ModNet.CHANNEL.send(PacketDistributor.PLAYER.with(() -> sp),
 								new OpenLecternBinderScreenMsg(pos, data.memory, data.getWaypoints()));
-				}else if(data.syncTo(TavernMemories.player(player)))
+				}else{
+					data.syncTo(TavernMemories.player(player));
 					TavernBlock.playSyncSound(level, player);
+				}
 			}
 		}
 		return InteractionResult.sidedSuccess(level.isClientSide);
