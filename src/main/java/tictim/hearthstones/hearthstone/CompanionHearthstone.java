@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
@@ -33,20 +33,27 @@ public class CompanionHearthstone extends SelectionHearthstone{
 		};
 	}
 
-	public static Set<Entity> getWarpTargets(Entity fuck){
+	public Set<Entity> getWarpTargets(Entity warpingEntity){
 		Set<Entity> set = new HashSet<>();
-		addRidingEntities(fuck, set);
-		for(LivingEntity e : fuck.level.getEntitiesOfClass(LivingEntity.class,
-				new AABB(fuck.getX(), fuck.getY(), fuck.getZ(), fuck.getX(), fuck.getY(), fuck.getZ()).inflate(8)))
-			if(e.isAlive()&&(e instanceof Mob m&&m.getLeashHolder()==fuck||
-					e instanceof TamableAnimal ta&&ta.getOwner()==fuck||
-					e instanceof AbstractHorse ah&&ah.isTamed()&&fuck.getUUID().equals(ah.getOwnerUUID())||
-					!fuck.isShiftKeyDown()&&e instanceof Player&&e!=fuck&&!e.isSleeping()&&(
-							e.getMainHandItem().is(ModItems.COMPANION_STONE.get())||
-									e.getOffhandItem().is(ModItems.COMPANION_STONE.get()))))
+		addRidingEntities(warpingEntity, set);
+		for(LivingEntity e : warpingEntity.level.getEntitiesOfClass(LivingEntity.class,
+				new AABB(warpingEntity.getX(), warpingEntity.getY(), warpingEntity.getZ(), warpingEntity.getX(), warpingEntity.getY(), warpingEntity.getZ()).inflate(8)))
+			if(isConsideredCompanion(warpingEntity, e))
 				addRidingEntities(e, set);
-		set.remove(fuck);
+		set.remove(warpingEntity);
 		return set;
+	}
+
+	protected boolean isConsideredCompanion(Entity warpingEntity, LivingEntity entity){
+		return entity.isAlive()&&(entity instanceof Mob m&&m.getLeashHolder()==warpingEntity||
+				entity instanceof OwnableEntity ownable&&ownable.getOwner()==warpingEntity||
+				entity instanceof AbstractHorse ah&&ah.isTamed()&&warpingEntity.getUUID().equals(ah.getOwnerUUID())||
+				!warpingEntity.isShiftKeyDown()&&entity instanceof Player&&entity!=warpingEntity&&!entity.isSleeping()&&isHoldingCompanionStone(entity));
+	}
+
+	protected static boolean isHoldingCompanionStone(LivingEntity entity){
+		return entity.getMainHandItem().is(ModItems.COMPANION_STONE.get())||
+				entity.getOffhandItem().is(ModItems.COMPANION_STONE.get());
 	}
 
 	private static void addRidingEntities(Entity e, Set<Entity> set){

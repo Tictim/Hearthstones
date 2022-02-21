@@ -45,15 +45,15 @@ public final class OverlayRenderEventHandler{
 		if(event.getType()!=RenderGameOverlayEvent.ElementType.ALL||Minecraft.getInstance().screen!=null) return;
 		Player p = Minecraft.getInstance().player;
 		if(p==null||!p.isAlive()) return;
-		if(p.getMainHandItem().getItem() instanceof HearthstoneItem)
-			drawHearthstoneUI(event, p, p.getMainHandItem(), InteractionHand.MAIN_HAND);
-		else if(p.getOffhandItem().getItem() instanceof HearthstoneItem)
-			drawHearthstoneUI(event, p, p.getMainHandItem(), InteractionHand.OFF_HAND);
+		if(p.getMainHandItem().getItem() instanceof HearthstoneItem item)
+			drawHearthstoneUI(event, p, p.getMainHandItem(), item, InteractionHand.MAIN_HAND);
+		else if(p.getOffhandItem().getItem() instanceof HearthstoneItem item)
+			drawHearthstoneUI(event, p, p.getMainHandItem(), item, InteractionHand.OFF_HAND);
 		drawTavernSign(event.getMatrixStack(), p);
 	}
 
 	@SuppressWarnings("IntegerDivisionInFloatingPointContext")
-	private static void drawHearthstoneUI(RenderGameOverlayEvent.Post event, Player player, ItemStack stack, InteractionHand hand){
+	private static void drawHearthstoneUI(RenderGameOverlayEvent.Post event, Player player, ItemStack stack, HearthstoneItem hearthstoneItem, InteractionHand hand){
 		Minecraft mc = Minecraft.getInstance();
 		int width = event.getWindow().getGuiScaledWidth(), height = event.getWindow().getGuiScaledHeight();
 		int left = width/2, top = height/2;
@@ -80,8 +80,8 @@ public final class OverlayRenderEventHandler{
 					GuiUtils.drawGradientRect(pose.last().pose(), -90, left-32, top+33, left+32, top+43, 0xFF5f5f5f, 0xFF5f5f5f);
 					GuiUtils.drawGradientRect(pose.last().pose(), -90, left-32, top+33, left+32-(int)(ratio*64), top+43, 0xFF02ccfc, 0xFF02ccfc);
 				}
-				if(stack.getItem()==ModItems.COMPANION_HEARTHSTONE.get()){
-					Set<Entity> entities = CompanionHearthstone.getWarpTargets(player);
+				if(hearthstoneItem.getHearthstone() instanceof CompanionHearthstone ch){
+					Set<Entity> entities = ch.getWarpTargets(player);
 					if(!entities.isEmpty()){
 						TranslatableComponent text = new TranslatableComponent("info.hearthstones.companion_hearthstone.companions");
 						for(Entity entity : entities) text.append("\n").append(entity.getDisplayName());
