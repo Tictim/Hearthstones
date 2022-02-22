@@ -1,7 +1,6 @@
 package tictim.hearthstones.net;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import tictim.hearthstones.tavern.AccessModifier;
 import tictim.hearthstones.tavern.Accessibility;

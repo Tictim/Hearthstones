@@ -48,7 +48,7 @@ public final class OverlayRenderEventHandler{
 		if(p.getMainHandItem().getItem() instanceof HearthstoneItem item)
 			drawHearthstoneUI(event, p, p.getMainHandItem(), item, InteractionHand.MAIN_HAND);
 		else if(p.getOffhandItem().getItem() instanceof HearthstoneItem item)
-			drawHearthstoneUI(event, p, p.getMainHandItem(), item, InteractionHand.OFF_HAND);
+			drawHearthstoneUI(event, p, p.getOffhandItem(), item, InteractionHand.OFF_HAND);
 		drawTavernSign(event.getMatrixStack(), p);
 	}
 
