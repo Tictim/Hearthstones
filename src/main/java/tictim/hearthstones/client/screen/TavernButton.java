@@ -93,7 +93,7 @@ public final class TavernButton extends Button{
 		return button==0||button==1;
 	}
 
-	public void renderToolTip(PoseStack pose, int mouseX, int mouseY){
+	@Override public void renderToolTip(PoseStack pose, int mouseX, int mouseY){
 		if(!isHoveredOrFocused()) return;
 		int i = 1;
 		for(TavernProperty p : this.properties){

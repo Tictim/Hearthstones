@@ -84,8 +84,11 @@ public class TavernWaypointBinderItem extends Item{
 				level.setBlock(pos, ModBlocks.BINDER_LECTERN.get()
 						.defaultBlockState()
 						.setValue(BlockStateProperties.HORIZONTAL_FACING, state.getValue(LecternBlock.FACING)), 3);
-				if(level.getBlockEntity(pos) instanceof BinderLecternBlockEntity binderLectern)
-					binderLectern.setBinder(context.getPlayer(), context.getItemInHand());
+				if(level.getBlockEntity(pos) instanceof BinderLecternBlockEntity binderLectern){
+					ItemStack itemInHand = context.getItemInHand();
+					binderLectern.setBinder(context.getPlayer(), itemInHand);
+					itemInHand.shrink(itemInHand.getCount());
+				}
 				level.playSound(null, pos, SoundEvents.BOOK_PUT, SoundSource.BLOCKS, 1, 1);
 				level.gameEvent(context.getPlayer(), GameEvent.BLOCK_CHANGE, pos);
 
