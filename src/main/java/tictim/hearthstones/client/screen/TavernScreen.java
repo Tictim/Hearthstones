@@ -216,7 +216,7 @@ public class TavernScreen extends AbstractScreen{
 		}
 
 		private int getTextureX(){
-			return this.active ? !isHome&&accessibility.isAccessibilityModifiable()&&this.isHoveredOrFocused() ? isPressed ? 14*2 : 7*2 : 0 : 14*2;
+			return this.active ? !isHome&&this.isHoveredOrFocused() ? isPressed ? 14*2 : 7*2 : 0 : 14*2;
 		}
 
 		@Override
