@@ -132,7 +132,9 @@ public class TavernWaypointBinderItem extends Item{
 	@Nullable @Override public CompoundTag getShareTag(ItemStack stack){
 		CompoundTag tag = stack.getTag();
 		Data data = data(stack);
-		return data!=null ? tag==null ? data.serializeNBT() : data.serializeNBT().merge(tag) : tag;
+		if(data==null) return tag;
+		if(tag==null) return data.serializeNBT();
+		return tag.copy().merge(data.serializeNBT());
 	}
 
 	@Override public void readShareTag(ItemStack stack, @Nullable CompoundTag nbt){
