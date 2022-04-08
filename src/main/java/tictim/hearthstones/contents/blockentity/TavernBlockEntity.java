@@ -3,7 +3,6 @@ package tictim.hearthstones.contents.blockentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -73,7 +72,7 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern, N
 		return this.owner;
 	}
 	public void setOwner(Owner owner){
-		if(this.owner == owner) return;
+		if(this.owner==owner) return;
 		this.owner = owner;
 		setChanged();
 	}
@@ -81,7 +80,7 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern, N
 		return access;
 	}
 	public void setAccess(AccessModifier access){
-		if(this.access == access) return;
+		if(this.access==access) return;
 		this.access = access;
 		setChanged();
 	}
@@ -111,9 +110,6 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern, N
 
 	@Override public ClientboundBlockEntityDataPacket getUpdatePacket(){
 		return ClientboundBlockEntityDataPacket.create(this);
-	}
-	@Override public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt){
-		load(pkt.getTag());
 	}
 	@Override public CompoundTag getUpdateTag(){
 		return saveWithoutMetadata();

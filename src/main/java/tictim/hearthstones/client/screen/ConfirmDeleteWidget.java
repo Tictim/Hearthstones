@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import tictim.hearthstones.client.HearthstoneOverlay;
 import tictim.hearthstones.tavern.Tavern;
 
 final class ConfirmDeleteWidget{
@@ -13,12 +14,14 @@ final class ConfirmDeleteWidget{
 
 	private final TavernMemoryScreen screen;
 	private final Component confirmDeleteText;
+	private final Tavern tavern;
 	private final Button yes;
 	private final Button no;
 
 	public ConfirmDeleteWidget(TavernMemoryScreen screen, Tavern tavern){
 		this.screen = screen;
-		this.confirmDeleteText = new TranslatableComponent("info.hearthstones.hearthstone.confirm_delete", tavern.name());
+		this.confirmDeleteText = new TranslatableComponent("info.hearthstones.hearthstone.confirm_delete");
+		this.tavern = tavern;
 
 		this.yes = new Button(
 				screen.width/2-5-BUTTON_WIDTH, buttonY(),
@@ -43,13 +46,15 @@ final class ConfirmDeleteWidget{
 	}
 
 	public int buttonY(){
-		return screen.height/2+15+screen.getYOffset();
+		return screen.height/2+20+4+screen.getYOffset();
 	}
 
 	public void render(PoseStack pose, int mouseX, int mouseY, float partialTicks){
-		GuiComponent.fill(pose, 0, screen.getYOffset(), screen.width, screen.getYOffset()+screen.height, 0xc0101010);
+		GuiComponent.fill(pose, 0, screen.getYOffset(), screen.width, screen.height+screen.getYOffset(), 0xc0101010);
 
-		GuiComponent.drawCenteredString(pose, screen.getMinecraft().font, confirmDeleteText, screen.width/2, screen.height/2-15+screen.getYOffset(), 0xFFFFFFFF);
+		GuiComponent.drawCenteredString(pose, screen.getMinecraft().font, confirmDeleteText, screen.width/2, screen.height/2-20-4-10+screen.getYOffset(), 0xFFFFFFFF);
+
+		HearthstoneOverlay.drawTavernOverlay(pose, screen.getMinecraft().player, screen.width/2, screen.height/2-20+screen.getYOffset(), tavern, null);
 
 		yes.render(pose, mouseX, mouseY+screen.getYOffset(), partialTicks);
 		no.render(pose, mouseX, mouseY+screen.getYOffset(), partialTicks);

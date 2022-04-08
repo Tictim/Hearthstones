@@ -1,7 +1,6 @@
 package tictim.hearthstones.contents.item;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -24,10 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 import tictim.hearthstones.Caps;
 import tictim.hearthstones.contents.ModBlocks;
@@ -36,37 +32,36 @@ import tictim.hearthstones.contents.blockentity.BinderLecternBlockEntity;
 import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.net.OpenBinderScreenMsg;
 import tictim.hearthstones.tavern.Tavern;
+import tictim.hearthstones.tavern.TavernBinderData;
 import tictim.hearthstones.tavern.TavernMemories;
-import tictim.hearthstones.tavern.TavernMemory;
-import tictim.hearthstones.tavern.TavernRecord;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class TavernWaypointBinderItem extends Item{
-	public TavernWaypointBinderItem(Properties properties){
+public class TavernBinderItem extends Item{
+	private final boolean infiniteWaypoints;
+
+	public TavernBinderItem(boolean infiniteWaypoints, Properties properties){
 		super(properties);
+		this.infiniteWaypoints = infiniteWaypoints;
 	}
 
 	@Override public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context){
 		Level level = context.getLevel();
 		if(level.isClientSide) return InteractionResult.PASS;
-		Data data = data(stack);
+		TavernBinderData data = data(stack);
 		if(data==null) return InteractionResult.PASS;
 		BlockPos pos = context.getClickedPos();
 		BlockEntity blockEntity = level.getBlockEntity(pos);
 		if(blockEntity instanceof Tavern tavern){
-			boolean overwrite = data.memory.has(tavern.pos());
+			boolean result = data.addOrUpdateWaypoint(tavern);
 			Player player = context.getPlayer();
-			if(overwrite||data.waypoints>0){
-				data.memory.addOrUpdate(tavern);
-				if(!overwrite) data.waypoints--;
-
-				if(player!=null) player.displayClientMessage(new TranslatableComponent("info.hearthstones.binder.saved"), true);
-			}else if(player!=null) player.displayClientMessage(new TranslatableComponent("info.hearthstones.binder.no_waypoint"), true);
+			if(player!=null)
+				player.displayClientMessage(new TranslatableComponent(result ?
+						"info.hearthstones.binder.saved" :
+						"info.hearthstones.binder.no_waypoint"), true);
 		}else if(blockEntity instanceof BinderLecternBlockEntity binderLectern){
-			TavernWaypointBinderItem.Data d2 = binderLectern.getData();
+			TavernBinderData d2 = binderLectern.getData();
 			if(d2!=null){
 				boolean r1 = data.syncFrom(d2.memory), r2 = d2.syncFrom(data.memory);
 				if(r1||r2){
@@ -101,14 +96,14 @@ public class TavernWaypointBinderItem extends Item{
 	@Override public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand){
 		ItemStack stack = player.getItemInHand(hand);
 		if(!level.isClientSide){
-			Data data = data(stack);
+			TavernBinderData data = data(stack);
 			if(data!=null){
 				if(player.isSecondaryUseActive()){
 					if(player instanceof ServerPlayer sp)
 						ModNet.CHANNEL.send(PacketDistributor.PLAYER.with(() -> sp),
 								new OpenBinderScreenMsg(hand==InteractionHand.OFF_HAND ?
 										Inventory.SLOT_OFFHAND : player.getInventory().selected,
-										data.memory, data.getWaypoints()));
+										data.memory, data.getEmptyWaypoints(), data.isInfiniteWaypoints()));
 				}else{
 					data.syncTo(TavernMemories.player(player));
 					TavernBlock.playSyncSound(level, player);
@@ -119,22 +114,30 @@ public class TavernWaypointBinderItem extends Item{
 	}
 
 	@Override public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> text, TooltipFlag flag){
-		Data data = data(stack);
-		if(data!=null&&data.memory.taverns().size()>0)
-			text.add(new TranslatableComponent("info.hearthstones.binder.tooltip.entries",
-					data.memory.taverns().size()));
-		text.add(new TranslatableComponent("info.hearthstones.binder.tooltip.0"));
-		text.add(new TranslatableComponent("info.hearthstones.binder.tooltip.1"));
-		text.add(new TranslatableComponent("info.hearthstones.binder.tooltip.2"));
+		TavernBinderData data = data(stack);
+		if(data!=null&&data.getWaypoints()>0){
+			text.add(infiniteWaypoints ?
+					new TranslatableComponent("info.hearthstones.binder.tooltip.waypoints.infinite",
+							data.getWaypoints()) :
+					new TranslatableComponent("info.hearthstones.binder.tooltip.waypoints",
+							data.getWaypoints(), data.getEmptyWaypoints()));
+		}
+		text.add(new TranslatableComponent("info.hearthstones.binder.tooltip"));
+		if(infiniteWaypoints)
+			text.add(new TranslatableComponent("info.hearthstones.binder.tooltip.infinite"));
+	}
+
+	@Override public boolean isFoil(ItemStack stack){
+		return infiniteWaypoints||super.isFoil(stack);
 	}
 
 	@Nullable @Override public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt){
-		return new Data();
+		return new TavernBinderData(infiniteWaypoints);
 	}
 
 	@Nullable @Override public CompoundTag getShareTag(ItemStack stack){
 		CompoundTag tag = stack.getTag();
-		Data data = data(stack);
+		TavernBinderData data = data(stack);
 		if(data==null) return tag;
 		if(tag==null) return data.serializeNBT();
 		return tag.copy().merge(data.serializeNBT());
@@ -142,76 +145,12 @@ public class TavernWaypointBinderItem extends Item{
 
 	@Override public void readShareTag(ItemStack stack, @Nullable CompoundTag nbt){
 		super.readShareTag(stack, nbt);
-		Data data = data(stack);
+		TavernBinderData data = data(stack);
 		if(data!=null&&nbt!=null)
 			data.deserializeNBT(nbt);
 	}
 
-	@SuppressWarnings("ConstantConditions") @Nullable public static Data data(ItemStack stack){
+	@SuppressWarnings("ConstantConditions") @Nullable public static TavernBinderData data(ItemStack stack){
 		return stack.getCapability(Caps.BINDER_DATA).orElse(null);
-	}
-
-	public static final class Data implements ICapabilitySerializable<CompoundTag>{
-		private int waypoints;
-		public final TavernMemory memory = new TavernMemory();
-
-		public Data(){}
-		public Data(CompoundTag tag){
-			deserializeNBT(tag);
-		}
-
-		public int getWaypoints(){
-			return waypoints;
-		}
-		public void setWaypoints(int waypoints){
-			this.waypoints = waypoints;
-		}
-
-		public boolean syncTo(TavernMemory m){
-			return sync(this.memory, m, Integer.MAX_VALUE)>0;
-		}
-
-		public boolean syncFrom(TavernMemory m){
-			int synced = sync(m, this.memory, waypoints);
-			waypoints -= synced;
-			return synced>0;
-		}
-
-		private static int sync(TavernMemory from, TavernMemory to, int maxEntry){
-			if(maxEntry<=0) return 0;
-			int entry = 0;
-			for(TavernRecord t : from.taverns().values()){
-				if(to.has(t.pos())) continue;
-				to.addOrUpdate(t);
-				if(++entry>=maxEntry) break;
-			}
-			return entry;
-		}
-
-		public void overwrite(Data data){
-			this.waypoints = data.waypoints;
-			this.memory.clear();
-			for(TavernRecord r : data.memory.taverns().values())
-				this.memory.addOrUpdate(r);
-		}
-
-		@Nullable private LazyOptional<Data> self;
-
-		@Nonnull @Override public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side){
-			if(cap!=Caps.BINDER_DATA) return LazyOptional.empty();
-			if(self==null) self = LazyOptional.of(() -> this);
-			return self.cast();
-		}
-
-		@Override public CompoundTag serializeNBT(){
-			CompoundTag tag = memory.write();
-			if(waypoints>0)
-				tag.putInt("Waypoints", waypoints);
-			return tag;
-		}
-		@Override public void deserializeNBT(CompoundTag nbt){
-			memory.read(nbt);
-			this.waypoints = nbt.getInt("Waypoints");
-		}
 	}
 }

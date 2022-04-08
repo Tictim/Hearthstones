@@ -11,9 +11,10 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import tictim.hearthstones.contents.ModItems;
 import tictim.hearthstones.contents.ModRecipes;
-import tictim.hearthstones.contents.item.TavernWaypointBinderItem;
+import tictim.hearthstones.contents.item.TavernBinderItem;
 import tictim.hearthstones.contents.item.TavernWaypointItem;
 import tictim.hearthstones.tavern.Tavern;
+import tictim.hearthstones.tavern.TavernBinderData;
 import tictim.hearthstones.tavern.TavernRecord;
 
 import java.util.ArrayList;
@@ -64,10 +65,10 @@ public class ChargeBinderRecipe implements CraftingRecipe{
 
 		if(book.isEmpty()||waypoints==0) return ItemStack.EMPTY;
 		ItemStack newStack = book.copy();
-		TavernWaypointBinderItem.Data data = TavernWaypointBinderItem.data(newStack);
-		if(data==null||waypoints+data.getWaypoints()<0)
+		TavernBinderData data = TavernBinderItem.data(newStack);
+		if(data==null||waypoints+data.getEmptyWaypoints()<0)
 			return ItemStack.EMPTY;
-		data.setWaypoints(data.getWaypoints()+waypoints);
+		data.setEmptyWaypoints(data.getEmptyWaypoints()+waypoints);
 		for(Tavern t : taverns)
 			data.memory.addOrUpdate(t);
 		return newStack;

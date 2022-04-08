@@ -7,6 +7,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,6 +20,7 @@ import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tictim.hearthstones.client.BinderLecternRenderer;
+import tictim.hearthstones.client.HearthstoneOverlay;
 import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.contents.ModBlockEntities;
 import tictim.hearthstones.contents.ModBlocks;
@@ -27,12 +29,12 @@ import tictim.hearthstones.contents.ModItems;
 import tictim.hearthstones.contents.ModRecipes;
 import tictim.hearthstones.contents.ModWorldgen;
 import tictim.hearthstones.contents.item.hearthstone.HearthstoneItem;
-import tictim.hearthstones.contents.item.TavernWaypointBinderItem;
 import tictim.hearthstones.datagen.BlockTagGen;
 import tictim.hearthstones.datagen.ItemTagGen;
 import tictim.hearthstones.datagen.LootTableGen;
 import tictim.hearthstones.datagen.RecipeGen;
 import tictim.hearthstones.net.ModNet;
+import tictim.hearthstones.tavern.TavernBinderData;
 import tictim.hearthstones.tavern.TavernMemories;
 
 @Mod(Hearthstones.MODID)
@@ -62,7 +64,7 @@ public class Hearthstones{
 	public static void registerCapabilities(RegisterCapabilitiesEvent event){
 		event.register(TavernMemories.class);
 		event.register(HearthstoneItem.Data.class);
-		event.register(TavernWaypointBinderItem.Data.class);
+		event.register(TavernBinderData.class);
 	}
 
 	@SubscribeEvent
@@ -98,6 +100,8 @@ public class Hearthstones{
 				ItemProperties.register(ModItems.COMPANION_HEARTHSTONE.get(), key, itemPropertyGetter);
 
 				BlockEntityRenderers.register(ModBlockEntities.BINDER_LECTERN.get(), BinderLecternRenderer::new);
+
+				OverlayRegistry.registerOverlayTop("Hearthstone Overlay", new HearthstoneOverlay());
 			});
 		}
 	}

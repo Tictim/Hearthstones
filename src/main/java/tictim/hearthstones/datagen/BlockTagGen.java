@@ -23,7 +23,8 @@ public class BlockTagGen extends BlockTagsProvider{
 		tag(ORES_AQUAMARINE).add(ModBlocks.AQUAMARINE_ORE.get(), ModBlocks.DEEPSLATE_AQUAMARINE_ORE.get());
 		tag(TAVERNS).add(ModBlocks.TAVERN.get(), ModBlocks.SHABBY_TAVERN.get(), ModBlocks.GLOBAL_TAVERN.get());
 
-		tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.AQUAMARINE_ORE.get(), ModBlocks.AQUAMARINE_BLOCK.get());
-		tag(BlockTags.NEEDS_STONE_TOOL).add(ModBlocks.AQUAMARINE_ORE.get(), ModBlocks.AQUAMARINE_BLOCK.get());
+		tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.AQUAMARINE_ORE.get(), ModBlocks.DEEPSLATE_AQUAMARINE_ORE.get(), ModBlocks.AQUAMARINE_BLOCK.get());
+		tag(BlockTags.MINEABLE_WITH_AXE).add(ModBlocks.TAVERN.get(), ModBlocks.SHABBY_TAVERN.get(), ModBlocks.GLOBAL_TAVERN.get(), ModBlocks.BINDER_LECTERN.get());
+		tag(BlockTags.NEEDS_STONE_TOOL).add(ModBlocks.AQUAMARINE_ORE.get(), ModBlocks.DEEPSLATE_AQUAMARINE_ORE.get(), ModBlocks.AQUAMARINE_BLOCK.get());
 	}
 }

@@ -7,18 +7,20 @@ import tictim.hearthstones.tavern.TavernMemory;
 public record OpenLecternBinderScreenMsg(
 		BlockPos lecternPos,
 		TavernMemory memory,
-		int waypoints
+		int blankWaypoints,
+		boolean infiniteWaypoints
 ){
 	public static OpenLecternBinderScreenMsg read(FriendlyByteBuf buf){
 		BlockPos pos = buf.readBlockPos();
 		TavernMemory memory = new TavernMemory();
 		memory.read(buf);
-		return new OpenLecternBinderScreenMsg(pos, memory, buf.readVarInt());
+		return new OpenLecternBinderScreenMsg(pos, memory, buf.readVarInt(), buf.readBoolean());
 	}
 
 	public void write(FriendlyByteBuf buf){
 		buf.writeBlockPos(lecternPos);
 		memory.write(buf);
-		buf.writeVarInt(waypoints);
+		buf.writeVarInt(blankWaypoints);
+		buf.writeBoolean(infiniteWaypoints);
 	}
 }

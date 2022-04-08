@@ -5,6 +5,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,15 +16,18 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import tictim.hearthstones.Hearthstones;
-import tictim.hearthstones.client.OverlayRenderEventHandler;
+import tictim.hearthstones.client.HearthstoneOverlay;
 import tictim.hearthstones.client.screen.BinderScreen;
 import tictim.hearthstones.client.screen.HearthstoneScreen;
 import tictim.hearthstones.client.screen.TavernScreen;
 import tictim.hearthstones.contents.ModItems;
 import tictim.hearthstones.contents.blockentity.BinderLecternBlockEntity;
 import tictim.hearthstones.contents.blockentity.TavernBlockEntity;
-import tictim.hearthstones.contents.item.TavernWaypointBinderItem;
+import tictim.hearthstones.contents.item.TavernBinderItem;
+import tictim.hearthstones.contents.item.TavernWaypointItem;
 import tictim.hearthstones.tavern.PlayerTavernMemory;
+import tictim.hearthstones.tavern.Tavern;
+import tictim.hearthstones.tavern.TavernBinderData;
 import tictim.hearthstones.tavern.TavernMemories;
 
 import java.util.Objects;
@@ -150,11 +154,11 @@ public final class ModNet{
 				return;
 			}
 			ItemStack stack = player.getInventory().getItem(packet.binderInventoryPosition());
-			if(stack.getItem()==ModItems.WAYPOINT_BINDER.get()){
-				TavernWaypointBinderItem.Data data = TavernWaypointBinderItem.data(stack);
-				if(data!=null)
-					data.memory.delete(packet.pos());
-			}
+			TavernBinderData data = TavernBinderItem.data(stack);
+			if(data==null) return;
+			Tavern deleted = data.memory.delete(packet.pos());
+			if(deleted==null||data.isInfiniteWaypoints()) return;
+			dropWaypoint(player, deleted);
 		});
 	}
 
@@ -167,15 +171,22 @@ public final class ModNet{
 				Hearthstones.LOGGER.error("Sender doesn't exist.");
 				return;
 			}
-			if(player.level.isLoaded(packet.lecternPos())){
-				if(player.level.getBlockEntity(packet.lecternPos()) instanceof BinderLecternBlockEntity binderLectern){
-					if((binderLectern.getPlayer()==null||binderLectern.getPlayer().equals(player.getUUID()))&&binderLectern.getData()!=null){
-						binderLectern.getData().memory.delete(packet.tavernPos());
-						binderLectern.setChanged();
-					}
-				}
-			}
+			if(!player.level.isLoaded(packet.lecternPos())||
+					!(player.level.getBlockEntity(packet.lecternPos()) instanceof BinderLecternBlockEntity binderLectern)) return;
+			TavernBinderData data = binderLectern.getData();
+			if((binderLectern.getPlayer()!=null&&!binderLectern.getPlayer().equals(player.getUUID()))||data==null) return;
+			Tavern deleted = data.memory.delete(packet.tavernPos());
+			if(deleted==null) return;
+			binderLectern.setChanged();
+			if(!data.isInfiniteWaypoints())
+				dropWaypoint(player, deleted);
 		});
+	}
+
+	private static void dropWaypoint(Player player, Tavern tavern){
+		ItemStack waypoint = new ItemStack(ModItems.WAYPOINT.get());
+		TavernWaypointItem.setTavern(waypoint, tavern);
+		player.getInventory().placeItemBackInInventory(waypoint);
 	}
 
 	private static void handleOpenHearthstoneScreen(OpenHearthstoneScreenMsg packet, Supplier<NetworkEvent.Context> contextSupplier){
@@ -226,7 +237,7 @@ public final class ModNet{
 		}
 
 		private static void handleSyncHomePos(SyncHomePosMsg packet){
-			OverlayRenderEventHandler.homePos = packet.homePos();
+			HearthstoneOverlay.homePos = packet.homePos();
 		}
 
 		private static void handleOpenBinderScreen(OpenBinderScreenMsg packet){

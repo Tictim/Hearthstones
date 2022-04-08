@@ -26,9 +26,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.PacketDistributor;
 import tictim.hearthstones.contents.blockentity.BinderLecternBlockEntity;
-import tictim.hearthstones.contents.item.TavernWaypointBinderItem;
+import tictim.hearthstones.contents.item.TavernBinderItem;
 import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.net.OpenLecternBinderScreenMsg;
+import tictim.hearthstones.tavern.TavernBinderData;
 import tictim.hearthstones.tavern.TavernMemories;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
@@ -100,12 +101,12 @@ public class BinderLecternBlock extends Block implements EntityBlock{
 
 	@SuppressWarnings("deprecation") @Override public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
 		if(!level.isClientSide&&level.getBlockEntity(pos) instanceof BinderLecternBlockEntity binderLectern){
-			TavernWaypointBinderItem.Data data = binderLectern.getData();
+			TavernBinderData data = binderLectern.getData();
 			if(data!=null){
 				if(player.isSecondaryUseActive()){
 					if(player instanceof ServerPlayer sp)
 						ModNet.CHANNEL.send(PacketDistributor.PLAYER.with(() -> sp),
-								new OpenLecternBinderScreenMsg(pos, data.memory, data.getWaypoints()));
+								new OpenLecternBinderScreenMsg(pos, data.memory, data.getEmptyWaypoints(), data.isInfiniteWaypoints()));
 				}else{
 					data.syncTo(TavernMemories.player(player));
 					TavernBlock.playSyncSound(level, player);
@@ -123,7 +124,7 @@ public class BinderLecternBlock extends Block implements EntityBlock{
 				if(binderLectern.getItem()!=null){
 					ItemStack copy = binderLectern.getItem().copy();
 					if(binderLectern.getData()!=null){
-						TavernWaypointBinderItem.Data data = TavernWaypointBinderItem.data(copy);
+						TavernBinderData data = TavernBinderItem.data(copy);
 						if(data!=null) data.overwrite(binderLectern.getData());
 					}
 					Direction direction = state.getValue(HORIZONTAL_FACING);

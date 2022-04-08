@@ -1,0 +1,41 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "value": {
+            "type": "hearthstones:easy_mode"
+          },
+          "type": "forge:not"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "hearthstones:deep_purple"
+          },
+          {
+            "item": "hearthstones:deep_purple"
+          },
+          {
+            "item": "hearthstones:deep_purple"
+          },
+          {
+            "item": "hearthstones:deep_purple"
+          },
+          {
+            "tag": "forge:leather"
+          },
+          {
+            "item": "minecraft:honey_bottle"
+          }
+        ],
+        "result": {
+          "item": "hearthstones:purple_leather"
+        }
+      }
+    }
+  ]
+}

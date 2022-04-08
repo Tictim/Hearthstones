@@ -12,8 +12,8 @@ import tictim.hearthstones.contents.blockentity.TavernBlockEntity;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class GuildTavernUpgradeItem extends TavernUpgradeItem{
-	public GuildTavernUpgradeItem(Properties properties){
+public class GlobalTavernUpgradeItem extends TavernUpgradeItem{
+	public GlobalTavernUpgradeItem(Properties properties){
 		super(properties);
 	}
 

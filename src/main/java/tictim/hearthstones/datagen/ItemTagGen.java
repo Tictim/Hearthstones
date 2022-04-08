@@ -20,8 +20,7 @@ public class ItemTagGen extends ItemTagsProvider{
 		copy(ModTags.Blocks.STORAGE_BLOCKS_AQUAMARINE, ModTags.STORAGE_BLOCKS_AQUAMARINE);
 		copy(ModTags.Blocks.ORES_AQUAMARINE, ModTags.ORES_AQUAMARINE);
 
-		//noinspection unchecked
-		tag(Tags.Items.DUSTS).addTags(ModTags.DUSTS_AQUAMARINE, ModTags.DUSTS_DIAMOND, ModTags.DUSTS_LAPIS, ModTags.DUSTS_AMETHYST);
+		tag(Tags.Items.DUSTS).addTag(ModTags.DUSTS_AQUAMARINE).addTag(ModTags.DUSTS_DIAMOND).addTag(ModTags.DUSTS_LAPIS).addTag(ModTags.DUSTS_AMETHYST);
 		tag(ModTags.DUSTS_AQUAMARINE).add(ModItems.AQUAMARINE_DUST.get());
 		tag(ModTags.DUSTS_DIAMOND).add(ModItems.DIAMOND_DUST.get());
 		tag(ModTags.DUSTS_LAPIS).add(ModItems.LAPIS_DUST.get());

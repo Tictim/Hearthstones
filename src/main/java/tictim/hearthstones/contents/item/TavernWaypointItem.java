@@ -20,6 +20,7 @@ import tictim.hearthstones.contents.block.TavernBlock;
 import tictim.hearthstones.contents.blockentity.BinderLecternBlockEntity;
 import tictim.hearthstones.tavern.PlayerTavernMemory;
 import tictim.hearthstones.tavern.Tavern;
+import tictim.hearthstones.tavern.TavernBinderData;
 import tictim.hearthstones.tavern.TavernMemories;
 import tictim.hearthstones.tavern.TavernRecord;
 import tictim.hearthstones.tavern.TavernTextFormat;
@@ -53,19 +54,18 @@ public class TavernWaypointItem extends Item{
 			if(player!=null)
 				player.displayClientMessage(new TranslatableComponent("info.hearthstones.waypoint.saved"), true);
 		}else if(blockEntity instanceof BinderLecternBlockEntity binderLectern){
-			TavernWaypointBinderItem.Data data = binderLectern.getData();
+			TavernBinderData data = binderLectern.getData();
 			if(data!=null){
 				Tavern tavern = getTavern(stack);
 				if(tavern==null){
-					if(data.getWaypoints()<Integer.MAX_VALUE){
-						data.setWaypoints(data.getWaypoints()+1);
+					if(data.addEmptyWaypoint(1)){
 						stack.shrink(1);
 						binderLectern.setChanged();
 					}
 				}else if(!data.memory.has(tavern.pos())){
 					data.memory.addOrUpdate(tavern);
 					TavernBlock.playSyncSound(level, context.getClickedPos());
-					stack.shrink(1);
+					if(!data.isInfiniteWaypoints()) stack.shrink(1);
 					binderLectern.setChanged();
 				}
 			}

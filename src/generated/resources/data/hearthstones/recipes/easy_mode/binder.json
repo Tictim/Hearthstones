@@ -1,0 +1,32 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "hearthstones:easy_mode"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "minecraft:book"
+          },
+          {
+            "tag": "forge:dusts/amethyst"
+          },
+          {
+            "tag": "forge:dusts/amethyst"
+          },
+          {
+            "tag": "forge:dusts/amethyst"
+          }
+        ],
+        "result": {
+          "item": "hearthstones:infinite_waypoint_binder"
+        }
+      }
+    }
+  ]
+}

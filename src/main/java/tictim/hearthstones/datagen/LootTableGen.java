@@ -5,6 +5,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -60,6 +61,8 @@ public class LootTableGen extends LootTableProvider{
 			registerTavernLootTable(ModBlocks.TAVERN.get());
 			registerTavernLootTable(ModBlocks.SHABBY_TAVERN.get());
 			registerTavernLootTable(ModBlocks.GLOBAL_TAVERN.get());
+
+			dropOther(ModBlocks.BINDER_LECTERN.get(), Items.LECTERN);
 		}
 
 		// ew

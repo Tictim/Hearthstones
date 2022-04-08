@@ -95,6 +95,16 @@ public class RecipeGen extends RecipeProvider{
 				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
 				.save(consumer);
 
+		shaped(WAYPOINT.get(), 4)
+				.pattern(" 13")
+				.pattern("121")
+				.pattern("11 ")
+				.define('1', Items.AMETHYST_SHARD)
+				.define('2', ModTags.GEMS_AQUAMARINE)
+				.define('3', Items.STRING)
+				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+				.save(consumer);
+
 		// Shapeless Recipe
 		shapeless(AQUAMARINE.get(), 9)
 				.requires(AQUAMARINE_BLOCK.get())
@@ -140,6 +150,14 @@ public class RecipeGen extends RecipeProvider{
 				.unlockedBy("has_taverncloth", has(TAVERNCLOTH.get()))
 				.save(consumer, new ResourceLocation(MODID, "tavern_from_taverncloth"));
 
+		shapeless(WAYPOINT.get())
+				.requires(WAYPOINT.get())
+				.unlockedBy("has_waypoint", has(WAYPOINT.get()))
+				.save(consumer, MODID+":clear_waypoint");
+
+		special(ModRecipes.CHARGE_BINDER_RECIPE.get())
+				.save(consumer, MODID+":charge_binder");
+
 		addMortarRecipe(Ingredient.of(ModTags.GEMS_AQUAMARINE), AQUAMARINE_DUST.get(), consumer);
 		addMortarRecipe(Ingredient.of(Tags.Items.GEMS_DIAMOND), DIAMOND_DUST.get(), consumer);
 		addMortarRecipe(Ingredient.of(Tags.Items.GEMS_LAPIS), LAPIS_DUST.get(), consumer);
@@ -171,6 +189,14 @@ public class RecipeGen extends RecipeProvider{
 				.pattern("1 1")
 				.define('1', RED_LEATHER.get())
 				.define('2', ModTags.GEMS_AQUAMARINE)
+				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+				.save(c));
+
+		easyMode(consumer, "binder", c -> shapeless(INFINITE_WAYPOINT_BINDER.get())
+				.requires(Items.BOOK)
+				.requires(ModTags.DUSTS_AMETHYST)
+				.requires(ModTags.DUSTS_AMETHYST)
+				.requires(ModTags.DUSTS_AMETHYST)
 				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
 				.save(c));
 
@@ -255,29 +281,31 @@ public class RecipeGen extends RecipeProvider{
 				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
 				.save(c));
 
-		shaped(WAYPOINT.get(), 4)
-				.pattern(" 13")
-				.pattern("121")
-				.pattern("11 ")
-				.define('1', Items.AMETHYST_SHARD)
-				.define('2', ModTags.GEMS_AQUAMARINE)
-				.define('3', Items.STRING)
+		notEasyMode(consumer, "binder", c -> shapeless(WAYPOINT_BINDER.get())
+				.requires(Items.BOOK)
+				.requires(ModTags.DUSTS_AMETHYST)
+				.requires(ModTags.DUSTS_AMETHYST)
+				.requires(ModTags.DUSTS_AMETHYST)
 				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
-				.save(consumer);
+				.save(c));
 
-		shapeless(WAYPOINT.get())
-				.requires(WAYPOINT.get())
-				.unlockedBy("has_waypoint", has(WAYPOINT.get()))
-				.save(consumer, MODID+":clear_waypoint");
+		notEasyMode(consumer, "purple_leather", c -> shapeless(PURPLE_LEATHER.get())
+				.requires(DEEP_PURPLE.get())
+				.requires(DEEP_PURPLE.get())
+				.requires(DEEP_PURPLE.get())
+				.requires(DEEP_PURPLE.get())
+				.requires(Tags.Items.LEATHER)
+				.requires(Items.HONEY_BOTTLE)
+				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
+				.save(c));
 
-		shapeless(WAYPOINT_BINDER.get())
+		notEasyMode(consumer, "infinite_binder", c -> shapeless(INFINITE_WAYPOINT_BINDER.get())
 				.requires(Items.BOOK)
 				.requires(DEEP_PURPLE.get())
+				.requires(DEEP_PURPLE.get())
+				.requires(DEEP_PURPLE.get())
 				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
-				.save(consumer);
-
-		special(ModRecipes.CHARGE_BINDER_RECIPE.get())
-				.save(consumer, MODID+":charge_binder");
+				.save(c));
 
 		// Furnace Recipe
 		Consumer<FinishedRecipe> c = result -> consumer.accept(result instanceof SimpleCookingRecipeBuilder.Result ?
