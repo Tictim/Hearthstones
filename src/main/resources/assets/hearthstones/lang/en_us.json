@@ -18,7 +18,7 @@
 	"item.hearthstones.red_leather": "Taverncloth Patch",
 	"item.hearthstones.tattered_leather": "Tattered Taverncloth Patch",
 	"item.hearthstones.blue_leather": "Blue Taverncloth Patch",
-	"item.hearthstones.purple_leather": "Purple Leather Patch",
+	"item.hearthstones.purple_leather": "Purple Taverncloth Patch",
 	"item.hearthstones.aquamarine": "Aquamarine",
 	"item.hearthstones.deep_blue": "Deep Blue",
 	"item.hearthstones.deep_purple": "Deep Purple",
@@ -103,7 +103,7 @@
 	"info.hearthstones.waypoint.tooltip.0": "§eStores the name and position of a Tavern. Can be given to other players.",
 	"info.hearthstones.waypoint.tooltip.1": "§eRight click at a Tavern to store its data. Use it again to retrieve the data.",
 	"info.hearthstones.waypoint.overlay.help.bind": "§6§lUse on Tavern§r to bind Waypoint",
-	"info.hearthstones.waypoint.overlay.help.lectern": "§6§lUse on Lectern§r to add Waypoint",
+	"info.hearthstones.waypoint.overlay.help.lectern": "§6§lUse on Binder§r to put Waypoint",
 	"info.hearthstones.waypoint.overlay.help.read": "§6§lRight click§r to read Waypoint",
 	"info.hearthstones.waypoint.overlay.saved": "Written:",
 
@@ -126,7 +126,7 @@
 
 	"enchantment.hearthstones.quickcast": "Quickcast",
 
-	"command.tavern_memory.add.no_tavern": "Tavern block doesn't exists at %s.",
+	"command.tavern_memory.add.no_tavern": "There's no Tavern block at %s.",
 	"command.tavern_memory.add.unloaded": "Position %s is outside of loaded area.",
 	"command.tavern_memory.add.out_of_world": "Position %s is outside of world boundary.",
 	"command.tavern_memory.add.not_global": "Tavern at %s is not Global Tavern.",
