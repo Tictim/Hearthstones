@@ -301,9 +301,9 @@ public class RecipeGen extends RecipeProvider{
 
 		notEasyMode(consumer, "infinite_binder", c -> shapeless(INFINITE_WAYPOINT_BINDER.get())
 				.requires(Items.BOOK)
-				.requires(DEEP_PURPLE.get())
-				.requires(DEEP_PURPLE.get())
-				.requires(DEEP_PURPLE.get())
+				.requires(PURPLE_LEATHER.get())
+				.requires(PURPLE_LEATHER.get())
+				.requires(PURPLE_LEATHER.get())
 				.unlockedBy("has_aquamarine", has(AQUAMARINE.get()))
 				.save(c));
 
