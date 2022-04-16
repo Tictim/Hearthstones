@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import tictim.hearthstones.config.ModCfg;
+import tictim.hearthstones.contents.ModTags;
 import tictim.hearthstones.hearthstone.HearthingPlanksHearthstone;
 
 import javax.annotation.Nullable;
@@ -20,7 +21,7 @@ public class HearthingPlanksItem extends HearthstoneItem{
 	}
 
 	@Override public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair){
-		return ItemTags.PLANKS.contains(repair.getItem());
+		return ModTags.has(ItemTags.PLANKS, repair.getItem());
 	}
 
 	@Override

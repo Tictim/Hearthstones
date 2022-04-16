@@ -3,6 +3,7 @@ package tictim.hearthstones.contents.item;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.Tags;
+import tictim.hearthstones.contents.ModTags;
 
 import java.util.Random;
 
@@ -30,6 +31,6 @@ public class MortarItem extends Item{
 
 	@Override
 	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair){
-		return Tags.Items.INGOTS_IRON.contains(repair.getItem());
+		return ModTags.has(Tags.Items.INGOTS_IRON, repair.getItem());
 	}
 }

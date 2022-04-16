@@ -1,9 +1,9 @@
 package tictim.hearthstones.contents;
 
-import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.features.OreFeatures;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
@@ -28,21 +28,23 @@ import static tictim.hearthstones.Hearthstones.MODID;
 public final class ModWorldgen{
 	private ModWorldgen(){}
 
-	private static PlacedFeature aquamarineOreFeature;
+	private static Holder<PlacedFeature> aquamarineOreFeature;
 
 	public static void register(){
 		List<OreConfiguration.TargetBlockState> aquamarineTargetList = List.of(
 				OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, ModBlocks.AQUAMARINE_ORE.get().defaultBlockState()),
 				OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES, ModBlocks.DEEPSLATE_AQUAMARINE_ORE.get().defaultBlockState()));
 
-		ConfiguredFeature<OreConfiguration, ?> aquamarineOre = Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(MODID, "aquamarine"),
-				Feature.ORE.configured(new OreConfiguration(aquamarineTargetList, 5)));
-		aquamarineOreFeature = Registry.register(BuiltinRegistries.PLACED_FEATURE, new ResourceLocation(MODID, "aquamarine"),
-				aquamarineOre.placed(List.of(
-						CountPlacement.of(20),
+		aquamarineOreFeature = PlacementUtils.register(
+				MODID+":aquamarine",
+				FeatureUtils.register(
+						MODID+":aquamarine",
+						Feature.ORE,
+						new OreConfiguration(aquamarineTargetList, 5)),
+				List.of(CountPlacement.of(20),
 						InSquarePlacement.spread(),
 						HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(15), VerticalAnchor.absolute(50)),
-						BiomeFilter.biome())));
+						BiomeFilter.biome()));
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

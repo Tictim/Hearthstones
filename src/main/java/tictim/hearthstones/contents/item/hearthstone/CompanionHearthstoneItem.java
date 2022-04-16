@@ -17,7 +17,7 @@ public class CompanionHearthstoneItem extends ScreenBasedHearthstoneItem{
 	}
 
 	@Override public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair){
-		return ModTags.HEARTHSTONE_MATERIAL.contains(repair.getItem());
+		return ModTags.has(ModTags.HEARTHSTONE_MATERIAL, repair.getItem());
 	}
 
 	@Override public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){

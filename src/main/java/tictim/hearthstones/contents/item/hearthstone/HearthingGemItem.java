@@ -17,7 +17,7 @@ public class HearthingGemItem extends ScreenBasedHearthstoneItem{
 	}
 
 	@Override public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair){
-		return ModTags.GEMS_AQUAMARINE.contains(repair.getItem());
+		return ModTags.has(ModTags.GEMS_AQUAMARINE, repair.getItem());
 	}
 
 	@Override public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag){
