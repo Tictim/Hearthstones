@@ -4,19 +4,14 @@
     {
       "conditions": [
         {
+          "type": "forge:not",
           "value": {
             "type": "hearthstones:easy_mode"
-          },
-          "type": "forge:not"
+          }
         }
       ],
       "recipe": {
         "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "111",
-          "121",
-          "131"
-        ],
         "key": {
           "1": {
             "item": "hearthstones:red_leather"
@@ -28,6 +23,11 @@
             "tag": "minecraft:logs"
           }
         },
+        "pattern": [
+          "111",
+          "121",
+          "131"
+        ],
         "result": {
           "item": "hearthstones:tavern"
         }

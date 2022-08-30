@@ -5,8 +5,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -97,7 +95,7 @@ public abstract class TavernBlock extends Block implements EntityBlock{
 				playSyncSound(level, pos);
 			else if(tavern.hasAccessPermission(player)&&player instanceof ServerPlayer sp)
 				ModNet.CHANNEL.send(PacketDistributor.PLAYER.with(() -> sp), new OpenTavernScreenMsg(tavern, player, tavern.pos().equals(memory.getHomePos())));
-		}else player.displayClientMessage(new TranslatableComponent("info.hearthstones.hearthstone.no_permission"), true);
+		}else player.displayClientMessage(Component.translatable("info.hearthstones.hearthstone.no_permission"), true);
 		return InteractionResult.SUCCESS;
 	}
 
@@ -109,7 +107,7 @@ public abstract class TavernBlock extends Block implements EntityBlock{
 		if(level.isClientSide||
 				!(placer instanceof Player player)||
 				!(level.getBlockEntity(pos) instanceof TavernBlockEntity tavern)) return;
-		if(stack.hasCustomHoverName()) tavern.setName(stack.getHoverName().getContents());
+		if(stack.hasCustomHoverName()) tavern.setName(stack.getHoverName().getString());
 		if(!tavern.owner().hasOwner()){
 			tavern.setOwner(Owner.of(player));
 			tavern.setAccess(AccessModifier.PROTECTED);
@@ -129,21 +127,21 @@ public abstract class TavernBlock extends Block implements EntityBlock{
 
 	@Override public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flagIn){
 		addTipInformation(stack, level, tooltip, flagIn);
-		tooltip.add(new TranslatableComponent("info.hearthstones.tavern.help"));
+		tooltip.add(Component.translatable("info.hearthstones.tavern.help"));
 
 		CompoundTag tag = stack.getTag();
 		if(tag==null||!tag.contains("BlockEntityTag", Tag.TAG_COMPOUND)) return;
 		CompoundTag nbt = tag.getCompound("BlockEntityTag");
 		if(nbt.contains("name", Tag.TAG_STRING))
-			tooltip.add(new TextComponent(" ").append(new TranslatableComponent("info.hearthstones.tavern.name", Component.Serializer.fromJson(nbt.getString("name")))));
+			tooltip.add(Component.literal(" ").append(Component.translatable("info.hearthstones.tavern.name", Component.Serializer.fromJson(nbt.getString("name")))));
 		if(nbt.contains("owner", Tag.TAG_COMPOUND)){
 			Owner owner = Owner.read(nbt.getCompound("owner"));
-			tooltip.add(new TextComponent(" ").append(new TranslatableComponent("info.hearthstones.tavern.owner", owner.getName(), owner.getId())));
+			tooltip.add(Component.literal(" ").append(Component.translatable("info.hearthstones.tavern.owner", owner.getName(), owner.getId())));
 		}
 	}
 
 	protected void addTipInformation(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag){
-		tooltip.add(new TranslatableComponent("info.hearthstones.tavern.tooltip"));
+		tooltip.add(Component.translatable("info.hearthstones.tavern.tooltip"));
 	}
 
 	@SuppressWarnings("deprecation") @Override public BlockState rotate(BlockState state, Rotation rotation){
@@ -164,6 +162,6 @@ public abstract class TavernBlock extends Block implements EntityBlock{
 		playSyncSound(level, entity.getX(), entity.getY(), entity.getZ());
 	}
 	public static void playSyncSound(Level level, double x, double y, double z){
-		level.playSound(null, x,y,z, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 0.5f, 1);
+		level.playSound(null, x, y, z, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 0.5f, 1);
 	}
 }

@@ -7,8 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -16,9 +15,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.GuiUtils;
-import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.ScreenUtils;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import tictim.hearthstones.client.screen.TavernButton;
 import tictim.hearthstones.contents.ModItems;
 import tictim.hearthstones.contents.blockentity.BinderLecternBlockEntity;
@@ -35,13 +34,13 @@ import tictim.hearthstones.tavern.TavernTextFormat;
 import javax.annotation.Nullable;
 import java.util.Set;
 
-public class HearthstoneOverlay implements IIngameOverlay{
+public class HearthstoneOverlay implements IGuiOverlay{
 	/**
 	 * Yeah I know this looks bad, stfu
 	 */
 	@Nullable public static TavernPos homePos;
 
-	@Override public void render(ForgeIngameGui gui, PoseStack pose, float partialTick, int width, int height){
+	@Override public void render(ForgeGui gui, PoseStack pose, float partialTick, int width, int height){
 		if(Minecraft.getInstance().screen!=null) return;
 		Player p = Minecraft.getInstance().player;
 		if(p==null||!p.isAlive()) return;
@@ -126,7 +125,7 @@ public class HearthstoneOverlay implements IIngameOverlay{
 			if(hearthstoneItem.getHearthstone() instanceof CompanionHearthstone ch){
 				Set<Entity> entities = ch.getWarpTargets(player);
 				if(!entities.isEmpty()){
-					TranslatableComponent text = new TranslatableComponent("info.hearthstones.companion_hearthstone.companions");
+					MutableComponent text = Component.translatable("info.hearthstones.companion_hearthstone.companions");
 					for(Entity entity : entities) text.append("\n").append(entity.getDisplayName());
 
 					String[] strs = text.getString().split("\n");
@@ -141,9 +140,9 @@ public class HearthstoneOverlay implements IIngameOverlay{
 
 		if(player.isUsingItem()&&player.getUsedItemHand()==hand){
 			double ratio = Mth.clamp((double)player.getUseItemRemainingTicks()/player.getUseItem().getUseDuration(), 0, 1);
-			drawCentered(pose, new TranslatableComponent("info.hearthstones.hearthstone.hearthing"), left, top+22);
-			GuiUtils.drawGradientRect(pose.last().pose(), -90, left-32, top+33, left+32, top+43, 0xFF5f5f5f, 0xFF5f5f5f);
-			GuiUtils.drawGradientRect(pose.last().pose(), -90, left-32, top+33, left+32-(int)(ratio*64), top+43, 0xFF02ccfc, 0xFF02ccfc);
+			drawCentered(pose, Component.translatable("info.hearthstones.hearthstone.hearthing"), left, top+22);
+			ScreenUtils.drawGradientRect(pose.last().pose(), -90, left-32, top+33, left+32, top+43, 0xFF5f5f5f, 0xFF5f5f5f);
+			ScreenUtils.drawGradientRect(pose.last().pose(), -90, left-32, top+33, left+32-(int)(ratio*64), top+43, 0xFF02ccfc, 0xFF02ccfc);
 		}
 	}
 
@@ -156,9 +155,9 @@ public class HearthstoneOverlay implements IIngameOverlay{
 		int midpoint = top-33-18;
 
 		Component waypointText = infiniteWaypoints ?
-				new TranslatableComponent("info.hearthstones.binder.overlay.waypoints.infinite",
+				Component.translatable("info.hearthstones.binder.overlay.waypoints.infinite",
 						formatWaypointCount(waypoints)) :
-				new TranslatableComponent("info.hearthstones.binder.overlay.waypoints",
+				Component.translatable("info.hearthstones.binder.overlay.waypoints",
 						formatWaypointCount(waypoints), formatWaypointCount(emptyWaypoints));
 
 		int length = 16+4+mc.font.width(waypointText);
@@ -175,9 +174,9 @@ public class HearthstoneOverlay implements IIngameOverlay{
 	}
 
 	private static Component formatWaypointCount(int waypoints){
-		if(waypoints<=0) return new TextComponent(waypoints+"").withStyle(ChatFormatting.RED);
-		else if(waypoints>=1000) return new TextComponent("1,000+");
-		else return new TextComponent(waypoints+"");
+		if(waypoints<=0) return Component.literal(waypoints+"").withStyle(ChatFormatting.RED);
+		else if(waypoints>=1000) return Component.literal("1,000+");
+		else return Component.literal(waypoints+"");
 	}
 
 	private static void drawWaypointOverlay(PoseStack pose, Player player, int width, int height, ItemStack stack){
@@ -207,7 +206,7 @@ public class HearthstoneOverlay implements IIngameOverlay{
 		mc.getItemRenderer().renderAndDecorateItem(player, tavern.type().stackForRender(), xCenter-8, yStart, 0);
 
 		if(contextStringKey!=null){
-			drawCentered(pose, new TranslatableComponent(contextStringKey), xCenter, yStart+19);
+			drawCentered(pose, Component.translatable(contextStringKey), xCenter, yStart+19);
 			yStart += 11;
 		}
 		//noinspection ConstantConditions
@@ -236,7 +235,7 @@ public class HearthstoneOverlay implements IIngameOverlay{
 
 	private static void drawHelpString(PoseStack pose, int xCenter, int yStart, String... keys){
 		for(String key : keys){
-			drawCentered(pose, new TranslatableComponent(key), xCenter, yStart);
+			drawCentered(pose, Component.translatable(key), xCenter, yStart);
 			yStart += Minecraft.getInstance().font.lineHeight;
 		}
 	}

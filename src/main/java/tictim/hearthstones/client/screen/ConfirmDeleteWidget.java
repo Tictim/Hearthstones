@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import tictim.hearthstones.client.HearthstoneOverlay;
 import tictim.hearthstones.tavern.Tavern;
 
@@ -20,13 +19,13 @@ final class ConfirmDeleteWidget{
 
 	public ConfirmDeleteWidget(TavernMemoryScreen screen, Tavern tavern){
 		this.screen = screen;
-		this.confirmDeleteText = new TranslatableComponent("info.hearthstones.hearthstone.confirm_delete");
+		this.confirmDeleteText = Component.translatable("info.hearthstones.hearthstone.confirm_delete");
 		this.tavern = tavern;
 
 		this.yes = new Button(
 				screen.width/2-5-BUTTON_WIDTH, buttonY(),
 				BUTTON_WIDTH, BUTTON_HEIGHT,
-				new TranslatableComponent("info.hearthstones.hearthstone.confirm_delete.yes"),
+				Component.translatable("info.hearthstones.hearthstone.confirm_delete.yes"),
 				a -> {
 					screen.delete(tavern);
 					screen.setCloseConfirmDelete(true);
@@ -34,7 +33,7 @@ final class ConfirmDeleteWidget{
 		this.no = new Button(
 				screen.width/2+5, buttonY(),
 				BUTTON_WIDTH, BUTTON_HEIGHT,
-				new TranslatableComponent("info.hearthstones.hearthstone.confirm_delete.no"),
+				Component.translatable("info.hearthstones.hearthstone.confirm_delete.no"),
 				a -> screen.setCloseConfirmDelete(true));
 	}
 

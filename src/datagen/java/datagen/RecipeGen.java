@@ -1,4 +1,4 @@
-package tictim.hearthstones.datagen;
+package datagen;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;

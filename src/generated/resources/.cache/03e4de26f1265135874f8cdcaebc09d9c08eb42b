@@ -1,0 +1,12 @@
+// 1.19.2	2022-08-30T21:28:33.7949485	Tags for minecraft:item
+50b0b69c331b2dcaf6c91ecbad37840186f81eaf data/forge/tags/items/dusts.json
+e7bd1feeeba6e59cd2d6d210adddf9adc8dd63ce data/forge/tags/items/dusts/amethyst.json
+7c91ed89421a2d5ece04a62d29b197018968624d data/forge/tags/items/dusts/aquamarine.json
+f1bc815439328b801bdb2d32a63aed71f98cc195 data/forge/tags/items/dusts/diamond.json
+40c4033619215755551d180784fb1dd5f04515d5 data/forge/tags/items/dusts/lapis.json
+f6d708b77bfcfbf8fa4d3b0ea106081378af8094 data/forge/tags/items/gems.json
+c5f501c58d95a287c991652bb8db138e9ebfcda2 data/forge/tags/items/gems/aquamarine.json
+6c9aa764cd20e19965910532370c2051d6bafe3b data/forge/tags/items/ores/aquamarine.json
+29656b59f178d1ee6f09e262066e124d7289a021 data/forge/tags/items/storage_blocks/aquamarine.json
+9ea90f6f4a526067fa78991186f334729881a223 data/hearthstones/tags/items/hearthstone_material.json
+dd284fe109751b1923a56e5c71a0f49446885d27 data/hearthstones/tags/items/taverns.json

@@ -12,7 +12,7 @@
     }
   ],
   "result": {
-    "item": "hearthstones:deep_purple",
-    "count": 3
+    "count": 3,
+    "item": "hearthstones:deep_purple"
   }
 }

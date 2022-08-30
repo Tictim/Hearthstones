@@ -3,7 +3,6 @@ package tictim.hearthstones.tavern;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectArrayMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import tictim.hearthstones.contents.ModItems;
@@ -24,9 +23,9 @@ public final class TavernType{
 		return type==null ? NORMAL : type;
 	}
 
-	public static final TavernType NORMAL = new TavernType(0, "normal", new ResourceLocation(MODID, "textures/screen/tavern/normal.png"), () -> new ItemStack(ModItems.TAVERN.get()), new TextComponent("Normal").withStyle(ChatFormatting.RED));
-	public static final TavernType SHABBY = new TavernType(1, "shabby", new ResourceLocation(MODID, "textures/screen/tavern/shabby.png"), () -> new ItemStack(ModItems.SHABBY_TAVERN.get()), new TextComponent("Shabby").withStyle(ChatFormatting.GRAY));
-	public static final TavernType GLOBAL = new TavernType(2, "global", new ResourceLocation(MODID, "textures/screen/tavern/global.png"), () -> new ItemStack(ModItems.GLOBAL_TAVERN.get()), new TextComponent("Global").withStyle(ChatFormatting.BLUE));
+	public static final TavernType NORMAL = new TavernType(0, "normal", new ResourceLocation(MODID, "textures/screen/tavern/normal.png"), () -> new ItemStack(ModItems.TAVERN.get()), Component.literal("Normal").withStyle(ChatFormatting.RED));
+	public static final TavernType SHABBY = new TavernType(1, "shabby", new ResourceLocation(MODID, "textures/screen/tavern/shabby.png"), () -> new ItemStack(ModItems.SHABBY_TAVERN.get()), Component.literal("Shabby").withStyle(ChatFormatting.GRAY));
+	public static final TavernType GLOBAL = new TavernType(2, "global", new ResourceLocation(MODID, "textures/screen/tavern/global.png"), () -> new ItemStack(ModItems.GLOBAL_TAVERN.get()), Component.literal("Global").withStyle(ChatFormatting.BLUE));
 
 	public final byte id;
 	public final String name;

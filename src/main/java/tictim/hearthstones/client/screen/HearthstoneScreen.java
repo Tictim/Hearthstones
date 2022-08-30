@@ -1,7 +1,6 @@
 package tictim.hearthstones.client.screen;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -130,6 +129,6 @@ public class HearthstoneScreen extends TavernMemoryScreen{
 	}
 
 	@Nullable @Override protected Component getEmptyScreenMessage(){
-		return new TranslatableComponent("info.hearthstones.screen.empty");
+		return Component.translatable("info.hearthstones.screen.empty");
 	}
 }

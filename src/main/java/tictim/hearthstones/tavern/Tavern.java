@@ -1,7 +1,6 @@
 package tictim.hearthstones.tavern;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;

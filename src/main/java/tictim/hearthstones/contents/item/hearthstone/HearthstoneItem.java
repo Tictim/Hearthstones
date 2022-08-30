@@ -3,7 +3,7 @@ package tictim.hearthstones.contents.item.hearthstone;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -52,7 +51,7 @@ public class HearthstoneItem extends Item{
 	@Override public boolean isEnchantable(ItemStack stack){
 		return true;
 	}
-	@Override public int getEnchantmentValue(){
+	@SuppressWarnings("deprecation") @Override public int getEnchantmentValue(){
 		return 5;
 	}
 
@@ -60,7 +59,7 @@ public class HearthstoneItem extends Item{
 		return UseAnim.BOW;
 	}
 	@Override public int getUseDuration(ItemStack stack){
-		int lv = EnchantmentHelper.getItemEnchantmentLevel(ModEnchantments.QUICKCAST.get(), stack);
+		int lv = stack.getEnchantmentLevel(ModEnchantments.QUICKCAST.get());
 		return 120-21*lv;
 	}
 
@@ -88,7 +87,7 @@ public class HearthstoneItem extends Item{
 			if(!new WarpContext(itemInHand, player, hand).hasCooldown()) player.startUsingItem(hand);
 			else{
 				player.getCooldowns().addCooldown(this, 20);
-				player.displayClientMessage(new TranslatableComponent("info.hearthstones.hearthstone.cooldown"), true);
+				player.displayClientMessage(Component.translatable("info.hearthstones.hearthstone.cooldown"), true);
 			}
 		}
 		return InteractionResultHolder.consume(itemInHand);

@@ -1,5 +1,6 @@
 package tictim.hearthstones.tavern;
 
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +32,7 @@ public final class Owner{
 		this(null, "");
 	}
 	private Owner(Player player){
-		this.id = Player.createPlayerUUID(player.getGameProfile());
+		this.id = UUIDUtil.getOrCreatePlayerUUID(player.getGameProfile());
 		this.name = player.getGameProfile().getName();
 	}
 	private Owner(@Nullable UUID owner, String name){
@@ -40,7 +41,7 @@ public final class Owner{
 	}
 
 	public boolean isOwner(Player player){
-		return id==null||id.equals(Player.createPlayerUUID(player.getGameProfile()));
+		return id==null||id.equals(UUIDUtil.getOrCreatePlayerUUID(player.getGameProfile()));
 	}
 	public boolean isOwnerOrOp(Player player){
 		return isOwner(player)||player.hasPermissions(1); // TODO test if it works

@@ -2,7 +2,6 @@ package tictim.hearthstones.contents.item.tavernupgrade;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -25,10 +24,10 @@ public class ShabbyTavernUpgradeItem extends TavernUpgradeItem{
 	}
 
 	@Override public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(this.allowdedIn(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
+		if(this.allowedIn(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
 	}
 
 	@Override public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("info.hearthstones.tattered_taverncloth.tooltip"));
+		tooltip.add(Component.translatable("info.hearthstones.tattered_taverncloth.tooltip"));
 	}
 }

@@ -7,8 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import tictim.hearthstones.Hearthstones;
 import tictim.hearthstones.client.Rendering;
@@ -24,8 +22,8 @@ import java.util.Set;
 public final class TavernButton extends Button{
 	public static final ResourceLocation ICONS = new ResourceLocation(Hearthstones.MODID, "textures/screen/icons.png");
 
-	private static final Component HELP_SELECT = new TranslatableComponent("info.hearthstones.screen.help.select");
-	private static final Component HELP_REMOVE = new TranslatableComponent("info.hearthstones.screen.help.remove");
+	private static final Component HELP_SELECT = Component.translatable("info.hearthstones.screen.help.select");
+	private static final Component HELP_REMOVE = Component.translatable("info.hearthstones.screen.help.remove");
 
 	public static final int BASE_WIDTH = 179;
 	public static final int BASE_HEIGHT = 20;
@@ -41,7 +39,7 @@ public final class TavernButton extends Button{
 	public boolean canDelete;
 
 	public TavernButton(TavernMemoryScreen screen, Tavern tavern){
-		super(0, 0, WIDTH, HEIGHT, TextComponent.EMPTY, button -> {});
+		super(0, 0, WIDTH, HEIGHT, Component.empty(), button -> {});
 		this.screen = screen;
 		this.tavern = tavern;
 	}
@@ -106,8 +104,8 @@ public final class TavernButton extends Button{
 			i++;
 		}
 		screen.renderTooltip(pose, canDelete ?
-				canSelect ? List.of(HELP_SELECT, HELP_REMOVE) : List.of(HELP_REMOVE) :
-				canSelect ? List.of(HELP_SELECT) : List.of(),
+						canSelect ? List.of(HELP_SELECT, HELP_REMOVE) : List.of(HELP_REMOVE) :
+						canSelect ? List.of(HELP_SELECT) : List.of(),
 				Optional.empty(), mouseX, mouseY);
 	}
 
@@ -121,7 +119,7 @@ public final class TavernButton extends Button{
 	public enum TavernProperty{
 		MISSING, HOME, GLOBAL, SHABBY, TOO_FAR;
 
-		private final List<Component> tooltip = Collections.singletonList(new TranslatableComponent("info.hearthstones.screen.property."+name().toLowerCase()));
+		private final List<Component> tooltip = Collections.singletonList(Component.translatable("info.hearthstones.screen.property."+name().toLowerCase()));
 
 		public List<Component> getTooltip(){
 			return tooltip;

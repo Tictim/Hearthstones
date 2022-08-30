@@ -9,11 +9,6 @@
       ],
       "recipe": {
         "type": "minecraft:crafting_shaped",
-        "pattern": [
-          " 11",
-          "121",
-          "11 "
-        ],
         "key": {
           "1": {
             "tag": "hearthstones:hearthstone_material"
@@ -22,6 +17,11 @@
             "tag": "forge:gems/aquamarine"
           }
         },
+        "pattern": [
+          " 11",
+          "121",
+          "11 "
+        ],
         "result": {
           "item": "hearthstones:hearthstone"
         }

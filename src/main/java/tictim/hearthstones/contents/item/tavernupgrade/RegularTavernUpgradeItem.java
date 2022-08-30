@@ -1,7 +1,6 @@
 package tictim.hearthstones.contents.item.tavernupgrade;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -23,6 +22,6 @@ public class RegularTavernUpgradeItem extends TavernUpgradeItem{
 	}
 
 	@Override public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent(ModCfg.easyMode() ? "info.hearthstones.taverncloth.tooltip.easyMode" : "info.hearthstones.taverncloth.tooltip"));
+		tooltip.add(Component.translatable(ModCfg.easyMode() ? "info.hearthstones.taverncloth.tooltip.easyMode" : "info.hearthstones.taverncloth.tooltip"));
 	}
 }

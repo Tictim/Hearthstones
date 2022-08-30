@@ -1,0 +1,9 @@
+// 1.19.2	2022-08-30T21:28:33.7899608	Tags for minecraft:block
+2d9f21e47b77b36166d5f7984b4945fa5c58e01b data/forge/tags/blocks/ores.json
+6c9aa764cd20e19965910532370c2051d6bafe3b data/forge/tags/blocks/ores/aquamarine.json
+336a8f34d1ed8cb8e6e417bc83c617ee568359b9 data/forge/tags/blocks/storage_blocks.json
+29656b59f178d1ee6f09e262066e124d7289a021 data/forge/tags/blocks/storage_blocks/aquamarine.json
+dd284fe109751b1923a56e5c71a0f49446885d27 data/hearthstones/tags/blocks/taverns.json
+7aa356697f2cfde873551bac30b5f08eb8f9a0e0 data/minecraft/tags/blocks/mineable/axe.json
+510c282f906f8eb0c1838cb8e2eb10829187cb53 data/minecraft/tags/blocks/mineable/pickaxe.json
+510c282f906f8eb0c1838cb8e2eb10829187cb53 data/minecraft/tags/blocks/needs_stone_tool.json

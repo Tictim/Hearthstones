@@ -1,12 +1,12 @@
 {
   "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.5,
   "ingredient": {
     "item": "hearthstones:deepslate_aquamarine_ore"
   },
   "result": {
-    "item": "hearthstones:aquamarine",
-    "count": 9
-  },
-  "experience": 0.5,
-  "cookingtime": 200
+    "count": 9,
+    "item": "hearthstones:aquamarine"
+  }
 }

@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
 import net.minecraft.world.Nameable;
@@ -93,10 +92,10 @@ public abstract class TavernBlockEntity extends BlockEntity implements Tavern, N
 	}
 
 	@Override public Component getName(){
-		return new TextComponent(name!=null ? name : "");
+		return Component.literal(name!=null ? name : "");
 	}
 	@Nullable @Override public Component getCustomName(){
-		return name!=null ? new TextComponent(name) : null;
+		return name!=null ? Component.literal(name) : null;
 	}
 	public void setName(@Nullable String name){
 		if(Objects.equals(this.name, name)) return;

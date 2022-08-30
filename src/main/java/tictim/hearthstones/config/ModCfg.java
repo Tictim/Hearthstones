@@ -30,7 +30,12 @@ public final class ModCfg{
 		hearthingGem = new HearthingGemConfig(server, "hearthingGem", "Hearthing Gem", 0, 150);
 		companionHearthstone = new HearthstoneConfig(server, "companionHearthstone", "Companion Hearthstone", 0, 225);
 
-		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, server.build());
+		ForgeConfigSpec spec = server.build();
+		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, spec);
+		hearthstone.setSpec(spec);
+		hearthingPlanks.setSpec(spec);
+		hearthingGem.setSpec(spec);
+		companionHearthstone.setSpec(spec);
 
 		ForgeConfigSpec.Builder common = new ForgeConfigSpec.Builder();
 

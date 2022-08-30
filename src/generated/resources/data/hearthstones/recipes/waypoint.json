@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " 13",
-    "121",
-    "11 "
-  ],
   "key": {
     "1": {
       "item": "minecraft:amethyst_shard"
@@ -16,8 +11,13 @@
       "item": "minecraft:string"
     }
   },
+  "pattern": [
+    " 13",
+    "121",
+    "11 "
+  ],
   "result": {
-    "item": "hearthstones:waypoint",
-    "count": 4
+    "count": 4,
+    "item": "hearthstones:waypoint"
   }
 }

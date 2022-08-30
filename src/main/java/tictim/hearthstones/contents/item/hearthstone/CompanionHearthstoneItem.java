@@ -1,7 +1,6 @@
 package tictim.hearthstones.contents.item.hearthstone;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -21,8 +20,8 @@ public class CompanionHearthstoneItem extends ScreenBasedHearthstoneItem{
 	}
 
 	@Override public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
-		tooltip.add(new TranslatableComponent("info.hearthstones.hearthstone.tooltip"));
-		tooltip.add(new TranslatableComponent("info.hearthstones.companion_hearthstone.tooltip.0"));
-		tooltip.add(new TranslatableComponent("info.hearthstones.companion_hearthstone.tooltip.1"));
+		tooltip.add(Component.translatable("info.hearthstones.hearthstone.tooltip"));
+		tooltip.add(Component.translatable("info.hearthstones.companion_hearthstone.tooltip.0"));
+		tooltip.add(Component.translatable("info.hearthstones.companion_hearthstone.tooltip.1"));
 	}
 }

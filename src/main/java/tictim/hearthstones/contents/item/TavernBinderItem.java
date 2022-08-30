@@ -3,7 +3,6 @@ package tictim.hearthstones.contents.item;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -57,7 +56,7 @@ public class TavernBinderItem extends Item{
 			boolean result = data.addOrUpdateWaypoint(tavern);
 			Player player = context.getPlayer();
 			if(player!=null)
-				player.displayClientMessage(new TranslatableComponent(result ?
+				player.displayClientMessage(Component.translatable(result ?
 						"info.hearthstones.binder.saved" :
 						"info.hearthstones.binder.no_waypoint"), true);
 		}else if(blockEntity instanceof BinderLecternBlockEntity binderLectern){
@@ -67,7 +66,7 @@ public class TavernBinderItem extends Item{
 				if(r1||r2){
 					if(r2) binderLectern.setChanged();
 					if(context.getPlayer()!=null)
-						context.getPlayer().displayClientMessage(new TranslatableComponent("info.hearthstones.binder.combined"), true);
+						context.getPlayer().displayClientMessage(Component.translatable("info.hearthstones.binder.combined"), true);
 				}
 				TavernBlock.playSyncSound(level, pos);
 			}
@@ -117,14 +116,14 @@ public class TavernBinderItem extends Item{
 		TavernBinderData data = data(stack);
 		if(data!=null&&data.getWaypoints()>0){
 			text.add(infiniteWaypoints ?
-					new TranslatableComponent("info.hearthstones.binder.tooltip.waypoints.infinite",
+					Component.translatable("info.hearthstones.binder.tooltip.waypoints.infinite",
 							data.getWaypoints()) :
-					new TranslatableComponent("info.hearthstones.binder.tooltip.waypoints",
+					Component.translatable("info.hearthstones.binder.tooltip.waypoints",
 							data.getWaypoints(), data.getEmptyWaypoints()));
 		}
-		text.add(new TranslatableComponent("info.hearthstones.binder.tooltip"));
+		text.add(Component.translatable("info.hearthstones.binder.tooltip"));
 		if(infiniteWaypoints)
-			text.add(new TranslatableComponent("info.hearthstones.binder.tooltip.infinite"));
+			text.add(Component.translatable("info.hearthstones.binder.tooltip.infinite"));
 	}
 
 	@Override public boolean isFoil(ItemStack stack){

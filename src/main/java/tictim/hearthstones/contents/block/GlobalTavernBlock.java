@@ -2,7 +2,6 @@ package tictim.hearthstones.contents.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -24,12 +23,12 @@ public class GlobalTavernBlock extends TavernBlock{
 
 	@Override public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flagIn){
 		super.appendHoverText(stack, level, tooltip, flagIn);
-		tooltip.add(new TranslatableComponent("info.hearthstones.tavern.global.tooltip.1"));
+		tooltip.add(Component.translatable("info.hearthstones.tavern.global.tooltip.1"));
 	}
 
 	@Override protected void addTipInformation(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag){
 		super.addTipInformation(stack, level, tooltip, flag);
-		tooltip.add(new TranslatableComponent("info.hearthstones.tavern.global.tooltip.0"));
+		tooltip.add(Component.translatable("info.hearthstones.tavern.global.tooltip.0"));
 	}
 
 	@Override public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack){

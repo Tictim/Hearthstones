@@ -7,8 +7,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import tictim.hearthstones.contents.ModItems;
 import tictim.hearthstones.net.ModNet;
@@ -122,7 +121,7 @@ public abstract class BinderScreen extends TavernMemoryScreen{
 		@Nullable private Component waypointText;
 
 		public WaypointWidget(){
-			super(0, 0, 0, 0, TextComponent.EMPTY);
+			super(0, 0, 0, 0, Component.empty());
 		}
 
 		private void updateSize(){
@@ -139,8 +138,8 @@ public abstract class BinderScreen extends TavernMemoryScreen{
 					waypointsCache!=waypoints||
 					infiniteWaypointsCache!=infiniteWaypoints){
 				this.waypointText = infiniteWaypoints ?
-						new TextComponent(waypoints+"") :
-						new TextComponent(waypoints+" / ").append(formatTotalWaypoints(waypoints, blankWaypoints));
+						Component.literal(waypoints+"") :
+						Component.literal(waypoints+" / ").append(formatTotalWaypoints(waypoints, blankWaypoints));
 				this.blankWaypointsCache = blankWaypoints;
 				this.waypointsCache = waypoints;
 				this.infiniteWaypointsCache = infiniteWaypoints;
@@ -149,7 +148,7 @@ public abstract class BinderScreen extends TavernMemoryScreen{
 		}
 
 		private static Component formatTotalWaypoints(int waypoints, int blankWaypoints){
-			TextComponent text = new TextComponent((long)waypoints+blankWaypoints+"");
+			MutableComponent text = Component.literal((long)waypoints+blankWaypoints+"");
 			if(blankWaypoints<=0)
 				text.withStyle(waypoints<=0 ? ChatFormatting.RED : ChatFormatting.GOLD);
 			return text;
@@ -167,25 +166,25 @@ public abstract class BinderScreen extends TavernMemoryScreen{
 		@Override public void updateNarration(NarrationElementOutput narrationElementOutput){}
 
 		private static final List<Component> infiniteBinderHelp = List.of(
-				new TranslatableComponent("info.hearthstones.screen.binder.help.0"),
-				new TranslatableComponent("info.hearthstones.screen.binder.help.1"),
-				new TranslatableComponent("info.hearthstones.screen.binder.help.2"),
-				new TranslatableComponent("info.hearthstones.screen.binder.help.3"),
-				new TranslatableComponent("info.hearthstones.screen.binder.help.4"),
-				new TranslatableComponent("info.hearthstones.screen.binder.help.6"),
-				new TranslatableComponent("info.hearthstones.screen.binder.help.7"),
-				new TranslatableComponent("info.hearthstones.screen.binder.help.8")
+				Component.translatable("info.hearthstones.screen.binder.help.0"),
+				Component.translatable("info.hearthstones.screen.binder.help.1"),
+				Component.translatable("info.hearthstones.screen.binder.help.2"),
+				Component.translatable("info.hearthstones.screen.binder.help.3"),
+				Component.translatable("info.hearthstones.screen.binder.help.4"),
+				Component.translatable("info.hearthstones.screen.binder.help.6"),
+				Component.translatable("info.hearthstones.screen.binder.help.7"),
+				Component.translatable("info.hearthstones.screen.binder.help.8")
 		);
 		private static final List<Component> binderHelp = List.of(
-				new TranslatableComponent("info.hearthstones.screen.binder.help.0"),
-				new TranslatableComponent("info.hearthstones.screen.binder.help.1"),
-				new TranslatableComponent("info.hearthstones.screen.binder.help.2"),
-				new TranslatableComponent("info.hearthstones.screen.binder.help.3"),
-				new TranslatableComponent("info.hearthstones.screen.binder.help.4"),
-				new TranslatableComponent("info.hearthstones.screen.binder.help.5"),
-				new TranslatableComponent("info.hearthstones.screen.binder.help.6"),
-				new TranslatableComponent("info.hearthstones.screen.binder.help.7"),
-				new TranslatableComponent("info.hearthstones.screen.binder.help.8")
+				Component.translatable("info.hearthstones.screen.binder.help.0"),
+				Component.translatable("info.hearthstones.screen.binder.help.1"),
+				Component.translatable("info.hearthstones.screen.binder.help.2"),
+				Component.translatable("info.hearthstones.screen.binder.help.3"),
+				Component.translatable("info.hearthstones.screen.binder.help.4"),
+				Component.translatable("info.hearthstones.screen.binder.help.5"),
+				Component.translatable("info.hearthstones.screen.binder.help.6"),
+				Component.translatable("info.hearthstones.screen.binder.help.7"),
+				Component.translatable("info.hearthstones.screen.binder.help.8")
 		);
 
 		@Override public void renderToolTip(PoseStack pose, int mouseX, int mouseY){
@@ -194,9 +193,9 @@ public abstract class BinderScreen extends TavernMemoryScreen{
 						infiniteWaypoints ? infiniteBinderHelp : binderHelp :
 						List.of(
 								infiniteWaypoints ?
-										new TranslatableComponent("info.hearthstones.screen.binder.waypoints.infinite", waypointsCache) :
-										new TranslatableComponent("info.hearthstones.screen.binder.waypoints", waypointsCache, blankWaypointsCache),
-								new TranslatableComponent("info.hearthstones.screen.binder.help.collapsed")
+										Component.translatable("info.hearthstones.screen.binder.waypoints.infinite", waypointsCache) :
+										Component.translatable("info.hearthstones.screen.binder.waypoints", waypointsCache, blankWaypointsCache),
+								Component.translatable("info.hearthstones.screen.binder.help.collapsed")
 						), Optional.empty(), mouseX, mouseY);
 		}
 	}

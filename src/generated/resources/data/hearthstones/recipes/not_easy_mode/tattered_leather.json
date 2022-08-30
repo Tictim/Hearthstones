@@ -4,10 +4,10 @@
     {
       "conditions": [
         {
+          "type": "forge:not",
           "value": {
             "type": "hearthstones:easy_mode"
-          },
-          "type": "forge:not"
+          }
         }
       ],
       "recipe": {
@@ -30,8 +30,8 @@
           }
         ],
         "result": {
-          "item": "hearthstones:tattered_leather",
-          "count": 7
+          "count": 7,
+          "item": "hearthstones:tattered_leather"
         }
       }
     }

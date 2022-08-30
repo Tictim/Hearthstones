@@ -2,7 +2,6 @@ package tictim.hearthstones.contents;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -15,12 +14,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.contents.item.MortarItem;
+import tictim.hearthstones.contents.item.TavernBinderItem;
+import tictim.hearthstones.contents.item.TavernWaypointItem;
 import tictim.hearthstones.contents.item.hearthstone.CompanionHearthstoneItem;
 import tictim.hearthstones.contents.item.hearthstone.HearthingGemItem;
 import tictim.hearthstones.contents.item.hearthstone.HearthingPlanksItem;
 import tictim.hearthstones.contents.item.hearthstone.NormalHearthstoneItem;
-import tictim.hearthstones.contents.item.TavernBinderItem;
-import tictim.hearthstones.contents.item.TavernWaypointItem;
 import tictim.hearthstones.contents.item.tavernupgrade.GlobalTavernUpgradeItem;
 import tictim.hearthstones.contents.item.tavernupgrade.RegularTavernUpgradeItem;
 import tictim.hearthstones.contents.item.tavernupgrade.ShabbyTavernUpgradeItem;
@@ -48,7 +47,7 @@ public final class ModItems{
 
 	public static final RegistryObject<Item> COMPANION_STONE = REGISTER.register("companion_stone", () -> new Item(p().stacksTo(1)){
 		@Override public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag){
-			tooltip.add(new TranslatableComponent("info.hearthstones.companion_stone.tooltip"));
+			tooltip.add(Component.translatable("info.hearthstones.companion_stone.tooltip"));
 		}
 	});
 	public static final RegistryObject<Item> MORTAR = REGISTER.register("mortar", () -> new MortarItem(p().durability(155).setNoRepair()));
@@ -65,7 +64,7 @@ public final class ModItems{
 	public static final RegistryObject<Item> RED_LEATHER = REGISTER.register("red_leather", () -> new Item(p()));
 	public static final RegistryObject<Item> TATTERED_LEATHER = REGISTER.register("tattered_leather", () -> new Item(p()){
 		@Override public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-			if(this.allowdedIn(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
+			if(this.allowedIn(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
 		}
 	});
 	public static final RegistryObject<Item> BLUE_LEATHER = REGISTER.register("blue_leather", () -> new Item(p(Rarity.UNCOMMON)));

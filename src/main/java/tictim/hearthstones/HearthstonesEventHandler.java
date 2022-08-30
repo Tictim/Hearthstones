@@ -30,7 +30,7 @@ public final class HearthstonesEventHandler{
 
 	@SubscribeEvent
 	public static void blockBreakEvent(LivingDestroyBlockEvent event){
-		LivingEntity entity = event.getEntityLiving();
+		LivingEntity entity = event.getEntity();
 		if(entity.level.getBlockEntity(event.getPos()) instanceof Tavern tavern){
 			boolean canBreak = entity instanceof Player&&canBreak(tavern, (Player)entity);
 			if(!canBreak) event.setCanceled(true);
@@ -39,11 +39,13 @@ public final class HearthstonesEventHandler{
 
 	@SubscribeEvent
 	public static void breakSpeedEvent(PlayerEvent.BreakSpeed event){
-		Player player = event.getPlayer();
-		if(player.level.getBlockEntity(event.getPos()) instanceof Tavern tavern){
-			boolean canBreak = canBreak(tavern, player);
-			if(!canBreak) event.setCanceled(true);
-		}
+		event.getPosition().ifPresent(pos -> {
+			Player player = event.getEntity();
+			if(player.level.getBlockEntity(pos) instanceof Tavern tavern){
+				boolean canBreak = canBreak(tavern, player);
+				if(!canBreak) event.setCanceled(true);
+			}
+		});
 	}
 
 	private static boolean canBreak(Tavern te, Player player){
@@ -69,7 +71,7 @@ public final class HearthstonesEventHandler{
 
 	@SubscribeEvent
 	public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event){
-		if(event.getPlayer() instanceof ServerPlayer sp){
+		if(event.getEntity() instanceof ServerPlayer sp){
 			ModNet.CHANNEL.send(PacketDistributor.PLAYER.with(() -> sp), new SyncHomePosMsg(TavernMemories.player(sp).getHomePos()));
 		}
 	}

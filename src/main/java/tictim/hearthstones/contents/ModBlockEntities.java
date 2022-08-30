@@ -1,9 +1,9 @@
 package tictim.hearthstones.contents;
 
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import tictim.hearthstones.contents.blockentity.BinderLecternBlockEntity;
 import tictim.hearthstones.contents.blockentity.GlobalTavernBlockEntity;
 import tictim.hearthstones.contents.blockentity.NormalTavernBlockEntity;
@@ -14,7 +14,7 @@ import static tictim.hearthstones.Hearthstones.MODID;
 public final class ModBlockEntities{
 	private ModBlockEntities(){}
 
-	public static final DeferredRegister<BlockEntityType<?>> REGISTER = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, MODID);
+	public static final DeferredRegister<BlockEntityType<?>> REGISTER = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MODID);
 
 	public static final RegistryObject<BlockEntityType<NormalTavernBlockEntity>> TAVERN = REGISTER.register("tavern",
 			() -> BlockEntityType.Builder.of(NormalTavernBlockEntity::new, ModBlocks.TAVERN.get()).build(null)

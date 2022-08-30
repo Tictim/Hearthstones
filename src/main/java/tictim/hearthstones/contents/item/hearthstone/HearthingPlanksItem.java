@@ -2,7 +2,6 @@ package tictim.hearthstones.contents.item.hearthstone;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -26,11 +25,11 @@ public class HearthingPlanksItem extends HearthstoneItem{
 
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){
-		if(this.allowdedIn(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
+		if(this.allowedIn(group)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
 	}
 
 	@Override public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag){
-		tooltip.add(new TranslatableComponent("info.hearthstones.hearthing_planks.tooltip.0"));
-		tooltip.add(new TranslatableComponent("info.hearthstones.hearthing_planks.tooltip.1"));
+		tooltip.add(Component.translatable("info.hearthstones.hearthing_planks.tooltip.0"));
+		tooltip.add(Component.translatable("info.hearthstones.hearthing_planks.tooltip.1"));
 	}
 }

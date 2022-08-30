@@ -1,7 +1,7 @@
 package tictim.hearthstones.hearthstone;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import tictim.hearthstones.config.HearthstoneConfig;
 import tictim.hearthstones.contents.blockentity.TavernBlockEntity;
 import tictim.hearthstones.tavern.Tavern;
@@ -23,18 +23,18 @@ public class SelectionHearthstone extends ConfigurableHearthstone{
 	@Nullable @Override public WarpSetup setupWarp(WarpContext context){
 		Tavern selectedTavern = context.getSelectedTavern();
 		if(selectedTavern==null){
-			context.getPlayer().displayClientMessage(new TranslatableComponent("info.hearthstones.hearthstone.no_selected"), true);
+			context.getPlayer().displayClientMessage(Component.translatable("info.hearthstones.hearthstone.no_selected"), true);
 			return null;
 		}
 		TavernBlockEntity tavern = getTavernAt(selectedTavern.pos());
 		if(tavern==null){
 			context.getMemory().updateIfPresent(selectedTavern.withMissingSet(true));
-			context.getPlayer().displayClientMessage(new TranslatableComponent("info.hearthstones.hearthstone.tavern_missing"), true);
+			context.getPlayer().displayClientMessage(Component.translatable("info.hearthstones.hearthstone.tavern_missing"), true);
 		}else{
 			context.getMemory().updateIfPresent(tavern.withMissingSet(false));
 			if(tavern.canTeleportTo(context))
 				return createWarpSetup(context, selectedTavern, HearthUtils.getWarpPos(tavern));
-			context.getPlayer().displayClientMessage(new TranslatableComponent("info.hearthstones.hearthstone.no_permission"), true);
+			context.getPlayer().displayClientMessage(Component.translatable("info.hearthstones.hearthstone.no_permission"), true);
 		}
 		return null;
 	}

@@ -3,7 +3,6 @@ package tictim.hearthstones.contents.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -23,7 +22,7 @@ public class ShabbyTavernBlock extends TavernBlock{
 
 	@Override protected void addTipInformation(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag){
 		super.addTipInformation(stack, level, tooltip, flag);
-		tooltip.add(new TranslatableComponent("info.hearthstones.tavern.shabby.tooltip"));
+		tooltip.add(Component.translatable("info.hearthstones.tavern.shabby.tooltip"));
 	}
 
 	@Override public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items){

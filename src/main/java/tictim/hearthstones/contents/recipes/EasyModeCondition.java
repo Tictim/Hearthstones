@@ -16,7 +16,7 @@ public class EasyModeCondition implements ICondition{
 	}
 
 	@Override
-	public boolean test(){
+	public boolean test(IContext context){
 		return ModCfg.easyMode();
 	}
 

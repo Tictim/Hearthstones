@@ -3,20 +3,17 @@ package tictim.hearthstones;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tictim.hearthstones.client.BinderLecternRenderer;
@@ -29,10 +26,6 @@ import tictim.hearthstones.contents.ModItems;
 import tictim.hearthstones.contents.ModRecipes;
 import tictim.hearthstones.contents.ModWorldgen;
 import tictim.hearthstones.contents.item.hearthstone.HearthstoneItem;
-import tictim.hearthstones.datagen.BlockTagGen;
-import tictim.hearthstones.datagen.ItemTagGen;
-import tictim.hearthstones.datagen.LootTableGen;
-import tictim.hearthstones.datagen.RecipeGen;
 import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.tavern.TavernBinderData;
 import tictim.hearthstones.tavern.TavernMemories;
@@ -53,11 +46,8 @@ public class Hearthstones{
 		ModEnchantments.REGISTER.register(eventBus);
 		ModBlockEntities.REGISTER.register(eventBus);
 		ModRecipes.REGISTER.register(eventBus);
-	}
-
-	@SubscribeEvent
-	public static void setup(FMLCommonSetupEvent event){
-		event.enqueueWork(ModWorldgen::register);
+		ModWorldgen.CONFIGURED_FEATURES.register(eventBus);
+		ModWorldgen.PLACED_FEATURES.register(eventBus);
 	}
 
 	@SubscribeEvent
@@ -65,18 +55,6 @@ public class Hearthstones{
 		event.register(TavernMemories.class);
 		event.register(HearthstoneItem.Data.class);
 		event.register(TavernBinderData.class);
-	}
-
-	@SubscribeEvent
-	public static void gatherData(GatherDataEvent event){
-		DataGenerator gen = event.getGenerator();
-		if(event.includeServer()){
-			gen.addProvider(new RecipeGen(gen));
-			BlockTagGen blockTagGen = new BlockTagGen(gen, event.getExistingFileHelper());
-			gen.addProvider(blockTagGen);
-			gen.addProvider(new ItemTagGen(gen, blockTagGen, event.getExistingFileHelper()));
-			gen.addProvider(new LootTableGen(gen));
-		}
 	}
 
 	@Mod.EventBusSubscriber(modid = MODID, bus = Bus.MOD, value = Dist.CLIENT)
@@ -98,11 +76,13 @@ public class Hearthstones{
 				ItemProperties.register(ModItems.HEARTHING_PLANKS.get(), key, itemPropertyGetter);
 				ItemProperties.register(ModItems.HEARTHING_GEM.get(), key, itemPropertyGetter);
 				ItemProperties.register(ModItems.COMPANION_HEARTHSTONE.get(), key, itemPropertyGetter);
-
-				BlockEntityRenderers.register(ModBlockEntities.BINDER_LECTERN.get(), BinderLecternRenderer::new);
-
-				OverlayRegistry.registerOverlayTop("Hearthstone Overlay", new HearthstoneOverlay());
 			});
+			BlockEntityRenderers.register(ModBlockEntities.BINDER_LECTERN.get(), BinderLecternRenderer::new);
+		}
+
+		@SubscribeEvent
+		public static void registerGuiOverlay(RegisterGuiOverlaysEvent event){
+			event.registerAboveAll("hearthstone_overlay", new HearthstoneOverlay());
 		}
 	}
 }

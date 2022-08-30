@@ -15,6 +15,6 @@ public class HearthingGemConfig extends HearthstoneConfig{
 	}
 
 	public double travelDistanceThreshold(){
-		return travelDistanceThreshold.get();
+		return getOrDefault(travelDistanceThreshold);
 	}
 }

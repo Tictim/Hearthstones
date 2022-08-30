@@ -1,7 +1,6 @@
 package tictim.hearthstones.tavern;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 
 public enum AccessModifier{
@@ -26,10 +25,10 @@ public enum AccessModifier{
 		};
 	}
 
-	private TranslatableComponent text;
+	private Component text;
 
 	public Component text(){
-		if(text==null) text = new TranslatableComponent("info.hearthstones.access."+this.name().toLowerCase());
+		if(text==null) text = Component.translatable("info.hearthstones.access."+this.name().toLowerCase());
 		return text;
 	}
 

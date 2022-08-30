@@ -1,4 +1,4 @@
-package tictim.hearthstones.datagen;
+package datagen;
 
 import com.google.gson.JsonObject;
 import net.minecraft.data.recipes.FinishedRecipe;

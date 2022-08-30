@@ -1,7 +1,6 @@
 package tictim.hearthstones.contents.item.hearthstone;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -21,8 +20,8 @@ public class HearthingGemItem extends ScreenBasedHearthstoneItem{
 	}
 
 	@Override public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag){
-		tooltip.add(new TranslatableComponent("info.hearthstones.hearthstone.tooltip"));
-		tooltip.add(new TranslatableComponent("info.hearthstones.hearthing_gem.tooltip"));
+		tooltip.add(Component.translatable("info.hearthstones.hearthstone.tooltip"));
+		tooltip.add(Component.translatable("info.hearthstones.hearthing_gem.tooltip"));
 	}
 
 	@Override protected boolean isHearthingGem(){

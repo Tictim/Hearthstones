@@ -3,7 +3,7 @@ package tictim.hearthstones.client.screen;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.chat.NarratorChatListener;
+import net.minecraft.client.GameNarrator;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import tictim.hearthstones.tavern.Tavern;
@@ -26,7 +26,7 @@ public abstract class TavernMemoryScreen extends AbstractScreen{
 	private boolean closeConfirmDelete;
 
 	public TavernMemoryScreen(){
-		super(NarratorChatListener.NO_TITLE);
+		super(GameNarrator.NO_TITLE);
 	}
 
 	@Override protected void onInit(){

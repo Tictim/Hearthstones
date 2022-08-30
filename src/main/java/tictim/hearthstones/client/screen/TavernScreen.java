@@ -8,12 +8,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringUtil;
-import net.minecraftforge.client.event.ScreenEvent.BackgroundDrawnEvent;
-import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.glfw.GLFW;
 import tictim.hearthstones.client.Rendering;
 import tictim.hearthstones.net.ModNet;
@@ -36,7 +32,7 @@ public class TavernScreen extends AbstractScreen{
 	public static final ResourceLocation ACCESS_TEAM = new ResourceLocation(MODID, "textures/screen/access/team.png");
 	public static final ResourceLocation ACCESS_PRIVATE = new ResourceLocation(MODID, "textures/screen/access/private.png");
 
-	private static final Component NO_NAME = new TranslatableComponent("info.hearthstones.tavern.no_name");
+	private static final Component NO_NAME = Component.translatable("info.hearthstones.tavern.no_name");
 
 	static{
 		NO_NAME.getStyle().withColor(ChatFormatting.GRAY).withItalic(true);
@@ -56,7 +52,7 @@ public class TavernScreen extends AbstractScreen{
 	private boolean setHome;
 
 	public TavernScreen(TavernPos pos, TavernType type, @Nullable String name, Accessibility accessibility, Owner owner, AccessModifier accessModifier, boolean isHome){
-		super(name!=null ? new TextComponent(name) : new TranslatableComponent("info.hearthstones.tavern.no_name"));
+		super(name!=null ? Component.literal(name) : Component.translatable("info.hearthstones.tavern.no_name"));
 		this.pos = pos;
 		this.type = type;
 		this.accessibility = accessibility;
@@ -71,7 +67,7 @@ public class TavernScreen extends AbstractScreen{
 	protected void onInit(){
 		//noinspection ConstantConditions
 		minecraft.keyboardHandler.setSendRepeatsToGui(true);
-		nameField = this.addRenderableWidget(new EditBox(font, getLeft()+24*2, getTop()+7*2, 139*2, 4*2, TextComponent.EMPTY));
+		nameField = this.addRenderableWidget(new EditBox(font, getLeft()+24*2, getTop()+7*2, 139*2, 4*2, Component.empty()));
 		nameField.setMaxLength(50);
 		nameField.setValue(originalName);
 		nameField.setBordered(false);
@@ -110,7 +106,6 @@ public class TavernScreen extends AbstractScreen{
 		//noinspection ConstantConditions
 		if(this.minecraft.level!=null){
 			this.fillGradient(matrixStack, 0, 0, this.width, this.height, 0x90101010, 0xA0101010);
-			MinecraftForge.EVENT_BUS.post(new BackgroundDrawnEvent(this, matrixStack));
 		}else this.renderDirtBackground(tint);
 	}
 
@@ -142,7 +137,7 @@ public class TavernScreen extends AbstractScreen{
 
 	private class AccessibilityButton extends Button{
 		public AccessibilityButton(int x, int y){
-			super(x, y, 32, 32, TextComponent.EMPTY, button -> {});
+			super(x, y, 32, 32, Component.empty(), button -> {});
 		}
 
 		@Override
@@ -177,14 +172,14 @@ public class TavernScreen extends AbstractScreen{
 		}
 	}
 
-	private static final Component HOME_TOOLTIP = new TranslatableComponent("info.hearthstones.screen.property.home");
-	private static final Component SET_HOME_TOOLTIP = new TranslatableComponent("info.hearthstones.screen.set_home");
+	private static final Component HOME_TOOLTIP = Component.translatable("info.hearthstones.screen.property.home");
+	private static final Component SET_HOME_TOOLTIP = Component.translatable("info.hearthstones.screen.set_home");
 
 	private class SetHomeButton extends Button{
 		private boolean isPressed;
 
 		public SetHomeButton(int x, int y){
-			super(x, y, 7*2, 7*2, TextComponent.EMPTY, button -> {});
+			super(x, y, 7*2, 7*2, Component.empty(), button -> {});
 		}
 
 		@Override

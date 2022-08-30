@@ -3,7 +3,6 @@ package tictim.hearthstones.contents.item;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -52,7 +51,7 @@ public class TavernWaypointItem extends Item{
 				}
 			}
 			if(player!=null)
-				player.displayClientMessage(new TranslatableComponent("info.hearthstones.waypoint.saved"), true);
+				player.displayClientMessage(Component.translatable("info.hearthstones.waypoint.saved"), true);
 		}else if(blockEntity instanceof BinderLecternBlockEntity binderLectern){
 			TavernBinderData data = binderLectern.getData();
 			if(data!=null){
@@ -96,11 +95,11 @@ public class TavernWaypointItem extends Item{
 	@Override public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> text, TooltipFlag flag){
 		TavernRecord tavern = getTavern(stack);
 		if(tavern!=null)
-			text.add(new TranslatableComponent("info.hearthstones.waypoint.tooltip.tavern",
+			text.add(Component.translatable("info.hearthstones.waypoint.tooltip.tavern",
 					TavernTextFormat.name(tavern),
 					TavernTextFormat.position(tavern)));
-		text.add(new TranslatableComponent("info.hearthstones.waypoint.tooltip.0"));
-		text.add(new TranslatableComponent("info.hearthstones.waypoint.tooltip.1"));
+		text.add(Component.translatable("info.hearthstones.waypoint.tooltip.0"));
+		text.add(Component.translatable("info.hearthstones.waypoint.tooltip.1"));
 	}
 
 	@Nullable public static TavernRecord getTavern(ItemStack stack){
