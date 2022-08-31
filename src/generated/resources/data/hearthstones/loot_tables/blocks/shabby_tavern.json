@@ -23,6 +23,11 @@
                   "op": "replace",
                   "source": "owner",
                   "target": "BlockEntityTag.owner"
+                },
+                {
+                  "op": "replace",
+                  "source": "access",
+                  "target": "BlockEntityTag.access"
                 }
               ],
               "source": "block_entity"
