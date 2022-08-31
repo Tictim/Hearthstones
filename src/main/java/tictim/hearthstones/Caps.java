@@ -5,7 +5,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import tictim.hearthstones.contents.item.TavernBinderItem;
 import tictim.hearthstones.contents.item.hearthstone.HearthstoneItem;
 import tictim.hearthstones.tavern.TavernBinderData;
 import tictim.hearthstones.tavern.TavernMemories;

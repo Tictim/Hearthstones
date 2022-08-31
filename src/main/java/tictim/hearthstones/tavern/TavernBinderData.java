@@ -93,7 +93,7 @@ public class TavernBinderData implements ICapabilitySerializable<NBTTagCompound>
 	}
 
 	@Override public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing){
-		return capability == Caps.BINDER_DATA;
+		return capability==Caps.BINDER_DATA;
 	}
 	@Nullable @Override public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing){
 		return capability==Caps.BINDER_DATA ? Caps.BINDER_DATA.cast(this) : null;

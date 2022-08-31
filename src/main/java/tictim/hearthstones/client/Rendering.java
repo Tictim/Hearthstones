@@ -21,7 +21,7 @@ public class Rendering{
 		Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, selected ? 20*2 : 0, 179*2, 20*2, 512, 512);
 	}
 
-	public static void renderTavernAccess( AccessModifier access){
+	public static void renderTavernAccess(AccessModifier access){
 		ResourceLocation tex;
 		switch(access){
 			case PUBLIC:
@@ -40,7 +40,7 @@ public class Rendering{
 				throw new IllegalArgumentException();
 		}
 		Minecraft.getMinecraft().getTextureManager().bindTexture(tex);
-		Gui.drawModalRectWithCustomSizedTexture( 0, 0, 0, 0, 32, 32, 32, 32);
+		Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, 32, 32, 32, 32);
 	}
 
 
