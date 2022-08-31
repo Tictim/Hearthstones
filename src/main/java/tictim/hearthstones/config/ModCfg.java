@@ -29,6 +29,7 @@ public class ModCfg{
 
 	public static boolean traceHearthstoneUsage;
 	public static boolean traceTavernUpdate;
+	public static boolean logModelWarnings;
 
 	public static boolean aquamarineGen = true;
 	public static int aquamarineMinY = 5;

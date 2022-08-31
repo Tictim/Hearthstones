@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import tictim.hearthstones.Hearthstones;
+import tictim.hearthstones.config.ModCfg;
 
 import javax.annotation.Nullable;
 import java.util.EnumMap;
@@ -39,10 +40,12 @@ public class BakedModelTavernBody implements IBakedModel{
 		List<BakedQuad> quads = textureModel.getQuads(textureState, facing, 0);
 		switch(quads.size()){
 			case 0:
-				if(facing!=null) Hearthstones.LOGGER.warn("It seems like {} side of Texture Model {} is missing.", facing.name().toLowerCase(), textureState);
+				if(facing!=null&&ModCfg.logModelWarnings)
+					Hearthstones.LOGGER.warn("It seems like {} side of Texture Model {} is missing.", facing.name().toLowerCase(), textureState);
 				return null;
 			default:
-				Hearthstones.LOGGER.warn("It seems like {} side of Texture Model {} has multiple quads.", facing==null ? "null" : facing.name().toLowerCase(), textureState);
+				if(ModCfg.logModelWarnings)
+					Hearthstones.LOGGER.warn("It seems like {} side of Texture Model {} has multiple quads.", facing==null ? "null" : facing.name().toLowerCase(), textureState);
 			case 1:
 				return quads.get(0).getSprite();
 		}
