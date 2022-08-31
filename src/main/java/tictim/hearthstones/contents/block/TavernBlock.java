@@ -132,8 +132,6 @@ public abstract class TavernBlock extends Block implements EntityBlock{
 		CompoundTag tag = stack.getTag();
 		if(tag==null||!tag.contains("BlockEntityTag", Tag.TAG_COMPOUND)) return;
 		CompoundTag nbt = tag.getCompound("BlockEntityTag");
-		if(nbt.contains("name", Tag.TAG_STRING))
-			tooltip.add(Component.literal(" ").append(Component.translatable("info.hearthstones.tavern.name", Component.Serializer.fromJson(nbt.getString("name")))));
 		if(nbt.contains("owner", Tag.TAG_COMPOUND)){
 			Owner owner = Owner.read(nbt.getCompound("owner"));
 			tooltip.add(Component.literal(" ").append(Component.translatable("info.hearthstones.tavern.owner", owner.getName(), owner.getId())));
