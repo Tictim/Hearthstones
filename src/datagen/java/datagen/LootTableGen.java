@@ -74,7 +74,8 @@ public class LootTableGen extends LootTableProvider{
 									.add(LootItem.lootTableItem(block)
 											.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
 											.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-													.copy("owner", "BlockEntityTag.owner"))))));
+													.copy("owner", "BlockEntityTag.owner")
+													.copy("access", "BlockEntityTag.access"))))));
 		}
 
 		@Override protected Iterable<Block> getKnownBlocks(){
