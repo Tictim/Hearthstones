@@ -33,6 +33,7 @@ public class TavernBinderItem extends RareItem{
 
 	public TavernBinderItem(boolean infiniteWaypoints){
 		this.infiniteWaypoints = infiniteWaypoints;
+		this.setMaxStackSize(1);
 	}
 
 	@Override public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand){
