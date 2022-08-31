@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package tictim.hearthstones.datagen;
+package datagen;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 
