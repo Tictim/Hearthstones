@@ -8,7 +8,9 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import tictim.hearthstones.Hearthstones;
 import tictim.hearthstones.contents.ModItems;
 import tictim.hearthstones.tavern.Tavern;
@@ -64,10 +66,23 @@ public class TavernSkinRecipe extends SpecialRecipe{
 		if(tavern==null||skin==null) return ItemStack.EMPTY;
 
 		ItemStack t2 = tavern.copy();
+		t2.setCount(1);
 		NBTTagCompound nbt = t2.getOrCreateSubCompound("BlockEntityTag");
 		Tavern.writeSkin(nbt, skin);
 
 		return t2;
+	}
+
+	@Override public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv){
+		NonNullList<ItemStack> ret = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+		for(int i = 0; i<ret.size(); i++){
+			ItemStack stack = inv.getStackInSlot(i);
+			if(!stack.isEmpty()){
+				if(tavernIngredient.test(stack)) ret.set(i, ForgeHooks.getContainerItem(stack));
+				else ret.set(i, stack.copy());
+			}
+		}
+		return ret;
 	}
 
 	@Override protected int minimumSize(){
