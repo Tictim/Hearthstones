@@ -11,6 +11,7 @@ import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import tictim.hearthstones.tavern.TavernType;
 
+import javax.annotation.Nullable;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class TavernModelCache{
 	private final Map<IBlockState, BakedModelTavernBody> tavernBodyModel = new HashMap<>();
 	private final Map<TavernType, IBakedModel> bakedTavernclothModel = new EnumMap<>(TavernType.class);
 
-	private IBakedModel bakedBodyModel;
+	@Nullable private IBakedModel bakedBodyModel;
 
 	public TavernModelCache(Map<TavernType, IModel> tavernclothModel, IModel bodyModel, VertexFormat format, EnumFacing facing){
 		this.tavernclothModel = tavernclothModel;
@@ -47,7 +48,7 @@ public class TavernModelCache{
 		BakedModelTavernBody model = tavernBodyModel.get(skin);
 		if(model==null){
 			if(bakedBodyModel==null) this.bakedBodyModel = bake(bodyModel);
-			tavernBodyModel.put(skin, model = new BakedModelTavernBody(this.bakedBodyModel, skin));
+			tavernBodyModel.put(skin, model = BakedModelTavernBody.createFromState(this.bakedBodyModel, skin, this.facing));
 		}
 		return model;
 	}

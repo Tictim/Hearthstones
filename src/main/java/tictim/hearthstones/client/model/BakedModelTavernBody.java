@@ -1,5 +1,6 @@
 package tictim.hearthstones.client.model;
 
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -25,9 +26,20 @@ public class BakedModelTavernBody implements IBakedModel{
 	@Nullable
 	private final TextureAtlasSprite nullTexture;
 
-	public BakedModelTavernBody(IBakedModel bodyModel, IBlockState textureState){
-		this(bodyModel, Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelForState(textureState), textureState);
+	public static BakedModelTavernBody createFromState(IBakedModel bodyModel, IBlockState textureState, EnumFacing facing){
+		IProperty<EnumFacing> p = getApplicableFacingProperty(textureState, facing);
+		if(p!=null) textureState = textureState.withProperty(p, facing);
+		return new BakedModelTavernBody(bodyModel, Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelForState(textureState), textureState);
 	}
+	@SuppressWarnings("unchecked") @Nullable private static IProperty<EnumFacing> getApplicableFacingProperty(IBlockState textureState, EnumFacing facing){
+		for(IProperty<?> p : textureState.getPropertyKeys()){
+			if(p.getName().equals("facing")&&p.getValueClass()==EnumFacing.class&&p.getAllowedValues().contains(facing)){
+				return (IProperty<EnumFacing>)p;
+			}
+		}
+		return null;
+	}
+
 	public BakedModelTavernBody(IBakedModel bodyModel, IBakedModel texture, IBlockState textureState){
 		this.bodyModel = bodyModel;
 		this.textureModel = texture;
