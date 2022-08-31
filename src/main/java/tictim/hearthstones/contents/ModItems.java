@@ -15,12 +15,13 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.contents.item.MortarItem;
+import tictim.hearthstones.contents.item.TavernBinderItem;
+import tictim.hearthstones.contents.item.TavernItem;
+import tictim.hearthstones.contents.item.TavernWaypointItem;
 import tictim.hearthstones.contents.item.hearthstone.CompanionHearthstoneItem;
 import tictim.hearthstones.contents.item.hearthstone.HearthingGemItem;
 import tictim.hearthstones.contents.item.hearthstone.HearthingPlanksItem;
 import tictim.hearthstones.contents.item.hearthstone.NormalHearthstoneItem;
-import tictim.hearthstones.contents.item.TavernBinderItem;
-import tictim.hearthstones.contents.item.TavernWaypointItem;
 import tictim.hearthstones.contents.item.tavernupgrade.GlobalTavernUpgradeItem;
 import tictim.hearthstones.contents.item.tavernupgrade.RegularTavernUpgradeItem;
 import tictim.hearthstones.contents.item.tavernupgrade.ShabbyTavernUpgradeItem;
@@ -80,9 +81,9 @@ public final class ModItems{
 	public static final RegistryObject<Item> AQUAMARINE_ORE = REGISTER.register("aquamarine_ore", () -> new BlockItem(ModBlocks.AQUAMARINE_ORE.get(), p()));
 	public static final RegistryObject<Item> DEEPSLATE_AQUAMARINE_ORE = REGISTER.register("deepslate_aquamarine_ore", () -> new BlockItem(ModBlocks.DEEPSLATE_AQUAMARINE_ORE.get(), p()));
 	public static final RegistryObject<Item> AQUAMARINE_BLOCK = REGISTER.register("aquamarine_block", () -> new BlockItem(ModBlocks.AQUAMARINE_BLOCK.get(), p()));
-	public static final RegistryObject<Item> TAVERN = REGISTER.register("tavern", () -> new BlockItem(ModBlocks.TAVERN.get(), p()));
-	public static final RegistryObject<Item> SHABBY_TAVERN = REGISTER.register("shabby_tavern", () -> new BlockItem(ModBlocks.SHABBY_TAVERN.get(), p()));
-	public static final RegistryObject<Item> GLOBAL_TAVERN = REGISTER.register("global_tavern", () -> new BlockItem(ModBlocks.GLOBAL_TAVERN.get(), p(Rarity.UNCOMMON)));
+	public static final RegistryObject<Item> TAVERN = REGISTER.register("tavern", () -> new TavernItem(ModBlocks.TAVERN.get(), p()));
+	public static final RegistryObject<Item> SHABBY_TAVERN = REGISTER.register("shabby_tavern", () -> new TavernItem(ModBlocks.SHABBY_TAVERN.get(), p()));
+	public static final RegistryObject<Item> GLOBAL_TAVERN = REGISTER.register("global_tavern", () -> new TavernItem(ModBlocks.GLOBAL_TAVERN.get(), p(Rarity.UNCOMMON)));
 
 	private static Item.Properties p(){
 		return new Item.Properties().tab(TAB);
