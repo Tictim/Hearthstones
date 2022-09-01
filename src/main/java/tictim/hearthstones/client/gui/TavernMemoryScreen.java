@@ -1,5 +1,6 @@
 package tictim.hearthstones.client.gui;
 
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Mouse;
@@ -102,22 +103,49 @@ public abstract class TavernMemoryScreen extends AbstractScreen{
 
 		GlStateManager.enableDepth();
 
-		int scroll = Mouse.getDWheel();
-		if(scroll!=0) yOffsetDest -= scroll*40;
-		this.yOffsetFloat = MathHelper.clampedLerp(0.4, yOffsetFloat, this.yOffsetDest = MathHelper.clamp(yOffsetDest, 0, Math.max(0, screenY-width/2)));
+		this.yOffsetFloat = lerp(0.4, yOffsetFloat, this.yOffsetDest = MathHelper.clamp(yOffsetDest, 0, Math.max(0, screenY-width/2)));
 		this.yOffset = (int)Math.round(yOffsetFloat);
 		if(confirmDelete!=null) confirmDelete.updateYOffset();
 	}
 
-	@Nullable protected abstract String getEmptyScreenMessage();
+	private static double lerp(double delta, double start, double end){
+		return start+delta*(end-start);
+	}
+
+	private int selectedButtonMouse;
 
 	@Override protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException{
-		if(confirmDelete==null||!confirmDelete.mouseClicked(mouseX, mouseY+yOffset, mouseButton))
-			super.mouseClicked(mouseX, mouseY, mouseButton);
+		mouseY += yOffset;
+		if(confirmDelete!=null){
+			confirmDelete.mouseClicked(mouseX, mouseY, mouseButton);
+			return;
+		}
+		this.selectedButtonMouse = mouseButton;
+		if(mouseButton==1){
+			for(GuiButton btn : this.buttonList){
+				if(btn instanceof TavernButton&&((TavernButton)btn).rightMousePressed(mc, mouseX, mouseY)){
+					this.selectedButton = btn;
+					btn.playPressSound(this.mc.getSoundHandler());
+					this.actionPerformed(btn);
+				}
+			}
+		}else super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
+
 	@Override protected void mouseReleased(int mouseX, int mouseY, int state){
-		super.mouseReleased(mouseX, mouseY+yOffset, state);
+		mouseY += yOffset;
+		if(this.selectedButton instanceof TavernButton&&state==this.selectedButtonMouse){
+			if(state==0){
+				this.selectedButton.mouseReleased(mouseX, mouseY);
+			}else if(state==1){
+				((TavernButton)this.selectedButton).rightMouseReleased(mouseX, mouseY);
+			}
+			this.selectedButton = null;
+		}else super.mouseReleased(mouseX, mouseY, state);
 	}
+
+	@Nullable protected abstract String getEmptyScreenMessage();
+
 	@Override protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick){
 		super.mouseClickMove(mouseX, mouseY+yOffset, clickedMouseButton, timeSinceLastClick);
 	}
@@ -131,6 +159,12 @@ public abstract class TavernMemoryScreen extends AbstractScreen{
 					this.mc.setIngameFocus();
 			}
 		}
+	}
+
+	@Override public void handleMouseInput() throws IOException{
+		super.handleMouseInput();
+		int scroll = Mouse.getEventDWheel();
+		if(scroll!=0) yOffsetDest -= scroll*40;
 	}
 
 	private void closeConfirmDeleteWidget(){

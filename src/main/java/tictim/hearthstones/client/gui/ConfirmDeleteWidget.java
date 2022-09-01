@@ -3,6 +3,7 @@ package tictim.hearthstones.client.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import tictim.hearthstones.client.HearthstoneOverlay;
 import tictim.hearthstones.tavern.Tavern;
@@ -50,7 +51,9 @@ final class ConfirmDeleteWidget{
 				(screen.width-mc.fontRenderer.getStringWidth(confirmDeleteText))/2,
 				screen.height/2-20-4-10+screen.getYOffset(), 0xFFFFFFFF);
 
+		GlStateManager.enableDepth();
 		HearthstoneOverlay.drawTavernOverlay(mc.player, screen.width/2, screen.height/2-20+screen.getYOffset(), tavern, null);
+		GlStateManager.disableDepth();
 
 		yes.drawButton(mc, mouseX, mouseY+screen.getYOffset(), partialTicks);
 		no.drawButton(mc, mouseX, mouseY+screen.getYOffset(), partialTicks);

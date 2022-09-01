@@ -9,8 +9,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
-import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 import tictim.hearthstones.client.Rendering;
 import tictim.hearthstones.net.ModNet;
@@ -92,6 +90,7 @@ public class TavernScreen extends AbstractScreen{
 		Rendering.renderTavernUIBase(type, false);
 		GlStateManager.popMatrix();
 		super.drawScreen(mouseX, mouseY, partialTicks);
+		nameField.drawTextBox();
 
 		if(!nameField.isFocused()&&StringUtil.isNullOrEmpty(nameField.getText()))
 			drawString(fontRenderer, NO_NAME.getFormattedText(), getLeft()+24*2, getTop()+7*2+1, 0xFFFFFF);
@@ -117,40 +116,9 @@ public class TavernScreen extends AbstractScreen{
 		}
 	}
 
-	private int selectedButtonMouse;
-
 	@Override protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException{
-		this.selectedButtonMouse = mouseButton;
-		if(mouseButton==1){
-			for(int i = 0; i<this.buttonList.size(); ++i){
-				GuiButton btn = this.buttonList.get(i);
-
-				if(btn instanceof TavernButton&&((TavernButton)btn).rightMousePressed(mc, mouseX, mouseY)){
-					ActionPerformedEvent.Pre event = new ActionPerformedEvent.Pre(this, btn, this.buttonList);
-					if(MinecraftForge.EVENT_BUS.post(event))
-						break;
-					btn = event.getButton();
-					this.selectedButton = btn;
-					btn.playPressSound(this.mc.getSoundHandler());
-					this.actionPerformed(btn);
-					if(this.equals(this.mc.currentScreen))
-						MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(this, event.getButton(), this.buttonList));
-				}
-			}
-		}else{
-			super.mouseClicked(mouseX, mouseY, mouseButton);
-		}
-	}
-
-	@Override protected void mouseReleased(int mouseX, int mouseY, int state){
-		if(this.selectedButton instanceof TavernButton&&state==this.selectedButtonMouse){
-			if(state==0){
-				this.selectedButton.mouseReleased(mouseX, mouseY);
-			}else if(state==1){
-				((TavernButton)this.selectedButton).rightMouseReleased(mouseX, mouseY);
-			}
-			this.selectedButton = null;
-		}else super.mouseReleased(mouseX, mouseY, state);
+		super.mouseClicked(mouseX, mouseY, mouseButton);
+		this.nameField.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override public void onGuiClosed(){
