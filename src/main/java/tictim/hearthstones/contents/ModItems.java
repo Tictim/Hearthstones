@@ -75,6 +75,14 @@ public class ModItems{
 
 	public static final Item AQUAMARINE_ORE = definitelyNotNull();
 	public static final Item AQUAMARINE_BLOCK = definitelyNotNull();
+
+	public static final Item AMETHYST_BLOCK = definitelyNotNull();
+	public static final Item BUDDING_AMETHYST = definitelyNotNull();
+	public static final Item AMETHYST_CLUSTER = definitelyNotNull();
+	public static final Item SMALL_AMETHYST_BUD = definitelyNotNull();
+	public static final Item MEDIUM_AMETHYST_BUD = definitelyNotNull();
+	public static final Item LARGE_AMETHYST_BUD = definitelyNotNull();
+
 	public static final Item TAVERN = definitelyNotNull();
 	public static final Item BINDER_LECTERN = definitelyNotNull();
 
@@ -121,6 +129,14 @@ public class ModItems{
 
 		registerBlockItem(registry, ModBlocks.AQUAMARINE_ORE);
 		registerBlockItem(registry, ModBlocks.AQUAMARINE_BLOCK);
+
+		registerBlockItem(registry, ModBlocks.AMETHYST_BLOCK);
+		registerBlockItem(registry, ModBlocks.BUDDING_AMETHYST);
+		registerBlockItem(registry, ModBlocks.AMETHYST_CLUSTER);
+		registerBlockItem(registry, ModBlocks.SMALL_AMETHYST_BUD);
+		registerBlockItem(registry, ModBlocks.MEDIUM_AMETHYST_BUD);
+		registerBlockItem(registry, ModBlocks.LARGE_AMETHYST_BUD);
+
 		register(registry, "tavern", new TavernItem(ModBlocks.TAVERN));
 		registerBlockItem(registry, ModBlocks.BINDER_LECTERN);
 	}

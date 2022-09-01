@@ -102,6 +102,10 @@ public class TavernBlock extends Block{
 		for(int i = 0; i<3; i++) items.add(new ItemStack(this, 1, i));
 	}
 
+	@Override public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+		return getStateFromMeta(meta).withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+	}
+
 	@Override public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
 		world.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
 		if(world.isRemote||!(placer instanceof EntityPlayer)) return;

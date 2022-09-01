@@ -51,6 +51,14 @@ public class Models{
 
 		simple(ModItems.AQUAMARINE_ORE);
 		simple(ModItems.AQUAMARINE_BLOCK);
+
+		simple(ModItems.AMETHYST_BLOCK);
+		simple(ModItems.BUDDING_AMETHYST);
+		simple(ModItems.AMETHYST_CLUSTER);
+		simple(ModItems.SMALL_AMETHYST_BUD);
+		simple(ModItems.MEDIUM_AMETHYST_BUD);
+		simple(ModItems.LARGE_AMETHYST_BUD);
+
 		for(TavernType tavernType : TavernType.values()){
 			ModelLoader.setCustomModelResourceLocation(ModItems.TAVERN,
 					tavernType.ordinal(),

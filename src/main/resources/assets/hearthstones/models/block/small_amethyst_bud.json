@@ -1,0 +1,6 @@
+{
+	"parent": "block/cross",
+	"textures": {
+		"cross": "hearthstones:block/small_amethyst_bud"
+	}
+}
