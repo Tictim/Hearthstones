@@ -146,6 +146,11 @@ public abstract class TavernTile extends TileEntity implements Tavern, IWorldNam
 	@Override public NBTTagCompound getUpdateTag(){
 		return writeToNBT(new NBTTagCompound());
 	}
+	@Override public void handleUpdateTag(NBTTagCompound tag){
+		IBlockState skin = this.skin;
+		readFromNBT(tag);
+		if(skin!=this.skin&&world!=null) world.checkLight(pos);
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag){
