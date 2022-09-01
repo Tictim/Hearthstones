@@ -8,6 +8,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
@@ -79,7 +80,11 @@ public class TavernSkinRecipe extends SpecialRecipe{
 			ItemStack stack = inv.getStackInSlot(i);
 			if(!stack.isEmpty()){
 				if(tavernIngredient.test(stack)) ret.set(i, ForgeHooks.getContainerItem(stack));
-				else ret.set(i, stack.copy());
+				else{
+					ItemStack copy = stack.copy();
+					copy.setCount(1);
+					ret.set(i, copy);
+				}
 			}
 		}
 		return ret;
@@ -105,7 +110,7 @@ public class TavernSkinRecipe extends SpecialRecipe{
 			try{
 				@SuppressWarnings("deprecation")
 				IBlockState state = block.getStateFromMeta(stack.getMetadata());
-				if(state.isBlockNormalCube()) return state;
+				if(state.getRenderType()==EnumBlockRenderType.MODEL) return state;
 			}catch(RuntimeException ex){
 				// I don't know why the hell this shit is here, but now I cannot trust any of the shits above after seeing this super elaborate and noncryptic try-catch shit
 				Hearthstones.LOGGER.warn("Unexpected error; ItemStack {}, Block {}", stack, block.getRegistryName(), ex);
