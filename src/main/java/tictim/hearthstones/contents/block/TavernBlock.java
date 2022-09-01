@@ -114,6 +114,7 @@ public class TavernBlock extends Block{
 			tavern.setOwner(Owner.of(player));
 			tavern.setAccess(AccessModifier.PROTECTED);
 		}
+		if(tavern.hasSkin()) world.checkLight(pos);
 		TavernMemories.player(player).addOrUpdate(tavern);
 		if(tavern.type()==TavernType.GLOBAL)
 			TavernMemories.global().addOrUpdate(tavern);
@@ -211,6 +212,16 @@ public class TavernBlock extends Block{
 	}
 	@Override protected BlockStateContainer createBlockState(){
 		return new BlockStateContainer(this, FACING, TAVERN_TYPE);
+	}
+
+	@Override public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos){
+		TileEntity te = world.getTileEntity(pos);
+		if(te instanceof TavernTile){
+			TavernTile tavern = (TavernTile)te;
+			IBlockState skin = tavern.skin();
+			if(skin!=null) return skin.getLightValue();
+		}
+		return 0;
 	}
 
 	public static ItemStack createTavernStack(Tavern tavern){

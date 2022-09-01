@@ -77,7 +77,7 @@ public class TavernBinderItem extends RareItem{
 		if(!world.isRemote){
 			TavernBinderData data = data(stack);
 			if(data!=null){
-				if(player.isHandActive()){
+				if(player.isSneaking()){
 					if(player instanceof EntityPlayerMP){
 						EntityPlayerMP mp = (EntityPlayerMP)player;
 						ModNet.CHANNEL.sendTo(new OpenBinderScreenMsg(hand==EnumHand.OFF_HAND ?

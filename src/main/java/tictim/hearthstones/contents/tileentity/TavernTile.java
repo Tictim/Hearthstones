@@ -139,7 +139,9 @@ public abstract class TavernTile extends TileEntity implements Tavern, IWorldNam
 		return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
 	}
 	@Override public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt){
+		IBlockState skin = this.skin;
 		readFromNBT(pkt.getNbtCompound());
+		if(skin!=this.skin&&world!=null) world.checkLight(pos);
 	}
 	@Override public NBTTagCompound getUpdateTag(){
 		return writeToNBT(new NBTTagCompound());

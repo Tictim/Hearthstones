@@ -4,6 +4,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -90,6 +92,16 @@ public class BinderLecternTile extends TileEntity{
 		this.emptyWaypointsSync = emptyWaypoints;
 		this.infiniteWaypointsSync = infiniteWaypoints;
 		return true;
+	}
+
+	@Override public SPacketUpdateTileEntity getUpdatePacket(){
+		return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
+	}
+	@Override public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt){
+		readFromNBT(pkt.getNbtCompound());
+	}
+	@Override public NBTTagCompound getUpdateTag(){
+		return writeToNBT(new NBTTagCompound());
 	}
 
 	@Override public void readFromNBT(NBTTagCompound tag){

@@ -154,7 +154,6 @@ public abstract class BinderScreen extends TavernMemoryScreen{
 		}
 
 		@Override public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks){
-			super.drawButton(mc, mouseX, mouseY, partialTicks);
 			if(visible){
 				this.hovered = mouseX>=this.x&&mouseY>=this.y&&mouseX<this.x+this.width&&mouseY<this.y+this.height;
 
@@ -165,6 +164,10 @@ public abstract class BinderScreen extends TavernMemoryScreen{
 				itemRender.renderItemIntoGUI(stack, x, y-getYOffset());
 				GlStateManager.disableDepth();
 			}
+		}
+
+		@Override public boolean mousePressed(Minecraft mc, int mouseX, int mouseY){
+			return false;
 		}
 
 		@Override public void renderTooltip(int mouseX, int mouseY){

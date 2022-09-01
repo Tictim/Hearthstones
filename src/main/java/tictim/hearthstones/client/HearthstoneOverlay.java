@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.Mod;
@@ -66,11 +68,8 @@ public class HearthstoneOverlay{
 	}
 
 	private static void drawTavernSign(EntityPlayer player){
-		RayTraceResult ray = Minecraft.getMinecraft().objectMouseOver;
-		if(ray==null||ray.typeOfHit!=RayTraceResult.Type.BLOCK) return;
-		TileEntity te = player.world.getTileEntity(ray.getBlockPos());
-		if(!(te instanceof Tavern)) return;
-		Tavern tavern = (Tavern)te;
+		Tavern tavern = getTileOverMouse(player.world, Tavern.class);
+		if(tavern==null) return;
 		GlStateManager.pushMatrix();
 		GlStateManager.disableDepth();
 		GlStateManager.color(1, 1, 1, 1);
@@ -101,6 +100,9 @@ public class HearthstoneOverlay{
 			drawHearthstoneOverlay(player, width, height, stack, item, hand);
 			return true;
 		}else if(stack.getItem()==ModItems.WAYPOINT_BINDER||stack.getItem()==ModItems.INFINITE_WAYPOINT_BINDER){
+			BinderLecternTile binderLectern = getTileOverMouse(player.world, BinderLecternTile.class);
+			if(binderLectern!=null&&!binderLectern.hasBinder()) return false;
+
 			TavernBinderData data = TavernBinderItem.data(stack);
 			if(data!=null) drawBinderOverlay(player, width, height, data.getWaypoints(), data.getEmptyWaypoints(), data.isInfiniteWaypoints());
 			return true;
@@ -182,7 +184,7 @@ public class HearthstoneOverlay{
 		int length = 16+4+mc.fontRenderer.getStringWidth(waypointText);
 
 		if(waypointForRender==null) waypointForRender = new ItemStack(ModItems.WAYPOINT);
-		mc.getRenderItem().renderItemAndEffectIntoGUI(player, waypointForRender, left-length/2, midpoint-8);
+		renderItem(player, waypointForRender, left-length/2, midpoint-8);
 
 		//noinspection IntegerDivisionInFloatingPointContext
 		mc.fontRenderer.drawStringWithShadow(waypointText, left-length/2+20, midpoint-mc.fontRenderer.FONT_HEIGHT/2, 0xFFFFFFFF);
@@ -204,11 +206,7 @@ public class HearthstoneOverlay{
 			drawTavernOverlay(player, width/2, height/2-55, tavern,
 					"info.hearthstones.waypoint.overlay.saved");
 
-		RayTraceResult ray = Minecraft.getMinecraft().objectMouseOver;
-		boolean lookingAtBinderLectern = ray!=null&&ray.typeOfHit==RayTraceResult.Type.BLOCK&&
-				player.world.getTileEntity(ray.getBlockPos()) instanceof BinderLecternTile;
-
-		drawHelpString(width/2, height/2+15, lookingAtBinderLectern ?
+		drawHelpString(width/2, height/2+15, getTileOverMouse(player.world, BinderLecternTile.class)!=null ?
 				"info.hearthstones.waypoint.overlay.help.lectern" :
 				tavern!=null ?
 						"info.hearthstones.waypoint.overlay.help.read" :
@@ -220,7 +218,7 @@ public class HearthstoneOverlay{
 	 */
 	public static void drawTavernOverlay(@Nullable EntityPlayer player, int xCenter, int yStart, Tavern tavern, @Nullable String contextStringKey){
 		Minecraft mc = Minecraft.getMinecraft();
-		mc.getRenderItem().renderItemAndEffectIntoGUI(player, displayTavern(tavern), xCenter-8, yStart);
+		renderItem(player, displayTavern(tavern), xCenter-8, yStart);
 
 		if(contextStringKey!=null){
 			drawCentered(I18n.format(contextStringKey), xCenter, yStart+19);
@@ -237,17 +235,18 @@ public class HearthstoneOverlay{
 	}
 
 	private static void drawBinderLecternOverlay(EntityPlayer player, int width, int height){
-		RayTraceResult ray = Minecraft.getMinecraft().objectMouseOver;
-		if(ray==null||ray.typeOfHit!=RayTraceResult.Type.BLOCK) return;
-		TileEntity te = player.world.getTileEntity(ray.getBlockPos());
-		if(!(te instanceof BinderLecternTile)) return;
-		BinderLecternTile binderLectern = (BinderLecternTile)te;
+		BinderLecternTile binderLectern = getTileOverMouse(player.world, BinderLecternTile.class);
+		if(binderLectern==null) return;
 
-		drawBinderOverlay(player, width, height,
-				binderLectern.getWaypointsSync(),
-				binderLectern.getEmptyWaypointsSync(),
-				binderLectern.isInfiniteWaypointsSync()
-		);
+		if(binderLectern.hasBinder()){
+			drawBinderOverlay(player, width, height,
+					binderLectern.getWaypointsSync(),
+					binderLectern.getEmptyWaypointsSync(),
+					binderLectern.isInfiniteWaypointsSync());
+		}else{
+			drawHelpString(width/2, height/2+15,
+					"info.hearthstones.binder.overlay.help.empty");
+		}
 	}
 
 	private static void drawHelpString(int xCenter, int yStart, String... keys){
@@ -261,5 +260,18 @@ public class HearthstoneOverlay{
 		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 		//noinspection IntegerDivisionInFloatingPointContext
 		font.drawStringWithShadow(str, x-font.getStringWidth(str)/2, y, 0xF0F0F0);
+	}
+
+	@Nullable private static <TE> TE getTileOverMouse(World world, Class<TE> type){
+		RayTraceResult ray = Minecraft.getMinecraft().objectMouseOver;
+		if(ray==null||ray.typeOfHit!=RayTraceResult.Type.BLOCK) return null;
+		TileEntity te = world.getTileEntity(ray.getBlockPos());
+		return type.isInstance(te) ? type.cast(te) : null;
+	}
+
+	private static void renderItem(EntityPlayer player, ItemStack stack, int x, int y){
+		RenderHelper.enableGUIStandardItemLighting();
+		Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(player, stack, x, y);
+		RenderHelper.disableStandardItemLighting();
 	}
 }

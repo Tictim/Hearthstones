@@ -132,19 +132,29 @@ public class ModNet{
 	private static final class Client{
 		@Nullable private static IMessage handleOpenHearthstoneScreen(OpenHearthstoneScreenMsg message, MessageContext ctx){
 			Minecraft mc = Minecraft.getMinecraft();
-			if(mc.currentScreen instanceof HearthstoneScreen){
-				HearthstoneScreen s = (HearthstoneScreen)mc.currentScreen;
-				s.updateData(message);
-			}else{
-				HearthstoneScreen s = new HearthstoneScreen();
-				s.updateData(message);
-				mc.displayGuiScreen(s);
-			}
+			mc.addScheduledTask(() -> {
+				if(mc.currentScreen instanceof HearthstoneScreen){
+					HearthstoneScreen s = (HearthstoneScreen)mc.currentScreen;
+					s.updateData(message);
+				}else{
+					HearthstoneScreen s = new HearthstoneScreen();
+					s.updateData(message);
+					mc.displayGuiScreen(s);
+				}
+			});
 			return null;
 		}
 
 		@Nullable private static IMessage handleOpenTavernScreen(OpenTavernScreenMsg packet, MessageContext ctx){
-			Minecraft.getMinecraft().displayGuiScreen(new TavernScreen(packet.getPos(), packet.getType(), packet.getName(), packet.getAccessibility(), packet.getOwner(), packet.getAccess(), packet.isHome()));
+			Minecraft mc = Minecraft.getMinecraft();
+			mc.addScheduledTask(() -> mc.displayGuiScreen(
+					new TavernScreen(packet.getPos(),
+							packet.getType(),
+							packet.getName(),
+							packet.getAccessibility(),
+							packet.getOwner(),
+							packet.getAccess(),
+							packet.isHome())));
 			return null;
 		}
 
@@ -155,25 +165,29 @@ public class ModNet{
 
 		@Nullable private static IMessage handleOpenBinderScreen(OpenBinderScreenMsg packet, MessageContext ctx){
 			Minecraft mc = Minecraft.getMinecraft();
-			if(mc.currentScreen instanceof BinderScreen.Inventory){
-				((BinderScreen.Inventory)mc.currentScreen).updateData(packet);
-			}else{
-				BinderScreen.Inventory s = new BinderScreen.Inventory();
-				s.updateData(packet);
-				mc.displayGuiScreen(s);
-			}
+			mc.addScheduledTask(() -> {
+				if(mc.currentScreen instanceof BinderScreen.Inventory){
+					((BinderScreen.Inventory)mc.currentScreen).updateData(packet);
+				}else{
+					BinderScreen.Inventory s = new BinderScreen.Inventory();
+					s.updateData(packet);
+					mc.displayGuiScreen(s);
+				}
+			});
 			return null;
 		}
 
 		@Nullable private static IMessage handleOpenLecternBinderScreen(OpenLecternBinderScreenMsg packet, MessageContext ctx){
 			Minecraft mc = Minecraft.getMinecraft();
-			if(mc.currentScreen instanceof BinderScreen.Lectern){
-				((BinderScreen.Lectern)mc.currentScreen).updateData(packet);
-			}else{
-				BinderScreen.Lectern s = new BinderScreen.Lectern();
-				s.updateData(packet);
-				mc.displayGuiScreen(s);
-			}
+			mc.addScheduledTask(() -> {
+				if(mc.currentScreen instanceof BinderScreen.Lectern){
+					((BinderScreen.Lectern)mc.currentScreen).updateData(packet);
+				}else{
+					BinderScreen.Lectern s = new BinderScreen.Lectern();
+					s.updateData(packet);
+					mc.displayGuiScreen(s);
+				}
+			});
 			return null;
 		}
 	}
