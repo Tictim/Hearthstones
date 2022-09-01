@@ -68,9 +68,6 @@ public class HearthstoneItem extends RareItem{
 	@Override public boolean isDamaged(ItemStack stack){
 		return hearthstone.getMaxDamage()>0&&stack.getItemDamage()>0;
 	}
-	@Override public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt){
-		return new Data(stack);
-	}
 
 	@Override public void onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected){
 		if(!world.isRemote&&world.getTotalWorldTime()%2==0&&entity instanceof EntityPlayer){
@@ -86,13 +83,13 @@ public class HearthstoneItem extends RareItem{
 	@Override public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
 		ItemStack itemInHand = player.getHeldItem(hand);
 		if(!world.isRemote){
-			if(!new WarpContext(itemInHand, player, hand).hasCooldown()) player.setActiveHand(hand);
+			if(!new WarpContext(itemInHand, player).hasCooldown()) player.setActiveHand(hand);
 			else{
 				player.getCooldownTracker().setCooldown(this, 20);
 				player.sendStatusMessage(new TextComponentTranslation("info.hearthstones.hearthstone.cooldown"), true);
 			}
 		}
-		return EnumActionResult.SUCCESS; // TODO ?
+		return EnumActionResult.SUCCESS;
 	}
 
 	@Override public void onUsingTick(ItemStack stack, EntityLivingBase entity, int count){
@@ -110,6 +107,28 @@ public class HearthstoneItem extends RareItem{
 			if(amount>0&&entity.getRNG().nextInt()%3==0)
 				Rendering.renderHearthstoneParticles(entity, amount);
 		}
+	}
+
+	@Override public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft){
+		if(entity instanceof EntityPlayer){
+			((EntityPlayer)entity).getCooldownTracker().setCooldown(this, 5);
+		}
+		super.onPlayerStoppedUsing(stack, world, entity, timeLeft);
+	}
+
+	@Override public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase entity){
+		if(world.isRemote||!(entity instanceof EntityPlayer)) return stack;
+		EntityPlayer player = (EntityPlayer)entity;
+		WarpContext ctx = new WarpContext(stack, player);
+		Hearthstone.WarpSetup warpSetup = getHearthstone().setupWarp(ctx);
+		if(warpSetup!=null) warpSetup.warp();
+
+		player.getCooldownTracker().setCooldown(this, 20);
+		return stack;
+	}
+
+	@Override public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt){
+		return new Data(stack);
 	}
 
 	@Nullable public static Data data(ICapabilityProvider capabilityProvider){

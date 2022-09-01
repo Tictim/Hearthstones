@@ -2,7 +2,6 @@ package tictim.hearthstones.hearthstone;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import tictim.hearthstones.tavern.PlayerTavernMemory;
 import tictim.hearthstones.tavern.Tavern;
 import tictim.hearthstones.tavern.TavernMemories;
@@ -13,17 +12,12 @@ import javax.annotation.Nullable;
 public final class WarpContext{
 	private final ItemStack stack;
 	private final EntityPlayer player;
-	@Nullable private final EnumHand hand;
 
 	@Nullable private PlayerTavernMemory memory;
 
 	public WarpContext(ItemStack stack, EntityPlayer player){
-		this(stack, player, null);
-	}
-	public WarpContext(ItemStack stack, EntityPlayer player, @Nullable EnumHand hand){
 		this.stack = stack;
 		this.player = player;
-		this.hand = hand;
 	}
 
 	public ItemStack getStack(){
@@ -31,9 +25,6 @@ public final class WarpContext{
 	}
 	public EntityPlayer getPlayer(){
 		return player;
-	}
-	@Nullable public EnumHand getHand(){
-		return hand;
 	}
 	public PlayerTavernMemory getMemory(){
 		if(memory==null) memory = TavernMemories.player(player);
