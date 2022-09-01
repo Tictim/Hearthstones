@@ -38,4 +38,12 @@ public class ModCfg{
 	public static int aquamarineOreSize = 3;
 	@Config.RangeInt(min = 0)
 	public static int aquamarineCountInChunk = 12;
+
+	public static boolean amethystGen = true;
+	public static int amethystMinY = 3;
+	public static int amethystMaxY = 20;
+	@Config.RangeInt(min = 0)
+	public static int amethystOreSize = 7;
+	@Config.RangeInt(min = 0)
+	public static int amethystCountInChunk = 3;
 }
