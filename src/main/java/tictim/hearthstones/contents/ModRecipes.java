@@ -19,6 +19,8 @@ import net.minecraftforge.registries.IForgeRegistry;
 import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.contents.item.TavernItem;
 import tictim.hearthstones.contents.recipe.ChargeBinderRecipe;
+import tictim.hearthstones.contents.recipe.PotionIngredient;
+import tictim.hearthstones.contents.recipe.ShapelessPotionRecipe;
 import tictim.hearthstones.contents.recipe.TavernSkinRecipe;
 
 import javax.annotation.Nonnull;
@@ -78,7 +80,8 @@ public class ModRecipes{
 			shaped(r, "not_easy_mode/tavern", TAVERN, "111", "121", "131", '1', RED_LEATHER, '2', ModOreDict.BLOCK_AQUAMARINE, '3', ModOreDict.LOG_WOOD);
 			shaped(r, "not_easy_mode/taverncloth", TAVERNCLOTH, "111", "121", "1 1", '1', RED_LEATHER, '2', ModOreDict.BLOCK_AQUAMARINE);
 			shapeless(r, "not_easy_mode/binder", WAYPOINT_BINDER, Items.BOOK, ModOreDict.DUST_AMETHYST, ModOreDict.DUST_AMETHYST, ModOreDict.DUST_AMETHYST);
-			shapeless(r, "not_easy_mode/purple_leather", PURPLE_LEATHER, DEEP_PURPLE, DEEP_PURPLE, DEEP_PURPLE, DEEP_PURPLE, ModOreDict.LEATHER, Items.POTIONITEM);
+			r.register(new ShapelessPotionRecipe(null, new ItemStack(PURPLE_LEATHER), DEEP_PURPLE, DEEP_PURPLE, DEEP_PURPLE, DEEP_PURPLE, ModOreDict.LEATHER, PotionIngredient.of())
+					.setRegistryName("not_easy_mode/purple_leather"));
 			shapeless(r, "not_easy_mode/infinite_binder", INFINITE_WAYPOINT_BINDER, Items.BOOK, PURPLE_LEATHER, PURPLE_LEATHER, PURPLE_LEATHER);
 		}
 
