@@ -43,6 +43,8 @@ public class ModRecipes{
 		shaped(r, HEARTHING_GEM, " 11", "111", "11 ", '1', ModOreDict.GEM_AQUAMARINE);
 		shaped(r, MORTAR, "  2", "121", "111", '1', ModOreDict.STONE, '2', ModOreDict.INGOT_IRON);
 		shaped(r, new ItemStack(WAYPOINT, 4), " 13", "121", "11 ", '1', AMETHYST_SHARD, '2', ModOreDict.GEM_AQUAMARINE, '3', Items.STRING);
+		shaped(r, AMETHYST_BLOCK, "11", "11", '1', AMETHYST_SHARD);
+		shaped(r, BUDDING_AMETHYST, " 1 ", "121", " 1 ", '1', AMETHYST_SHARD, '2', Items.GHAST_TEAR); // temp recipe
 
 		// Shapeless Recipe
 		shapeless(r, new ItemStack(AQUAMARINE, 9), AQUAMARINE_BLOCK);
@@ -61,6 +63,8 @@ public class ModRecipes{
 		shapeless(r, DIAMOND_DUST, MORTAR, ModOreDict.GEM_DIAMOND);
 		shapeless(r, LAPIS_DUST, MORTAR, ModOreDict.GEM_LAPIS);
 		shapeless(r, AMETHYST_DUST, MORTAR, AMETHYST_SHARD);
+
+		shapeless(r, new ItemStack(AMETHYST_SHARD, 4), AMETHYST_BLOCK);
 
 		if(ModCfg.easyMode){
 			shaped(r, "easy_mode/hearthstone", HEARTHSTONE, " 11", "121", "11 ", '1', ModOreDict.HEARTHSTONE_MATERIAL, '2', ModOreDict.GEM_AQUAMARINE);
