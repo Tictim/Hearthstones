@@ -8,8 +8,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.PotionType;
 import net.minecraft.potion.PotionUtils;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public final class PotionIngredient extends Ingredient{
 	private static final PotionIngredient INSTANCE = new PotionIngredient();
@@ -25,28 +28,28 @@ public final class PotionIngredient extends Ingredient{
 		return !potionType.getEffects().isEmpty();
 	}
 
-	private ItemStack sample;
-	private ItemStack getSample(){
-		if(this.sample==null) this.sample = new ItemStack(Items.POTIONITEM);
-		return this.sample;
-	}
-
+	@Nullable private List<ItemStack> matchingStacks;
 	@Override public ItemStack[] getMatchingStacks(){
-		return new ItemStack[]{this.getSample()};
+		if(matchingStacks==null)
+			matchingStacks = ForgeRegistries.POTION_TYPES.getValuesCollection().stream()
+					.filter(p -> !p.getEffects().isEmpty())
+					.map(p -> PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), p))
+					.collect(Collectors.toList());
+		return matchingStacks.toArray(new ItemStack[0]);
 	}
 
-	private IntList matchingStacks;
+	@Nullable private IntList matchingStacksPacked;
 	@Override public IntList getValidItemStacksPacked(){
-		if(this.matchingStacks==null){
-			this.matchingStacks = new IntArrayList(1);
-			this.matchingStacks.add(RecipeItemHelper.pack(this.getSample()));
+		if(this.matchingStacksPacked==null){
+			this.matchingStacksPacked = new IntArrayList(1);
+			this.matchingStacksPacked.add(RecipeItemHelper.pack(new ItemStack(Items.POTIONITEM)));
 		}
-
-		return this.matchingStacks;
+		return this.matchingStacksPacked;
 	}
 
 	@Override protected void invalidate(){
 		this.matchingStacks = null;
+		this.matchingStacksPacked = null;
 	}
 
 	@Override public boolean isSimple(){
