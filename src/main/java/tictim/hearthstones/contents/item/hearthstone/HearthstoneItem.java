@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -30,10 +31,18 @@ import tictim.hearthstones.tavern.TavernRecord;
 import javax.annotation.Nullable;
 
 public class HearthstoneItem extends RareItem{
+	public static final ResourceLocation HAS_COOLDOWN = new ResourceLocation("has_cooldown");
 	private final Hearthstone hearthstone;
 
 	public HearthstoneItem(Hearthstone hearthstone){
 		setMaxStackSize(1);
+		this.addPropertyOverride(HAS_COOLDOWN, (stack, world, entity) -> {
+			if(entity instanceof EntityPlayer){
+				HearthstoneItem.Data data = HearthstoneItem.data(stack);
+				if(data!=null&&data.hasCooldown) return 1;
+			}
+			return 0;
+		});
 		this.hearthstone = hearthstone;
 	}
 
@@ -189,6 +198,11 @@ public class HearthstoneItem extends RareItem{
 				hasCooldown = tag.getBoolean("HasCooldown");
 				destination = tag.hasKey("Destination", Constants.NBT.TAG_COMPOUND) ? new TavernRecord(tag.getCompoundTag("Destination")) : null;
 			}
+		}
+
+		private int nbtHash;
+		public void readClient(){
+
 		}
 	}
 }
