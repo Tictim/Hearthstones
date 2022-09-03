@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import static tictim.hearthstones.Hearthstones.MODID;
 
 @Mod.EventBusSubscriber(modid = MODID)
-@Config(modid = MODID, name = "ttmp/hearthstones", category = "master")
+@Config(modid = MODID, category = "master")
 public class ModCfg{
 	@SubscribeEvent
 	@SuppressWarnings("unused")
@@ -31,19 +31,6 @@ public class ModCfg{
 	public static boolean traceTavernUpdate;
 	public static boolean logModelWarnings;
 
-	public static boolean aquamarineGen = true;
-	public static int aquamarineMinY = 5;
-	public static int aquamarineMaxY = 50;
-	@Config.RangeInt(min = 0)
-	public static int aquamarineOreSize = 3;
-	@Config.RangeInt(min = 0)
-	public static int aquamarineCountInChunk = 12;
-
-	public static boolean amethystGen = true;
-	public static int amethystMinY = 3;
-	public static int amethystMaxY = 20;
-	@Config.RangeInt(min = 0)
-	public static int amethystOreSize = 7;
-	@Config.RangeInt(min = 0)
-	public static int amethystCountInChunk = 3;
+	public static WorldgenConfig aquamarine = new WorldgenConfig(5, 50, 3, 12);
+	public static WorldgenConfig amethyst = new WorldgenConfig(3, 20, 7, 3);
 }

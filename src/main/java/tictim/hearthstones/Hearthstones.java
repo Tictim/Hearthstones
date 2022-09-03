@@ -8,13 +8,15 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import tictim.hearthstones.config.ModCfg;
+import tictim.hearthstones.contents.ModBlocks;
 import tictim.hearthstones.contents.ModOreDict;
 import tictim.hearthstones.contents.tileentity.BinderLecternTile;
 import tictim.hearthstones.contents.tileentity.GlobalTavernTile;
 import tictim.hearthstones.contents.tileentity.NormalTavernTile;
 import tictim.hearthstones.contents.tileentity.ShabbyTavernTile;
 import tictim.hearthstones.net.ModNet;
-import tictim.hearthstones.worldgen.HearthstonesWorldGenerator;
+import tictim.hearthstones.worldgen.ModOreGenerator;
 
 @Mod(modid = Hearthstones.MODID,
 		name = Hearthstones.NAME,
@@ -47,7 +49,8 @@ public class Hearthstones{
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event){
 		ModOreDict.register();
-		GameRegistry.registerWorldGenerator(new HearthstonesWorldGenerator(), 0);
+		GameRegistry.registerWorldGenerator(new ModOreGenerator(() -> ModBlocks.AQUAMARINE_ORE.getDefaultState(), ModCfg.aquamarine), 0);
+		GameRegistry.registerWorldGenerator(new ModOreGenerator(() -> ModBlocks.AMETHYST_BLOCK.getDefaultState(), ModCfg.amethyst), 0);
 		proxy.registerRenderer();
 	}
 }
