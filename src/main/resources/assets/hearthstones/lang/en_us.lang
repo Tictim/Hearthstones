@@ -35,6 +35,13 @@ tile.hearthstones.aquamarine_ore.name=Aquamarine Ore
 tile.hearthstones.deepslate_aquamarine_ore.name=Deepslate Aquamarine Ore
 tile.hearthstones.binder_lectern.name=Binder Lectern
 
+tile.hearthstones.amethyst_block.name=Block of Amethyst
+tile.hearthstones.budding_amethyst.name=Budding Amethyst
+tile.hearthstones.small_amethyst_bud.name=Small Amethyst Bud
+tile.hearthstones.medium_amethyst_bud.name=Medium Amethyst Bud
+tile.hearthstones.large_amethyst_bud.name=Large Amethyst Bud
+tile.hearthstones.amethyst_cluster.name=Amethyst Cluster
+
 info.hearthstones.screen.empty=You haven't visited any Tavern yet. Try build new one!
 
 info.hearthstones.screen.binder.waypoints=%s written Waypoints, %s blank Waypoints
@@ -143,3 +150,5 @@ command.tavern_memory.global.no_entry=Global Tavern Memory: No entry
 command.tavern_memory.player.entry=%s(%s)'s Tavern Memory: 1 entry
 command.tavern_memory.player.entries=%s(%s)'s Tavern Memory: %s entries
 command.tavern_memory.player.no_entry=%s(%s)'s Tavern Memory: No entry
+
+subtitles.block.amethyst_block.chime=Amethyst chimes

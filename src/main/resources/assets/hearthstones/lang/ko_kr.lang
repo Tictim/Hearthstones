@@ -25,6 +25,7 @@ item.hearthstones.aquamarine_dust.name=아쿠아마린 가루
 item.hearthstones.diamond_dust.name=다이아몬드 가루
 item.hearthstones.lapis_dust.name=라피스 라줄리 가루
 item.hearthstones.amethyst_dust.name=자수정 가루
+item.hearthstones.amethyst_shard.name=자수정 조각
 
 tile.hearthstones.tavern.name=여관
 tile.hearthstones.shabby_tavern.name=초라한 여관
@@ -33,6 +34,13 @@ tile.hearthstones.aquamarine_block.name=아쿠아마린 블럭
 tile.hearthstones.aquamarine_ore.name=아쿠아마린 광석
 tile.hearthstones.deepslate_aquamarine_ore.name=심층암 아쿠아마린 광석
 tile.hearthstones.binder_lectern.name=바인더 독서대
+
+tile.hearthstones.amethyst_block.name=자수정 블록
+tile.hearthstones.budding_amethyst.name=싹 틔우는 자수정
+tile.hearthstones.small_amethyst_bud.name=작은 자수정 봉오리
+tile.hearthstones.medium_amethyst_bud.name=중간 자수정 봉오리
+tile.hearthstones.large_amethyst_bud.name=큰 자수정 봉오리
+tile.hearthstones.amethyst_cluster.name=자수정 군집
 
 info.hearthstones.screen.empty=방문한 여관이 없습니다. 당신의 여관을 만들어 보세요!
 
