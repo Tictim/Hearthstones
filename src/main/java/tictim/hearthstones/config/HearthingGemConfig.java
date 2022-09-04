@@ -11,7 +11,7 @@ public class HearthingGemConfig implements HearthstoneConfig{
 	public int cooldown;
 	@Config.Comment("Maximum distance the Hearthing Gem can be used without breaking it.")
 	@Config.RangeDouble(min = 0, max = Double.POSITIVE_INFINITY)
-	public int travelDistanceThreshold;
+	public double travelDistanceThreshold;
 
 	public HearthingGemConfig(int maxUse, int cooldown, int travelDistanceThreshold){
 		this.maxUse = maxUse;
@@ -25,7 +25,7 @@ public class HearthingGemConfig implements HearthstoneConfig{
 	@Override public int cooldown(){
 		return cooldown;
 	}
-	public int travelDistanceThreshold(){
+	public double travelDistanceThreshold(){
 		return travelDistanceThreshold;
 	}
 }
