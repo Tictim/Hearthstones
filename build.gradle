@@ -41,6 +41,10 @@ minecraft {
     makeObfSourceJar = false
 }
 
+runClient {
+    args("--username=Dev")
+}
+
 repositories {
     maven {
         name = "Progwml6 maven"
