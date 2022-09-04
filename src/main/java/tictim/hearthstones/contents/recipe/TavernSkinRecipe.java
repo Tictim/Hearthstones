@@ -109,7 +109,7 @@ public class TavernSkinRecipe extends SpecialRecipe{
 			Block block = ((ItemBlock)item).getBlock();
 			try{
 				@SuppressWarnings("deprecation")
-				IBlockState state = block.getStateFromMeta(stack.getMetadata());
+				IBlockState state = block.getStateFromMeta(item.getMetadata(stack.getMetadata())); // wtf?
 				if(state.getRenderType()==EnumBlockRenderType.MODEL) return state;
 			}catch(RuntimeException ex){
 				// I don't know why the hell this shit is here, but now I cannot trust any of the shits above after seeing this super elaborate and noncryptic try-catch shit

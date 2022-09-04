@@ -71,9 +71,9 @@ public class BakedModelTavernBody implements IBakedModel{
 	}
 
 	private TextureAtlasSprite getSprite(BakedQuad quad){
-		if(quad.getFace()==null) return nullTexture==null ? quad.getSprite() : nullTexture;
 		TextureAtlasSprite sprite = textures.get(quad.getFace());
-		return sprite==null ? quad.getSprite() : sprite;
+		if(sprite!=null) return sprite;
+		return nullTexture!=null ? nullTexture : quad.getSprite();
 	}
 
 	@Override public boolean isAmbientOcclusion(){

@@ -52,8 +52,13 @@ public interface Tavern{
 	@SuppressWarnings("deprecation") @Nullable static IBlockState readSkin(NBTTagCompound tag){
 		if(tag.hasKey("skin", Constants.NBT.TAG_STRING)){
 			Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(tag.getString("skin")));
-			if(block!=null&&block!=Blocks.AIR)
-				return block.getStateFromMeta(Byte.toUnsignedInt(tag.getByte("skinMeta")));
+			if(block!=null&&block!=Blocks.AIR){
+				try{
+					return block.getStateFromMeta(Byte.toUnsignedInt(tag.getByte("skinMeta")));
+				}catch(RuntimeException ex){ // nonexistent property etc.
+					return block.getDefaultState();
+				}
+			}
 		}
 		return null;
 	}
