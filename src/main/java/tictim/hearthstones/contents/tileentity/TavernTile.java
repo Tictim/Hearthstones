@@ -23,6 +23,7 @@ import tictim.hearthstones.tavern.Tavern;
 import tictim.hearthstones.tavern.TavernPos;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 import static net.minecraft.block.BlockHorizontal.FACING;
 
@@ -75,6 +76,7 @@ public abstract class TavernTile extends TileEntity implements Tavern, IWorldNam
 	public void setOwner(Owner owner){
 		if(this.owner==owner) return;
 		this.owner = owner;
+		onUpdate();
 	}
 	@Override public AccessModifier access(){
 		return access;
@@ -82,6 +84,7 @@ public abstract class TavernTile extends TileEntity implements Tavern, IWorldNam
 	public void setAccess(AccessModifier access){
 		if(this.access==access) return;
 		this.access = access;
+		onUpdate();
 	}
 
 	@Nullable @Override public String name(){
@@ -102,7 +105,9 @@ public abstract class TavernTile extends TileEntity implements Tavern, IWorldNam
 	}
 
 	public void setName(@Nullable String name){
+		if(Objects.equals(this.name, name)) return;
 		this.name = name;
+		onUpdate();
 	}
 
 	public boolean canTeleportTo(WarpContext context){
@@ -126,10 +131,13 @@ public abstract class TavernTile extends TileEntity implements Tavern, IWorldNam
 	}
 	public void setSkin(@Nullable IBlockState skin){
 		if(this.skin!=skin){
+			this.skin = skin;
 			this.world.markBlockRangeForRenderUpdate(this.pos, this.pos);
+			onUpdate();
 		}
-		this.skin = skin;
 	}
+
+	protected void onUpdate(){}
 
 	@Override public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
 		return oldState.getBlock()!=newState.getBlock()||oldState.getValue(TavernBlock.TAVERN_TYPE)!=newState.getValue(TavernBlock.TAVERN_TYPE);

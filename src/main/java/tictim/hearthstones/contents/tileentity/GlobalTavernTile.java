@@ -18,4 +18,11 @@ public class GlobalTavernTile extends TavernTile{
 		TavernMemories m = TavernMemories.get();
 		if(m!=null) m.getGlobal().addOrUpdate(this);
 	}
+
+	@Override protected void onUpdate(){
+		if(world!=null&&!world.isRemote){
+			TavernMemories m = TavernMemories.get();
+			if(m!=null) m.getGlobal().addOrUpdate(this);
+		}
+	}
 }
