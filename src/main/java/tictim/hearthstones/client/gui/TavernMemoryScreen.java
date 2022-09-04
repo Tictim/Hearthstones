@@ -164,7 +164,7 @@ public abstract class TavernMemoryScreen extends AbstractScreen{
 	@Override public void handleMouseInput() throws IOException{
 		super.handleMouseInput();
 		int scroll = Mouse.getEventDWheel();
-		if(scroll!=0) yOffsetDest -= scroll*40;
+		if(scroll!=0) yOffsetDest -= scroll>0 ? 40 : -40;
 	}
 
 	private void closeConfirmDeleteWidget(){
