@@ -16,7 +16,7 @@ public class BinderLecternTileRenderer extends TileEntitySpecialRenderer<BinderL
 	@SuppressWarnings("ConstantConditions")
 	@Override
 	public void render(BinderLecternTile te, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
-		if(te==null||!te.hasBinder()) return;
+		if(te==null||!te.hasBinderSync()) return;
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+0.5, y+1.0625, z+0.5);
 		float f = te.getWorld().getBlockState(te.getPos()).getValue(BlockHorizontal.FACING).rotateY().getHorizontalAngle();

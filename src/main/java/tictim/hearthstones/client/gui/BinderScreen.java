@@ -161,7 +161,7 @@ public abstract class BinderScreen extends TavernMemoryScreen{
 				drawString(fontRenderer, getWaypointText(), x+24, y+2, 0xFFFFFF);
 
 				GlStateManager.enableDepth();
-				itemRender.renderItemIntoGUI(stack, x, y-getYOffset());
+				itemRender.renderItemIntoGUI(stack, x, y);
 				GlStateManager.disableDepth();
 			}
 		}

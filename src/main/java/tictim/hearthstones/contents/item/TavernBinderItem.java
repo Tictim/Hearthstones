@@ -95,7 +95,7 @@ public class TavernBinderItem extends RareItem{
 
 	@Override public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
 		TavernBinderData data = data(stack);
-		if(data!=null&&data.getWaypoints()>0){
+		if(data!=null&&(data.getWaypoints()>0||data.getEmptyWaypoints()>0)){
 			tooltip.add(infiniteWaypoints ?
 					I18n.format("info.hearthstones.binder.tooltip.waypoints.infinite",
 							data.getWaypoints()) :

@@ -21,6 +21,7 @@ public class BinderLecternTile extends TileEntity{
 	@Nullable private ItemStack item;
 	@Nullable private TavernBinderData data;
 
+	private boolean hasBinderSync;
 	private int waypointsSync;
 	private int emptyWaypointsSync;
 	private boolean infiniteWaypointsSync;
@@ -39,6 +40,12 @@ public class BinderLecternTile extends TileEntity{
 		return item!=null;
 	}
 
+	/**
+	 * For client side only.
+	 */
+	public boolean hasBinderSync(){
+		return hasBinderSync;
+	}
 	/**
 	 * For client side only.
 	 */
@@ -82,12 +89,17 @@ public class BinderLecternTile extends TileEntity{
 	}
 
 	private boolean updateSyncData(){
+		boolean hasBinder = hasBinder();
 		int waypoints = data!=null ? data.getWaypoints() : 0;
 		int emptyWaypoints = data!=null ? data.getEmptyWaypoints() : 0;
 		boolean infiniteWaypoints = data!=null&&data.isInfiniteWaypoints();
 
-		if(waypointsSync==waypoints&&emptyWaypointsSync==emptyWaypoints&&infiniteWaypointsSync==infiniteWaypoints)
+		if(hasBinderSync==hasBinder&&
+				waypointsSync==waypoints&&
+				emptyWaypointsSync==emptyWaypoints&&
+				infiniteWaypointsSync==infiniteWaypoints)
 			return false;
+		this.hasBinderSync = hasBinder;
 		this.waypointsSync = waypoints;
 		this.emptyWaypointsSync = emptyWaypoints;
 		this.infiniteWaypointsSync = infiniteWaypoints;
@@ -95,20 +107,36 @@ public class BinderLecternTile extends TileEntity{
 	}
 
 	@Override public SPacketUpdateTileEntity getUpdatePacket(){
-		return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
+		return new SPacketUpdateTileEntity(this.pos, 0, writeUpdateTag(new NBTTagCompound()));
 	}
 	@Override public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt){
-		readFromNBT(pkt.getNbtCompound());
+		handleUpdateTag(pkt.getNbtCompound());
 	}
+
 	@Override public NBTTagCompound getUpdateTag(){
-		return writeToNBT(new NBTTagCompound());
+		return writeUpdateTag(super.writeToNBT(new NBTTagCompound()));
 	}
+	protected NBTTagCompound writeUpdateTag(NBTTagCompound tag){
+		tag.setBoolean("HasBinder", hasBinderSync);
+		tag.setInteger("Waypoints", waypointsSync);
+		tag.setInteger("EmptyWaypoints", emptyWaypointsSync);
+		tag.setBoolean("InfiniteWaypoints", infiniteWaypointsSync);
+		return tag;
+	}
+	@Override public void handleUpdateTag(NBTTagCompound tag){
+		this.hasBinderSync = tag.getBoolean("HasBinder");
+		this.waypointsSync = tag.getInteger("Waypoints");
+		this.emptyWaypointsSync = tag.getInteger("EmptyWaypoints");
+		this.infiniteWaypointsSync = tag.getBoolean("InfiniteWaypoints");
+	}
+
 
 	@Override public void readFromNBT(NBTTagCompound tag){
 		super.readFromNBT(tag);
 		this.player = tag.hasUniqueId("player") ? tag.getUniqueId("player") : null;
 		this.item = tag.hasKey("item", Constants.NBT.TAG_COMPOUND) ? new ItemStack(tag.getCompoundTag("item")) : null;
 		this.data = readData(tag);
+		updateSyncData();
 	}
 
 	@Nullable private static TavernBinderData readData(NBTTagCompound tag){

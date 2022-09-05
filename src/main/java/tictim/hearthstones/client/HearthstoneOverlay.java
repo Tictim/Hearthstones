@@ -101,7 +101,7 @@ public class HearthstoneOverlay{
 			return true;
 		}else if(stack.getItem()==ModItems.WAYPOINT_BINDER||stack.getItem()==ModItems.INFINITE_WAYPOINT_BINDER){
 			BinderLecternTile binderLectern = getTileOverMouse(player.world, BinderLecternTile.class);
-			if(binderLectern!=null&&!binderLectern.hasBinder()) return false;
+			if(binderLectern!=null&&!binderLectern.hasBinderSync()) return false;
 
 			TavernBinderData data = TavernBinderItem.data(stack);
 			if(data!=null) drawBinderOverlay(player, width, height, data.getWaypoints(), data.getEmptyWaypoints(), data.isInfiniteWaypoints());
@@ -238,7 +238,7 @@ public class HearthstoneOverlay{
 		BinderLecternTile binderLectern = getTileOverMouse(player.world, BinderLecternTile.class);
 		if(binderLectern==null) return;
 
-		if(binderLectern.hasBinder()){
+		if(binderLectern.hasBinderSync()){
 			drawBinderOverlay(player, width, height,
 					binderLectern.getWaypointsSync(),
 					binderLectern.getEmptyWaypointsSync(),
