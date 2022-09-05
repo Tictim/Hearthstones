@@ -9,6 +9,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -75,7 +76,7 @@ public class TavernBinderItem extends RareItem{
 		return EnumActionResult.PASS;
 	}
 
-	@Override public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
+	@Override public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand){
 		ItemStack stack = player.getHeldItem(hand);
 		if(!world.isRemote){
 			TavernBinderData data = data(stack);
@@ -93,7 +94,7 @@ public class TavernBinderItem extends RareItem{
 				}
 			}
 		}
-		return EnumActionResult.SUCCESS;
+		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
 	}
 
 	@Override public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items){

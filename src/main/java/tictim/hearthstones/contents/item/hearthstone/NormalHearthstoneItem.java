@@ -25,4 +25,3 @@ public class NormalHearthstoneItem extends ScreenBasedHearthstoneItem{
 		tooltip.add(I18n.format("info.hearthstones.hearthstone.tooltip"));
 	}
 }
-
