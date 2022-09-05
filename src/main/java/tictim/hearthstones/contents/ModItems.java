@@ -3,19 +3,17 @@ package tictim.hearthstones.contents;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
-import tictim.hearthstones.config.ModCfg;
+import tictim.hearthstones.contents.item.EasyModeItem;
 import tictim.hearthstones.contents.item.MortarItem;
 import tictim.hearthstones.contents.item.RareItem;
 import tictim.hearthstones.contents.item.TavernBinderItem;
@@ -112,11 +110,7 @@ public class ModItems{
 
 		register(registry, "aquamarine", new Item());
 		register(registry, "red_leather", new Item());
-		register(registry, "tattered_leather", new Item(){
-			@Override public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items){
-				if(this.isInCreativeTab(tab)&&!ModCfg.easyMode) items.add(new ItemStack(this));
-			}
-		});
+		register(registry, "tattered_leather", new EasyModeItem());
 		register(registry, "blue_leather", new RareItem().setRarity(EnumRarity.UNCOMMON));
 		register(registry, "purple_leather", new RareItem().setRarity(EnumRarity.UNCOMMON));
 		register(registry, "deep_blue", new RareItem().setRarity(EnumRarity.UNCOMMON));

@@ -2,6 +2,7 @@ package tictim.hearthstones.contents.item;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
@@ -11,12 +12,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import tictim.hearthstones.Caps;
+import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.contents.block.TavernBlock;
 import tictim.hearthstones.contents.tileentity.BinderLecternTile;
 import tictim.hearthstones.net.ModNet;
@@ -93,6 +96,11 @@ public class TavernBinderItem extends RareItem{
 		return EnumActionResult.SUCCESS;
 	}
 
+	@Override public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items){
+		if(this.isInCreativeTab(tab)&&(infiniteWaypoints||!ModCfg.easyMode))
+			items.add(new ItemStack(this));
+	}
+
 	@Override public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
 		TavernBinderData data = data(stack);
 		if(data!=null&&(data.getWaypoints()>0||data.getEmptyWaypoints()>0)){
@@ -103,7 +111,7 @@ public class TavernBinderItem extends RareItem{
 							data.getWaypoints(), data.getEmptyWaypoints()));
 		}
 		tooltip.add(I18n.format("info.hearthstones.binder.tooltip"));
-		if(infiniteWaypoints)
+		if(infiniteWaypoints&&!ModCfg.easyMode)
 			tooltip.add(I18n.format("info.hearthstones.binder.tooltip.infinite"));
 	}
 

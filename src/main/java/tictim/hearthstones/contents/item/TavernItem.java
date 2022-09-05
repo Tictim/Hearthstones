@@ -1,9 +1,12 @@
 package tictim.hearthstones.contents.item;
 
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.contents.ModItems;
 import tictim.hearthstones.tavern.TavernType;
 
@@ -45,6 +48,14 @@ public class TavernItem extends ItemBlock{
 	@SuppressWarnings("deprecation") @Override public EnumRarity getRarity(ItemStack stack){
 		EnumRarity rarity = type(stack).getRarity();
 		return stack.isItemEnchanted() ? RareItem.upper(rarity) : rarity;
+	}
+
+	@Override public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items){
+		if(isInCreativeTab(tab)){
+			items.add(normal());
+			if(!ModCfg.easyMode) items.add(shabby());
+			items.add(global());
+		}
 	}
 
 	@Override public String getTranslationKey(ItemStack stack){
