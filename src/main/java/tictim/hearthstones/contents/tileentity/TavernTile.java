@@ -59,6 +59,7 @@ public abstract class TavernTile extends TileEntity implements Tavern, IWorldNam
 		another.setName(this.name());
 		another.setOwner(this.owner());
 		another.setAccess(this.access());
+		another.setSkin(this.skin());
 	}
 
 	protected abstract ItemStack getUpgradeItem();
