@@ -14,7 +14,6 @@ import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.util.ITeleporter;
@@ -47,7 +46,7 @@ public final class HearthUtils{
 	public static TavernTile getTavernAt(TavernPos pos){
 		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
 		if(server==null) return null;
-		World world = DimensionManager.getWorld(pos.dim(), true);
+		World world = server.getWorld(pos.dim());
 		if(world==null) return null;
 		TileEntity te = world.getTileEntity(pos.pos());
 		return te instanceof TavernTile ? (TavernTile)te : null;
