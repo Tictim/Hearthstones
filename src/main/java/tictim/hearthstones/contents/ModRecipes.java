@@ -45,6 +45,7 @@ public class ModRecipes{
 		shaped(r, new ItemStack(WAYPOINT, 4), " 13", "121", "11 ", '1', AMETHYST_SHARD, '2', ModOreDict.GEM_AQUAMARINE, '3', Items.STRING);
 		shaped(r, AMETHYST_BLOCK, "11", "11", '1', AMETHYST_SHARD);
 		shaped(r, BUDDING_AMETHYST, " 1 ", "121", " 1 ", '1', AMETHYST_SHARD, '2', Items.GHAST_TEAR); // temp recipe
+		shaped(r, BINDER_LECTERN, "111", " 2 ", " 3 ", '1', ModOreDict.SLAB_WOOD, '2', Blocks.BOOKSHELF, '3', AMETHYST_SHARD);
 
 		// Shapeless Recipe
 		shapeless(r, new ItemStack(AQUAMARINE, 9), AQUAMARINE_BLOCK);

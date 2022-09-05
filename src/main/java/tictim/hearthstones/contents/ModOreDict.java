@@ -22,6 +22,7 @@ public class ModOreDict{
 	public static final String DYE_RED = "dyeRed";
 	public static final String GEM_DIAMOND = "gemDiamond";
 	public static final String GEM_LAPIS = "gemLapis";
+	public static final String SLAB_WOOD = "slabWood";
 
 	public static void register(){
 		OreDictionary.registerOre(HEARTHSTONE_MATERIAL, new ItemStack(Blocks.STONE, 1, 1));
