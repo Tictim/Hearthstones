@@ -39,7 +39,12 @@ public class HearthstoneItem extends RareItem{
 		this.addPropertyOverride(HAS_COOLDOWN, (stack, world, entity) -> {
 			if(entity instanceof EntityPlayer){
 				HearthstoneItem.Data data = HearthstoneItem.data(stack);
-				if(data!=null&&data.hasCooldown) return 1;
+				if(data!=null){
+					data.readClient();
+					if(data.hasCooldown){
+						return 1;
+					}
+				}
 			}
 			return 0;
 		});
@@ -202,7 +207,11 @@ public class HearthstoneItem extends RareItem{
 
 		private int nbtHash;
 		public void readClient(){
-
+			int hash = stack.getTagCompound()==null||stack.getTagCompound().isEmpty() ? 0 : stack.getTagCompound().hashCode();
+			if(nbtHash!=hash){
+				read();
+				nbtHash = hash;
+			}
 		}
 	}
 }
