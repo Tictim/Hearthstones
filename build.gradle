@@ -45,6 +45,10 @@ runClient {
     args("--username=Dev")
 }
 
+runServer {
+    args("nogui")
+}
+
 repositories {
     maven {
         name = "Progwml6 maven"

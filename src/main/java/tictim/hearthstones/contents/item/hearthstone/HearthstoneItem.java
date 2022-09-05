@@ -8,12 +8,12 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -89,7 +89,7 @@ public class HearthstoneItem extends RareItem{
 		}
 	}
 
-	@Override public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
+	@Override public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand){
 		ItemStack itemInHand = player.getHeldItem(hand);
 		if(!world.isRemote){
 			if(!new WarpContext(itemInHand, player).hasCooldown()) player.setActiveHand(hand);
@@ -98,7 +98,7 @@ public class HearthstoneItem extends RareItem{
 				player.sendStatusMessage(new TextComponentTranslation("info.hearthstones.hearthstone.cooldown"), true);
 			}
 		}
-		return EnumActionResult.SUCCESS;
+		return ActionResult.newResult(EnumActionResult.SUCCESS, itemInHand);
 	}
 
 	@Override public void onUsingTick(ItemStack stack, EntityLivingBase entity, int count){

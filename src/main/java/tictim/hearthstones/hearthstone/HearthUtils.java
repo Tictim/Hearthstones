@@ -112,14 +112,14 @@ public final class HearthUtils{
 	}
 
 	private static void log(String message, Entity entity, int destDimension, BlockPos destPos){
-		Hearthstones.LOGGER.debug(message, entity, destDimension, destPos);
+		Hearthstones.LOGGER.info(message, entity, destDimension, destPos);
 		if(entity.isBeingRidden())
-			Hearthstones.LOGGER.debug("Passengers: {}",
+			Hearthstones.LOGGER.info("Passengers: {}",
 					entity.getPassengers().stream()
 							.map(Entity::toString)
 							.collect(Collectors.joining(", ")));
 		if(entity.isRiding())
-			Hearthstones.LOGGER.debug("Entity riding: {}", entity.getRidingEntity());
+			Hearthstones.LOGGER.info("Entity riding: {}", entity.getRidingEntity());
 	}
 
 	private static void playSound(World world, double x, double y, double z){
