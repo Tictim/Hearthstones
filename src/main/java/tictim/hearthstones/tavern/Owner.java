@@ -106,7 +106,7 @@ public final class Owner{
 		MinecraftServer server = player.getServer();
 		if(server==null){
 			if(player.world.isRemote)
-				return Client.isOp(player); // TODO does this really work
+				return Client.isOp(player);
 			else return false;
 		}else return server.getPlayerList().getOppedPlayers().getPermissionLevel(player.getGameProfile())>=1;
 	}
