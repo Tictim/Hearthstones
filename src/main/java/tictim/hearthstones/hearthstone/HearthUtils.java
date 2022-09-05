@@ -11,25 +11,37 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.util.ITeleporter;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import tictim.hearthstones.Hearthstones;
 import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.contents.tileentity.TavernTile;
 import tictim.hearthstones.tavern.TavernPos;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import static tictim.hearthstones.Hearthstones.MODID;
+
+@Mod.EventBusSubscriber(modid = MODID)
 public final class HearthUtils{
 	private HearthUtils(){}
 
 	private static final Random SOUND_RNG = new Random();
+	private static final List<Ticket> tickets = new ArrayList<>();
 
 	@Nullable
 	public static TavernTile getTavernAt(TavernPos pos){
@@ -99,6 +111,13 @@ public final class HearthUtils{
 			if(inSameDimension) player.connection.setPlayerLocation(destX, destY, destZ, player.rotationYaw, player.rotationPitch, Collections.emptySet());
 			else player.server.getPlayerList().transferPlayerToDimension(player, destDimension, new Tp(destX, destY, destZ));
 		}else{
+			Ticket ticket = ForgeChunkManager.requestTicket(Hearthstones.instance, entity.world, ForgeChunkManager.Type.ENTITY);
+			if(ticket!=null){
+				ticket.bindEntity(entity);
+				ticket.setChunkListDepth(1);
+				ForgeChunkManager.forceChunk(ticket, new ChunkPos(new BlockPos(entity)));
+				tickets.add(ticket);
+			}
 			entity.dismountRidingEntity();
 			if(inSameDimension) entity.setLocationAndAngles(destX, destY, destZ, entity.rotationYaw, entity.rotationPitch);
 			else entity.changeDimension(destDimension, new Tp(destX, destY, destZ));
@@ -124,6 +143,15 @@ public final class HearthUtils{
 
 	private static void playSound(World world, double x, double y, double z){
 		world.playSound(null, x, y, z, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.PLAYERS, 20, 0.95f+SOUND_RNG.nextFloat()*0.1f);
+	}
+
+	@SubscribeEvent
+	public static void onServerTick(TickEvent.ServerTickEvent event){
+		if(event.phase==TickEvent.Phase.START){
+			for(Ticket ticket : tickets){
+				ForgeChunkManager.releaseTicket(ticket);
+			}
+		}
 	}
 
 	private static final class Tp implements ITeleporter{

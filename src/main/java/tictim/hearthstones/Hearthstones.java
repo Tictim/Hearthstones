@@ -1,6 +1,7 @@
 package tictim.hearthstones;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -52,5 +53,7 @@ public class Hearthstones{
 		GameRegistry.registerWorldGenerator(new ModOreGenerator(() -> ModBlocks.AQUAMARINE_ORE.getDefaultState(), ModCfg.aquamarine), 0);
 		GameRegistry.registerWorldGenerator(new ModOreGenerator(() -> ModBlocks.AMETHYST_BLOCK.getDefaultState(), ModCfg.amethyst), 0);
 		proxy.registerRenderer();
+
+		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {}); // what do i even do with this????
 	}
 }
