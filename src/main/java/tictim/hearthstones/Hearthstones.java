@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +18,7 @@ import tictim.hearthstones.contents.tileentity.GlobalTavernTile;
 import tictim.hearthstones.contents.tileentity.NormalTavernTile;
 import tictim.hearthstones.contents.tileentity.ShabbyTavernTile;
 import tictim.hearthstones.net.ModNet;
+import tictim.hearthstones.server.TavernMemoryCommand;
 import tictim.hearthstones.worldgen.ModOreGenerator;
 
 @Mod(modid = Hearthstones.MODID,
@@ -55,5 +57,10 @@ public class Hearthstones{
 		proxy.registerRenderer();
 
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {}); // what do i even do with this????
+	}
+
+	@Mod.EventHandler
+	public void serverStarting(FMLServerStartingEvent event){
+		event.registerServerCommand(new TavernMemoryCommand());
 	}
 }

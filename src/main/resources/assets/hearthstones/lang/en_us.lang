@@ -135,6 +135,17 @@ info.hearthstones.access.private=§cPrivate Tavern§r can be used only by §cyou
 
 enchantment.hearthstones.quickcast=Quickcast
 
+command.tavern_memory.usage=/tavernMemory <add|remove|global|player>
+command.tavern_memory.add.usage=/tavernMemory add <player> <dimension> <x> <y> <z>
+command.tavern_memory.add.usage.global=/tavernMemory global add <dimension> <x> <y> <z>
+command.tavern_memory.remove.usage=/tavernMemory remove <player> <dimension> <x> <y> <z>
+command.tavern_memory.remove.usage.global=/tavernMemory global remove <dimension> <x> <y> <z>
+command.tavern_memory.global.usage=/tavernMemory global [add|remove]
+command.tavern_memory.player.usage=/tavernMemory player <player>
+
+command.tavern_memory.no_profile=No profile matches given username '%s'.
+
+command.tavern_memory.add.no_dimension=No dimension is registered with ID of %s.
 command.tavern_memory.add.no_tavern=There's no Tavern block at %s.
 command.tavern_memory.add.unloaded=Position %s is outside of loaded area.
 command.tavern_memory.add.out_of_world=Position %s is outside of world boundary.

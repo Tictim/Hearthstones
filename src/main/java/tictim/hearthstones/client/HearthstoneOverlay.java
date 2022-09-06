@@ -1,6 +1,5 @@
 package tictim.hearthstones.client;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -14,6 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.client.config.GuiUtils;
@@ -195,7 +195,7 @@ public class HearthstoneOverlay{
 	}
 
 	private static String formatWaypointCount(int waypoints){
-		if(waypoints<=0) return ChatFormatting.RED.toString()+waypoints+ChatFormatting.RESET;
+		if(waypoints<=0) return TextFormatting.RED.toString()+waypoints+TextFormatting.RESET;
 		else if(waypoints>=1000) return "1,000+";
 		else return waypoints+"";
 	}

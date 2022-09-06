@@ -1,12 +1,12 @@
 package tictim.hearthstones.client.gui;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import tictim.hearthstones.contents.ModItems;
 import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.net.OpenBinderScreenMsg;
@@ -116,7 +116,7 @@ public abstract class BinderScreen extends TavernMemoryScreen{
 	private static String formatTotalWaypoints(int waypoints, int blankWaypoints){
 		String text = (long)waypoints+blankWaypoints+"";
 		if(blankWaypoints<=0)
-			return (waypoints<=0 ? ChatFormatting.RED : ChatFormatting.GOLD)+text+ChatFormatting.RESET;
+			return (waypoints<=0 ? TextFormatting.RED : TextFormatting.GOLD)+text+TextFormatting.RESET;
 		return text;
 	}
 

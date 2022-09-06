@@ -7,7 +7,7 @@ import net.minecraft.entity.Entity;
 import javax.annotation.Nullable;
 import java.math.RoundingMode;
 
-import static com.mojang.realmsclient.gui.ChatFormatting.*;
+import static net.minecraft.util.text.TextFormatting.*;
 
 public class TavernTextFormat{
 	private TavernTextFormat(){}

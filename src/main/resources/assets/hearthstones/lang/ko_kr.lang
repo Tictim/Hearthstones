@@ -126,6 +126,7 @@ info.hearthstones.binder.overlay.waypoints=%s 저장된 웨이포인트, %s 빈 
 info.hearthstones.binder.overlay.waypoints.infinite=%s 저장된 웨이포인트
 info.hearthstones.binder.overlay.help.0=§6§l우클릭§r으로 모든 웨이포인트 읽기
 info.hearthstones.binder.overlay.help.1=§6§lSHIFT+우클릭§r으로 웨이포인트 목록 열기
+info.hearthstones.binder.overlay.help.empty=여관 웨이포인트 바인더를 놓아 사용
 
 info.hearthstones.access.public=§a공용 여관§r은 §a모두가 자유롭게 이용하거나 정보를 수정§r할 수 있습니다. 여관을 공용이 아니도록 만드는 것 빼고요.
 info.hearthstones.access.protected=§6보호된 여관§r은 §6모두가 이용할§r 수 있습니다. 하지만 여관의 정보는 §6주인과 관리자 권한을 가진 플레이어만 수정§r할 수 있습니다.
@@ -134,6 +135,17 @@ info.hearthstones.access.private=§c개인용 여관§r은 §c주인과 관리�
 
 enchantment.hearthstones.quickcast=빠른 시전
 
+command.tavern_memory.usage=/tavernMemory <add|remove|global|player>
+command.tavern_memory.add.usage=/tavernMemory add <플레이어> <차원> <x> <y> <z>
+command.tavern_memory.add.usage.global=/tavernMemory global add <차원> <x> <y> <z>
+command.tavern_memory.remove.usage=/tavernMemory remove <플레이어> <차원> <x> <y> <z>
+command.tavern_memory.remove.usage.global=/tavernMemory global remove <차원> <x> <y> <z>
+command.tavern_memory.global.usage=/tavernMemory global [add|remove]
+command.tavern_memory.player.usage=/tavernMemory player <플레이어>
+
+command.tavern_memory.no_profile=이름 '%s'을 가진 플레이어가 없습니다.
+
+command.tavern_memory.add.no_dimension=ID %s를 가진 차원이 없습니다.
 command.tavern_memory.add.no_tavern=%s에 여관이 없습니다.
 command.tavern_memory.add.unloaded=%s는 로드되지 않은 지역입니다.
 command.tavern_memory.add.out_of_world=%s는 월드 경계선 바깥에 있습니다.
@@ -149,3 +161,5 @@ command.tavern_memory.global.no_entry=글로벌 여관 기록: 0
 command.tavern_memory.player.entry=%s(%s)의 여관 기록: 1
 command.tavern_memory.player.entries=%s(%s)의 여관 기록: %s
 command.tavern_memory.player.no_entry=%s(%s)의 여관 기록: 0
+
+subtitles.block.amethyst_block.chime=자수정이 울림
