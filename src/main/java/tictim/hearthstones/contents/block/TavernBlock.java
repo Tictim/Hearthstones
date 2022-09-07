@@ -231,9 +231,7 @@ public class TavernBlock extends Block{
 			if(tavern.owner().hasOwner()) tileTag.setTag("owner", tavern.owner().write());
 			if(tavern.access().ordinal()!=0) tileTag.setByte("access", (byte)tavern.access().ordinal());
 			if(tavern.skin()!=null) Tavern.writeSkin(tileTag, tavern.skin());
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setTag("BlockEntityTag", tileTag);
-			stack.setTagCompound(tag);
+			stack.setTagInfo("BlockEntityTag", tileTag);
 		}
 		return stack;
 	}
