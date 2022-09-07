@@ -33,7 +33,7 @@ import tictim.hearthstones.worldgen.ModOreGenerator;
 public class Hearthstones{
 	public static final String MODID = "hearthstones";
 	public static final String NAME = "Hearthstones";
-	public static final String VERSION = "1.0.1.0-SNAPSHOT";
+	public static final String VERSION = "1.0.1.0";
 
 	public static final Logger LOGGER = LogManager.getLogger(NAME);
 
