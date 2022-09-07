@@ -1,11 +1,14 @@
 package tictim.hearthstones;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +22,8 @@ import tictim.hearthstones.contents.tileentity.NormalTavernTile;
 import tictim.hearthstones.contents.tileentity.ShabbyTavernTile;
 import tictim.hearthstones.net.ModNet;
 import tictim.hearthstones.server.TavernMemoryCommand;
+import tictim.hearthstones.tavern.TavernMemories;
+import tictim.hearthstones.tavern.retro.RetroTavernMemories;
 import tictim.hearthstones.worldgen.ModOreGenerator;
 
 @Mod(modid = Hearthstones.MODID,
@@ -62,5 +67,20 @@ public class Hearthstones{
 	@Mod.EventHandler
 	public void serverStarting(FMLServerStartingEvent event){
 		event.registerServerCommand(new TavernMemoryCommand());
+	}
+
+	@Mod.EventHandler
+	public void serverStarted(FMLServerStartedEvent event){
+		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+		if(server==null){
+			LOGGER.error("wat");
+			return;
+		}
+		RetroTavernMemories retro = RetroTavernMemories.get(server.getEntityWorld());
+		if(retro!=null&&!retro.isObsolete()){
+			LOGGER.info("Detected retro save data, copying");
+			retro.copyTo(TavernMemories.expect());
+			retro.setObsolete();
+		}
 	}
 }

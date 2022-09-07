@@ -88,7 +88,7 @@ public final class TavernButton extends GuiButton implements AbstractScreen.Tool
 		int i = 1;
 		for(TavernProperty p : this.properties){
 			int px = getPropertyWidgetX(i);
-			int py = getPropertyWidgetY();
+			int py = getPropertyWidgetY()-screen.getYOffset();
 			if(px<=mouseX&&px+14>mouseX&&py<=mouseY&&py+14>mouseY){
 				screen.drawHoveringText(p.getTooltip(), mouseX, mouseY);
 				return;

@@ -21,6 +21,7 @@ import tictim.hearthstones.tavern.AccessModifier;
 import tictim.hearthstones.tavern.Owner;
 import tictim.hearthstones.tavern.Tavern;
 import tictim.hearthstones.tavern.TavernPos;
+import tictim.hearthstones.tavern.retro.Retro;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -177,17 +178,9 @@ public abstract class TavernTile extends TileEntity implements Tavern, IWorldNam
 
 	private void readRetro(NBTTagCompound tag){ // Read 1.0.0.x data
 		this.name = tag.hasKey("name", Constants.NBT.TAG_STRING) ? tag.getString("name") : null;
-		if(tag.hasKey("owner", Constants.NBT.TAG_COMPOUND)){
-			NBTTagCompound owner = tag.getCompoundTag("owner");
-			this.owner = owner.hasUniqueId("owner") ?
-					Owner.of(owner.getUniqueId("owner"), owner.getString("ownerName")) :
-					Owner.NO_OWNER;
-			AccessModifier[] values = AccessModifier.values();
-			this.access = values[Byte.toUnsignedInt(owner.getByte("access"))%values.length];
-		}else{
-			this.owner = Owner.NO_OWNER;
-			this.access = AccessModifier.PUBLIC;
-		}
+		Retro.RetroOwner owner = Retro.readOwner(tag.getCompoundTag("owner"));
+		this.owner = owner.owner;
+		this.access = owner.access;
 		this.skin = Tavern.readSkin(tag);
 	}
 

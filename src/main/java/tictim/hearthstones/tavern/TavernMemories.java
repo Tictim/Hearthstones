@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import tictim.hearthstones.Caps;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -28,6 +29,10 @@ public class TavernMemories implements ICapabilitySerializable<NBTTagCompound>{
 	}
 	public PlayerTavernMemory getPlayer(UUID id){
 		return players.computeIfAbsent(id, uuid -> new PlayerTavernMemory());
+	}
+
+	public Map<UUID, PlayerTavernMemory> players(){
+		return Collections.unmodifiableMap(players);
 	}
 
 	@Override public boolean hasCapability(Capability<?> cap, @Nullable EnumFacing facing){
