@@ -22,7 +22,7 @@ public class ShabbyTavernUpgradeItem extends TavernUpgradeItem{
 	}
 
 	@Override public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items){
-		if(this.isInCreativeTab(tab)&&!ModCfg.easyMode)
+		if(this.isInCreativeTab(tab)&&!ModCfg.easyMode())
 			items.add(new ItemStack(this));
 	}
 

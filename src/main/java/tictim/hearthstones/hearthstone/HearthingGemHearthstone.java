@@ -11,7 +11,7 @@ import static tictim.hearthstones.hearthstone.HearthUtils.warp;
 
 public class HearthingGemHearthstone extends SelectionHearthstone{
 	public HearthingGemHearthstone(){
-		super(ModCfg.hearthingGem);
+		super(ModCfg.hearthstones.hearthingGem);
 	}
 
 	protected WarpSetup createWarpSetup(WarpContext context, Tavern selectedTavern, BlockPos warpPos){
@@ -37,6 +37,6 @@ public class HearthingGemHearthstone extends SelectionHearthstone{
 
 	public static boolean isTooFar(Entity entity, TavernPos destination){
 		return !destination.isSameDimension(entity.world)||
-				Math.sqrt(entity.getDistanceSq(destination.pos().getX()+.5, destination.pos().getY(), destination.pos().getZ()+.5))>ModCfg.hearthingGem.travelDistanceThreshold;
+				Math.sqrt(entity.getDistanceSq(destination.pos().getX()+.5, destination.pos().getY(), destination.pos().getZ()+.5))>ModCfg.hearthstones.hearthingGem.travelDistanceThreshold;
 	}
 }

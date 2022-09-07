@@ -7,6 +7,6 @@ import tictim.hearthstones.config.ModCfg;
 
 public class EasyModeItem extends RareItem{
 	@Override public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items){
-		if(this.isInCreativeTab(tab)&&!ModCfg.easyMode) items.add(new ItemStack(this));
+		if(this.isInCreativeTab(tab)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
 	}
 }

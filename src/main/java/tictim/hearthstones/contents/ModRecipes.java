@@ -67,7 +67,7 @@ public class ModRecipes{
 
 		shapeless(r, new ItemStack(AMETHYST_SHARD, 4), AMETHYST_BLOCK);
 
-		if(ModCfg.easyMode){
+		if(ModCfg.easyMode()){
 			shaped(r, "easy_mode/hearthstone", HEARTHSTONE, " 11", "121", "11 ", '1', ModOreDict.HEARTHSTONE_MATERIAL, '2', ModOreDict.GEM_AQUAMARINE);
 			shaped(r, "easy_mode/tavern", TavernItem.normal(), "111", "121", "131", '1', RED_LEATHER, '2', ModOreDict.GEM_AQUAMARINE, '3', ModOreDict.LOG_WOOD);
 			shaped(r, "easy_mode/taverncloth", TAVERNCLOTH, "111", "121", "1 1", '1', RED_LEATHER, '2', ModOreDict.GEM_AQUAMARINE);

@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 @JEIPlugin
 public class HearthstonesJeiPlugin implements IModPlugin{
 	@Override public void register(@Nonnull IModRegistry registry){
-		if(ModCfg.easyMode){
+		if(ModCfg.easyMode()){
 			IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
 			blacklist.addIngredientToBlacklist(new ItemStack(ModItems.SHABBY_HEARTHSTONE, 1, OreDictionary.WILDCARD_VALUE));
 			blacklist.addIngredientToBlacklist(new ItemStack(ModItems.TATTERED_TAVERNCLOTH, 1, OreDictionary.WILDCARD_VALUE));

@@ -20,7 +20,7 @@ import static tictim.hearthstones.hearthstone.HearthUtils.warp;
 
 public class CompanionHearthstone extends SelectionHearthstone{
 	public CompanionHearthstone(){
-		super(ModCfg.companionHearthstone);
+		super(ModCfg.hearthstones.companionHearthstone);
 	}
 
 	@Override protected WarpSetup createWarpSetup(WarpContext context, Tavern selectedTavern, BlockPos warpPos){

@@ -20,7 +20,7 @@ public class RegularTavernUpgradeItem extends TavernUpgradeItem{
 	}
 
 	@Override public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		tooltip.add(I18n.format(ModCfg.easyMode ?
+		tooltip.add(I18n.format(ModCfg.easyMode() ?
 				"info.hearthstones.taverncloth.tooltip.easyMode" :
 				"info.hearthstones.taverncloth.tooltip"));
 	}

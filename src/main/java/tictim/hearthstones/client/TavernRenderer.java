@@ -48,7 +48,7 @@ public final class TavernRenderer{
 
 	@SubscribeEvent
 	public static void loadSprites(TextureStitchEvent.Pre event){
-		if(ModCfg.logModelWarnings)
+		if(ModCfg.logModelWarnings())
 			Hearthstones.LOGGER.info("Stitching textureModel sprites");
 
 		TextureMap textureMap = Minecraft.getMinecraft().getTextureMapBlocks();
@@ -66,7 +66,7 @@ public final class TavernRenderer{
 		blockModelCache = new TavernBlockModelCache(taverncloth, body, DefaultVertexFormats.BLOCK);
 		itemModelCache = new TavernModelCache(taverncloth, body, DefaultVertexFormats.ITEM, EnumFacing.NORTH);
 
-		if(ModCfg.logModelWarnings)
+		if(ModCfg.logModelWarnings())
 			Hearthstones.LOGGER.info("Stitching textureModel sprites end");
 	}
 

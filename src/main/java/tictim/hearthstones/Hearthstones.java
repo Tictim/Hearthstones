@@ -57,8 +57,8 @@ public class Hearthstones{
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event){
 		ModOreDict.register();
-		GameRegistry.registerWorldGenerator(new ModOreGenerator(() -> ModBlocks.AQUAMARINE_ORE.getDefaultState(), ModCfg.aquamarine), 0);
-		GameRegistry.registerWorldGenerator(new ModOreGenerator(() -> ModBlocks.AMETHYST_BLOCK.getDefaultState(), ModCfg.amethyst), 0);
+		GameRegistry.registerWorldGenerator(new ModOreGenerator(() -> ModBlocks.AQUAMARINE_ORE.getDefaultState(), ModCfg.worldgen.aquamarine), 0);
+		GameRegistry.registerWorldGenerator(new ModOreGenerator(() -> ModBlocks.AMETHYST_BLOCK.getDefaultState(), ModCfg.worldgen.amethyst), 0);
 		proxy.registerRenderer();
 
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, (tickets, world) -> {}); // what do i even do with this????

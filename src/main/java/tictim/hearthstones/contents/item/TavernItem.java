@@ -53,7 +53,7 @@ public class TavernItem extends ItemBlock{
 	@Override public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items){
 		if(isInCreativeTab(tab)){
 			items.add(normal());
-			if(!ModCfg.easyMode) items.add(shabby());
+			if(!ModCfg.easyMode()) items.add(shabby());
 			items.add(global());
 		}
 	}

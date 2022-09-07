@@ -98,7 +98,7 @@ public class TavernBinderItem extends RareItem{
 	}
 
 	@Override public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items){
-		if(this.isInCreativeTab(tab)&&(infiniteWaypoints||!ModCfg.easyMode))
+		if(this.isInCreativeTab(tab)&&(infiniteWaypoints||!ModCfg.easyMode()))
 			items.add(new ItemStack(this));
 	}
 
@@ -112,7 +112,7 @@ public class TavernBinderItem extends RareItem{
 							data.getWaypoints(), data.getEmptyWaypoints()));
 		}
 		tooltip.add(I18n.format("info.hearthstones.binder.tooltip"));
-		if(infiniteWaypoints&&!ModCfg.easyMode)
+		if(infiniteWaypoints&&!ModCfg.easyMode())
 			tooltip.add(I18n.format("info.hearthstones.binder.tooltip.infinite"));
 	}
 

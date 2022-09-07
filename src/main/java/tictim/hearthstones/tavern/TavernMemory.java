@@ -39,7 +39,7 @@ public class TavernMemory{
 		TavernPos pos = tavern.pos();
 		TavernRecord t = tavern.toRecord();
 		taverns.put(pos, t);
-		if(ModCfg.traceTavernUpdate)
+		if(ModCfg.traceTavernUpdate())
 			Hearthstones.LOGGER.info("Updated tavern at {}", pos);
 	}
 

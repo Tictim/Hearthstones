@@ -14,7 +14,7 @@ import java.util.List;
 
 public class NormalHearthstoneItem extends ScreenBasedHearthstoneItem{
 	public NormalHearthstoneItem(){
-		super(new SelectionHearthstone(ModCfg.hearthstone));
+		super(new SelectionHearthstone(ModCfg.hearthstones.hearthstone));
 	}
 
 	@Override public boolean getIsRepairable(ItemStack toRepair, ItemStack repair){

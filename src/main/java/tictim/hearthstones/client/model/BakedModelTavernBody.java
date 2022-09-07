@@ -52,11 +52,11 @@ public class BakedModelTavernBody implements IBakedModel{
 		List<BakedQuad> quads = textureModel.getQuads(textureState, facing, 0);
 		switch(quads.size()){
 			case 0:
-				if(facing!=null&&ModCfg.logModelWarnings)
+				if(facing!=null&&ModCfg.logModelWarnings())
 					Hearthstones.LOGGER.warn("It seems like {} side of Texture Model {} is missing.", facing.name().toLowerCase(), textureState);
 				return null;
 			default:
-				if(ModCfg.logModelWarnings)
+				if(ModCfg.logModelWarnings())
 					Hearthstones.LOGGER.warn("It seems like {} side of Texture Model {} has multiple quads.", facing==null ? "null" : facing.name().toLowerCase(), textureState);
 			case 1:
 				return quads.get(0).getSprite();

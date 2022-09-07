@@ -11,7 +11,7 @@ import static tictim.hearthstones.hearthstone.HearthUtils.getTavernAt;
 
 public class HearthingPlanksHearthstone extends ConfigurableHearthstone{
 	public HearthingPlanksHearthstone(){
-		super(ModCfg.hearthingPlanks);
+		super(ModCfg.hearthstones.hearthingPlanks);
 	}
 
 	@Nullable @Override public Tavern previewWarp(WarpContext context){

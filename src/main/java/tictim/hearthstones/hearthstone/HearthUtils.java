@@ -83,7 +83,7 @@ public final class HearthUtils{
 	}
 
 	public static void warp(Entity entity, int destDimension, BlockPos destPos, boolean playSound){
-		if(ModCfg.traceHearthstoneUsage)
+		if(ModCfg.traceHearthstoneUsage())
 			log("Moving Entity {} to {}:{}", entity, destDimension, destPos);
 		entity.fallDistance = 0f;
 
@@ -125,7 +125,7 @@ public final class HearthUtils{
 			playSound(originalWorld, originX, originY, originZ);
 			playSound(destWorld, destX, destY, destZ);
 		}
-		if(ModCfg.traceHearthstoneUsage)
+		if(ModCfg.traceHearthstoneUsage())
 			log("Moved Entity {} to {}:{}", entity, destDimension, destPos);
 	}
 

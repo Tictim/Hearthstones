@@ -24,7 +24,7 @@ public class HearthingPlanksItem extends HearthstoneItem{
 	}
 
 	@Override public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items){
-		if(this.isInCreativeTab(tab)&&!ModCfg.easyMode) items.add(new ItemStack(this));
+		if(this.isInCreativeTab(tab)&&!ModCfg.easyMode()) items.add(new ItemStack(this));
 	}
 
 	@Override public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
