@@ -6,7 +6,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.OreDictionary;
 import tictim.hearthstones.config.ModCfg;
 import tictim.hearthstones.contents.ModOreDict;
 import tictim.hearthstones.hearthstone.HearthingPlanksHearthstone;
@@ -20,7 +19,7 @@ public class HearthingPlanksItem extends HearthstoneItem{
 	}
 
 	@Override public boolean getIsRepairable(ItemStack toRepair, ItemStack repair){
-		return OreDictionary.containsMatch(false, OreDictionary.getOres(ModOreDict.LOG_WOOD), repair);
+		return ModOreDict.matches(repair, ModOreDict.LOG_WOOD, false);
 	}
 
 	@Override public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items){

@@ -4,7 +4,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.OreDictionary;
 import tictim.hearthstones.contents.ModOreDict;
 import tictim.hearthstones.hearthstone.CompanionHearthstone;
 
@@ -17,7 +16,7 @@ public class CompanionHearthstoneItem extends ScreenBasedHearthstoneItem{
 	}
 
 	@Override public boolean getIsRepairable(ItemStack toRepair, ItemStack repair){
-		return OreDictionary.containsMatch(false, OreDictionary.getOres(ModOreDict.HEARTHSTONE_MATERIAL), repair);
+		return ModOreDict.matches(repair, ModOreDict.HEARTHSTONE_MATERIAL, false);
 	}
 
 	@Override public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){

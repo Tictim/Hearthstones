@@ -2,6 +2,7 @@ package tictim.hearthstones.contents;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ModOreDict{
@@ -35,5 +36,13 @@ public class ModOreDict{
 		OreDictionary.registerOre(DUST_DIAMOND, new ItemStack(ModItems.DIAMOND_DUST));
 		OreDictionary.registerOre(DUST_LAPIS, new ItemStack(ModItems.LAPIS_DUST));
 		OreDictionary.registerOre(DUST_AMETHYST, new ItemStack(ModItems.AMETHYST_DUST));
+	}
+
+	public static boolean matches(ItemStack stack, String ore, boolean strict){
+		NonNullList<ItemStack> logWood = OreDictionary.getOres(ore);
+		for(ItemStack s : logWood){
+			if(OreDictionary.itemMatches(s, stack, strict)) return true;
+		}
+		return false;
 	}
 }

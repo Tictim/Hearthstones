@@ -2,7 +2,6 @@ package tictim.hearthstones.contents.item;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 import tictim.hearthstones.contents.ModOreDict;
 
 public class MortarItem extends Item{
@@ -28,7 +27,7 @@ public class MortarItem extends Item{
 	}
 
 	@Override public boolean getIsRepairable(ItemStack toRepair, ItemStack repair){
-		return OreDictionary.containsMatch(false, OreDictionary.getOres(ModOreDict.INGOT_IRON), repair);
+		return ModOreDict.matches(repair, ModOreDict.INGOT_IRON, false);
 	}
 	@Override public boolean showDurabilityBar(ItemStack stack){
 		return isDamaged(stack);
