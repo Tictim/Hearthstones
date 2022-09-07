@@ -177,7 +177,8 @@ public abstract class TavernTile extends TileEntity implements Tavern, IWorldNam
 	}
 
 	private void readRetro(NBTTagCompound tag){ // Read 1.0.0.x data
-		this.name = tag.hasKey("name", Constants.NBT.TAG_STRING) ? tag.getString("name") : null;
+		this.name = tag.getString("name");
+		if(this.name.isEmpty()) this.name = null;
 		Retro.RetroOwner owner = Retro.readOwner(tag.getCompoundTag("owner"));
 		this.owner = owner.owner;
 		this.access = owner.access;
