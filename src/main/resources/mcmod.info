@@ -2,10 +2,10 @@
 {
   "modid": "hearthstones",
   "name": "Hearthstones",
-  "description": "",
+  "description": "Build your own tavern, teleport from anywhere!",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://www.curseforge.com/minecraft/mc-mods/tictim-hearthstones",
   "updateUrl": "",
   "authorList": ["Tictim"],
   "credits": "",
