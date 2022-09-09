@@ -114,7 +114,7 @@ public class TavernBinderItem extends Item{
 
 	@Override public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> text, TooltipFlag flag){
 		TavernBinderData data = data(stack);
-		if(data!=null&&data.getWaypoints()>0){
+		if(data!=null&&(data.getWaypoints()>0||data.getEmptyWaypoints()>0)){
 			text.add(infiniteWaypoints ?
 					Component.translatable("info.hearthstones.binder.tooltip.waypoints.infinite",
 							data.getWaypoints()) :
