@@ -66,11 +66,8 @@ public class ChargeBinderRecipe implements CraftingRecipe{
 		if(book.isEmpty()||waypoints==0) return ItemStack.EMPTY;
 		ItemStack newStack = book.copy();
 		TavernBinderData data = TavernBinderItem.data(newStack);
-		if(data==null||waypoints+data.getEmptyWaypoints()<0)
-			return ItemStack.EMPTY;
-		data.setEmptyWaypoints(data.getEmptyWaypoints()+waypoints);
-		for(Tavern t : taverns)
-			data.memory.addOrUpdate(t);
+		if(data==null||!data.addEmptyWaypoint(waypoints)) return ItemStack.EMPTY;
+		for(Tavern t : taverns) data.addOrUpdateWaypoint(t);
 		return newStack;
 	}
 	@Override public boolean canCraftInDimensions(int width, int height){
